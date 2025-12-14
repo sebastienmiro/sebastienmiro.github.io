@@ -91,16 +91,12 @@
     {{ page.share-img }}
   {%- elsif page.thumbnail-img -%}
     {{ page.thumbnail-img }}
-  {%- elsif page.cover-img -%}
-    {%- if page.cover-img.first -%}
-      {{ page.cover-img[0].first.first }}
-    {%- else -%}
-      {{ page.cover-img }}
-    {%- endif -%}
   {%- else -%}
     {{ site.url }}/assets/img/default-og.png
   {%- endif -%}
 {%- endcapture -%}
+
+{%- assign img = img | strip -%}
 
   <meta property="og:title" content="{{ title }}">
   <meta property="og:description" content="{{ description }}">
