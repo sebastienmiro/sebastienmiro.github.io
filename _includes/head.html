@@ -86,22 +86,21 @@
   <meta property="og:site_name" content="{{ site.title }}">
   {% endif %}
 
-  {%- capture img -%}
-    {%- if page.share-img -%}
-      {{ page.share-img }}
-    {%- elsif page.cover-img -%}
-      {%- if page.cover-img.first -%}
-        {{ page.cover-img[0].first.first }}
-      {%- else -%}
-        {{ page.cover-img }}
-      {%- endif -%}
-    {%- elsif page.thumbnail-img -%}
-      {{ page.thumbnail-img }}
-    {%- elsif site.avatar -%}
-      {{ site.avatar }}
-    {% endif %}
-  {%- endcapture -%}
-  {%- assign img=img | strip -%}
+{%- capture img -%}
+  {%- if page.share-img -%}
+    {{ page.share-img }}
+  {%- elsif page.thumbnail-img -%}
+    {{ page.thumbnail-img }}
+  {%- elsif page.cover-img -%}
+    {%- if page.cover-img.first -%}
+      {{ page.cover-img[0].first.first }}
+    {%- else -%}
+      {{ page.cover-img }}
+    {%- endif -%}
+  {%- else -%}
+    {{ site.url }}/assets/img/default-og.png
+  {%- endif -%}
+{%- endcapture -%}
 
   <meta property="og:title" content="{{ title }}">
   <meta property="og:description" content="{{ description }}">
