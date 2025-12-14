@@ -1,5 +1,5 @@
 ---
-title: "Conditional Access Framework v4 : un cadre solide et pragmatique pour sécuriser l’identité"
+title: "Conditional Access Framework v4 : un cadre solide pour sécuriser l’identité"
 date: 2025-12-14 09:30:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, conditional-access, gouvernance]
@@ -68,7 +68,7 @@ Chaque article correspond à un **bloc cohérent du framework**, et peut être l
 
 Le Conditional Access Framework v4 repose sur un constat partagé par la majorité des équipes terrain : malgré des mécanismes d’authentification toujours plus robustes, certaines attaques continueront de passer. Le sujet n’est donc plus uniquement d’empêcher l’accès, mais de maîtriser ce que cet accès permet une fois obtenu.
 
-Dans cette logique, le framework fournit un cadre pragmatique pour utiliser l’accès conditionnel comme un outil de réduction de risques concrets. Il aide à limiter l’impact des compromissions les plus courantes et à éviter qu’un accès initial ne se transforme immédiatement en point d’entrée durable.
+Dans cette logique, le framework fournit un cadre pour utiliser l’accès conditionnel comme un outil de réduction de risques concrets. Il aide à limiter l’impact des compromissions les plus courantes et à éviter qu’un accès initial ne se transforme immédiatement en point d’entrée durable.
 
 Il ne promet pas une sécurité totale. Il apporte en revanche un langage commun, une structure claire et une approche suffisamment réaliste pour être déployée et maintenue dans la durée, ce qui explique largement son adoption dans la communauté MSP.
 
