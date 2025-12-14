@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — CA100 à CA105 : comptes à privilèges"
-date: 2025-12-27 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, privileged-access, deploiement]
 categories: [identite, entra-id]

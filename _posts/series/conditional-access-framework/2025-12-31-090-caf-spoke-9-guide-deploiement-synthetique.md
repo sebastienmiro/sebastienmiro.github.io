@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Guide de déploiement maîtrisé (audit-first)"
-date: 2025-12-24 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, deploiement, synthese]
 categories: [identite, entra-id]

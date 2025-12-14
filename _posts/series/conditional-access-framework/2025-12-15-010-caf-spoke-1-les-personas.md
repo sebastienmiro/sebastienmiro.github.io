@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Les personas comme point de départ"
-date: 2025-12-15 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, conditional-access, gouvernance]
 categories: [identite, entra-id]

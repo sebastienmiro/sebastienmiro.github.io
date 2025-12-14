@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Applications : périmètre, illusion de contrôle et réalité terrain"
-date: 2025-12-20 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, applications, perimetre]
 categories: [identite, entra-id]

@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — limites structurelles et angles morts"
-date: 2026-01-01 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, limites, risques]
 categories: [identite, entra-id]

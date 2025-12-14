@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Session & tokens : ce que le framework protège réellement"
-date: 2025-12-31 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, token-protection, session]
 categories: [identite, entra-id]

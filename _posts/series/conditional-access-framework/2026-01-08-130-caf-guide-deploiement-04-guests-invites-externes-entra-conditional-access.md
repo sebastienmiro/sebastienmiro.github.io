@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — CA400 à CA404 : invités et identités externes"
-date: 2025-12-29 09:00:00 +01:00
+date: 2026-10-08 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, utilisateurs-externes, conditional-access]
 categories: [identite, entra-id]
