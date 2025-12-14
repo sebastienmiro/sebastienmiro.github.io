@@ -1,0 +1,72 @@
+{% include sidebar-author.html %}
+
+{% if page.sidebar and page.series %}
+
+<aside class="sidebar">
+
+  <!-- Série -->
+  <div class="sidebar-block">
+    <h5>Série {{ page.series }}</h5>
+    <ul>
+      {% assign posts_in_series = site.posts
+         | where: "series", page.series
+         | sort: "series_order" %}
+
+      {% for post in posts_in_series %}
+        <li {% if post.url == page.url %}class="active"{% endif %}>
+          <a href="{{ post.url }}">{{ post.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Métadonnées -->
+  <div class="sidebar-block">
+    <h5>Contexte</h5>
+    <ul class="meta">
+      <li><strong>Niveau :</strong> {{ page.level }}</li>
+      <li><strong>Périmètre :</strong>
+        {% for s in page.scope %}
+          {{ s }}{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+      </li>
+      {% if page.last_reviewed %}
+      <li><strong>Revu le :</strong> {{ page.last_reviewed }}</li>
+      {% endif %}
+    </ul>
+  </div>
+
+{% if page.categories %}
+<div class="sidebar-block">
+  <h5>Catégories</h5>
+  <ul class="sidebar-categories">
+    {% for category in page.categories %}
+      <li>
+        <a href="{{ '/categories' | relative_url }}#{{ category | slugify }}">
+          {{ category }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if page.tags %}
+<div class="sidebar-block">
+  <h5>Tags</h5>
+
+  <div class="sidebar-tags">
+    {% for tag in page.tags %}
+      <a href="{{ '/tags' | relative_url }}#{{ tag | slugify }}"
+         class="btn btn-primary tag-btn sidebar-tag-btn">
+        <i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{ tag }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+
+</aside>
+
+{% endif %}

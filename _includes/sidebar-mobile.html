@@ -1,0 +1,35 @@
+{% include sidebar-author.html %}
+
+{% if page.sidebar_summary %}
+<div class="sidebar-block">
+  <h5>En synthèse</h5>
+  <ul>
+    {% for item in page.sidebar_summary %}
+      <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if page.categories %}
+<div class="sidebar-block">
+  <strong>Catégorie :</strong>
+  {{ page.categories | join: ", " }}
+</div>
+{% endif %}
+
+{% if page.tags %}
+<div class="sidebar-block">
+  <strong>Tags :</strong>
+
+  <div class="sidebar-tags">
+    {% for tag in page.tags %}
+      <a href="{{ '/tags' | relative_url }}#{{ tag | slugify }}"
+         class="btn btn-primary tag-btn sidebar-tag-btn">
+        <i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{ tag }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+

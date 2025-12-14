@@ -1,0 +1,187 @@
+---
+layout: page
+---
+
+<div class="container-md">
+  <div class="row">
+
+    <!-- Rail éditorial – desktop -->
+    <div class="col-lg-4 d-none d-lg-block">
+      {% include home-rail.html %}
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="col-lg-8">
+
+      <!-- Rail éditorial – mobile -->
+      <div class="d-lg-none mb-4">
+        {% include home-rail.html %}
+      </div>
+
+      <section class="text-center">
+        <p align="text-center">{{ site.homepage.intro-text }}</p>
+      </section>
+
+      <br>
+
+      <div class="intro-header">
+        <div class="page-heading">
+          <hr class="small">
+          <h2>Derniers articles</h2>
+          <hr class="small">
+        </div>
+      </div>
+
+      {{ content }}
+
+      {% assign posts = paginator.posts | default: site.posts %}
+
+      <!-- role="list" needed so that `list-style: none` in Safari doesn't remove the list semantics -->
+      <ul class="posts-list list-unstyled" role="list">
+        {% for post in posts %}
+        <li class="post-preview">
+          <article>
+
+            {%- capture thumbnail -%}
+              {% if post.thumbnail-img %}
+                {{ post.thumbnail-img }}
+              {% elsif post.cover-img %}
+                {% if post.cover-img.first %}
+                  {{ post.cover-img[0].first.first }}
+                {% else %}
+                  {{ post.cover-img }}
+                {% endif %}
+              {% else %}
+              {% endif %}
+            {%- endcapture %}
+            {% assign thumbnail = thumbnail | strip %}
+
+            {% if site.feed_show_excerpt == false %}
+            {% if thumbnail != "" %}
+            <div class="post-image post-image-normal">
+              <a href="{{ post.url | absolute_url }}" aria-label="Thumbnail">
+                <img src="{{ thumbnail | absolute_url }}" alt="Post thumbnail">
+              </a>
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <a href="{{ post.url | absolute_url }}">
+              <h2 class="post-title">{{ post.title | strip_html }}</h2>
+
+              {% if post.subtitle %}
+                <h3 class="post-subtitle">
+                  {{ post.subtitle | strip_html }}
+                </h3>
+              {% endif %}
+            </a>
+
+            <p class="post-meta">
+              {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
+              Publié le
+              {% assign dy = post.date | date: "%a" %}
+              {% case dy %}
+                {% when "Mon" %}Lundi
+                {% when "Tue" %}Mardi
+                {% when "Wed" %}Mercredi
+                {% when "Thu" %}Jeudi
+                {% when "Fri" %}Vendredi
+                {% when "Sat" %}Samedi
+                {% when "Sun" %}Dimanche
+                {% else %}{{ dy }}
+              {% endcase %}
+              {% assign d = post.date | date: "%-d" %}
+              {% case d %}
+                {% when '1' %}{{ d }}er
+                {% else %}{{ d }}
+              {% endcase %}
+              {% assign m = post.date | date: "%-m" %}
+              {% case m %}
+                {% when '1' %}janvier
+                {% when '2' %}février
+                {% when '3' %}mars
+                {% when '4' %}avril
+                {% when '5' %}mai
+                {% when '6' %}juin
+                {% when '7' %}juillet
+                {% when '8' %}août
+                {% when '9' %}septembre
+                {% when '10' %}octobre
+                {% when '11' %}novembre
+                {% when '12' %}décembre
+              {% endcase %}
+              {{ post.date | date: '%Y' }}
+            </p>
+
+            {% if thumbnail != "" %}
+            <div class="post-image post-image-small">
+              <a href="{{ post.url | absolute_url }}" aria-label="Thumbnail">
+                <img src="{{ thumbnail | absolute_url }}" alt="Post thumbnail">
+              </a>
+            </div>
+            {% endif %}
+
+            {% unless site.feed_show_excerpt == false %}
+            {% if thumbnail != "" %}
+            <div class="post-image post-image-short">
+              <a href="{{ post.url | absolute_url }}" aria-label="Thumbnail">
+                <img src="{{ thumbnail | absolute_url }}" alt="Post thumbnail">
+              </a>
+            </div>
+            {% endif %}
+
+            <div class="post-entry">
+              {% assign excerpt_length = site.excerpt_length | default: 50 %}
+              {{ post.excerpt | strip_html | truncatewords: excerpt_length }}
+              {% assign excerpt_word_count = post.excerpt | number_of_words %}
+              {% if post.content != post.excerpt or excerpt_word_count > excerpt_length %}
+                <a href="{{ post.url | absolute_url }}" class="post-read-more">
+                  [Lire&nbsp;la&nbsp;suite]
+                </a>
+              {% endif %}
+            </div>
+            {% endunless %}
+
+            {% if site.feed_show_tags != false and post.tags.size > 0 %}
+            <div class="blog-tags">
+              <span>Tags:</span>
+              <!-- role="list" needed so that `list-style: none` in Safari doesn't remove the list semantics -->
+              <ul class="d-inline list-inline" role="list">
+                {% for tag in post.tags %}
+                <li class="list-inline-item">
+                  <a href="{{ '/tags' | absolute_url }}#{{ tag | slugify }}">
+                    {{ tag }}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+          </article>
+        </li>
+        {% endfor %}
+      </ul>
+
+      {% if paginator.total_pages > 1 %}
+      <ul class="pagination main-pager">
+        {% if paginator.previous_page %}
+        <li class="page-item previous">
+          <a class="page-link" href="{{ paginator.previous_page_path | absolute_url }}">
+            &larr; Articles plus récents
+          </a>
+        </li>
+        {% endif %}
+        {% if paginator.next_page %}
+        <li class="page-item next">
+          <a class="page-link" href="{{ paginator.next_page_path | absolute_url }}">
+            Articles plus anciens &rarr;
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      {% endif %}
+
+    </div> <!-- col-lg-8 -->
+  </div> <!-- row -->
+</div> <!-- container -->

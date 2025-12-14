@@ -1,0 +1,11 @@
+CA:
+  label: Conditional Access Framework
+  description: Construire un modèle CA cohérent et maintenable
+  url: /series/conditional-access-framework/
+  featured: true
+
+R1M:
+  label: Un risque, une mesure
+  description: Comprendre une attaque, puis une réponse concrète
+  url: /series/un-risque-une-mesure/
+  featured: true
