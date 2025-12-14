@@ -8,7 +8,7 @@ tags: [series:conditional-access-framework]
 
 ---
 
-## Conditional Access Framework — série d’articles
+## Conditional Access Framework - série d’articles
 
 Cette série est dédiée à l’analyse et au déploiement opérationnel du **Conditional Access Framework v4** de Joey Verlinden.
 

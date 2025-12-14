@@ -16,8 +16,6 @@ scope:
   - Entra ID
   - MFA
 ---
-**MFA ≠ sécurité.**
-
 Cette affirmation peut surprendre, tant l’authentification multifacteur est devenue un prérequis incontournable dans Microsoft Entra ID et Microsoft 365.  
 Et pourtant, dans de nombreux incidents récents, **la MFA était bien activée… et n’a pas empêché la compromission**.
 

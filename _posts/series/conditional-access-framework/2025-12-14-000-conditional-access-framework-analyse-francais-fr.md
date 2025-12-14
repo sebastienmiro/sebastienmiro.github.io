@@ -35,7 +35,7 @@ Elle vise en priorité :
 - les MSP et équipes d’exploitation qui doivent déployer, maintenir et expliquer des politiques dans la durée ;
 - les profils sécurité « terrain », à l’interface entre gouvernance et implémentation technique.
 
-Elle part du principe que les notions de base sont déjà acquises : MFA, Conditional Access, Entra ID, devices managés, applications cloud. L’objectif n’est pas d’expliquer *ce qu’est* l’accès conditionnel, mais de décortiquer *comment* l’utiliser correctement à l’échelle d’un framework complet.
+Elle part du principe que les notions de base sont déjà acquises : MFA, Conditional Access, Entra ID, appareils managés, applications cloud. L’objectif n’est pas d’expliquer *ce qu’est* l’accès conditionnel, mais de décortiquer *comment* l’utiliser correctement à l’échelle d’un framework complet.
 
 Cette série ne s’adresse pas :
 - à des environnements en phase de découverte de Microsoft 365 ;
@@ -44,7 +44,7 @@ Cette série ne s’adresse pas :
 
 Le Conditional Access Framework v4 est un cadre structurant. Il suppose un minimum de maturité, de compréhension des impacts, et d’acceptation du compromis entre sécurité et usage. Les articles qui suivent assument pleinement ce positionnement.
 
-## Parcours de lecture — série Conditional Access Framework
+## Parcours de lecture
 
 La série est structurée pour refléter **l’ordre réel de compréhension et de déploiement du framework**, en particulier dans des environnements Microsoft et MSP.
 
@@ -56,7 +56,7 @@ La série est structurée pour refléter **l’ordre réel de compréhension et 
 | 3 | Utilisateurs standards : périmètre et protections réelles | ⏳ |
 | 4 | Comptes à privilèges : sortir du flux normal | ⏳ |
 | 5 | La session et les tokens : le cœur du framework v4 | ⏳ |
-| 6 | Devices : conformité, filtres et signaux | ⏳ |
+| 6 | appareils : conformité, filtres et signaux | ⏳ |
 | 7 | Applications : réduire la surface d’exposition | ⏳ |
 | 8 | Ordre de déploiement du Conditional Access Framework | ⏳ |
 | 9 | Limites et angles morts du framework | ⏳ |
@@ -82,17 +82,17 @@ Ce choix est assumé. Il permet au framework de rester focalisé sur ce que l’
 
 ## La session : le véritable point de bascule du framework v4
 
-La principale évolution du framework v4 concerne la gestion de la session. Les attaques actuelles cherchent moins à casser l’authentification qu’à exploiter une session légitime, via des techniques comme le phishing proxy, l’AiTM ou la réutilisation de tokens.
+La principale évolution du framework v4 concerne la gestion de la session. Les attaquants cherchent moins à casser l’authentification qu’à exploiter une session légitime, via des techniques comme le phishing proxy, l’AiTM ou la réutilisation de tokens.
 
 Le framework intègre pleinement cette réalité en traitant la session comme un objet de sécurité à part entière, et non plus comme une simple conséquence d’une authentification réussie. C’est ce point qui distingue réellement la version v4 des approches plus anciennes.
 
-Cette logique reste toutefois dépendante de l’écosystème Microsoft : devices bien intégrés à Entra ID, applications compatibles, et compréhension claire des impacts. Ces mécanismes seront détaillés dans un article dédié, car ils constituent le cœur opérationnel du framework.
+Cette logique reste toutefois dépendante de l’écosystème Microsoft : appareils bien intégrés à Entra ID, applications compatibles, et compréhension claire des impacts. Ces mécanismes seront détaillés dans un article dédié, car ils constituent le cœur opérationnel du framework.
 
 ## Un cadre fondé sur des signaux, pas sur des garanties
 
-Aucun des axes du framework n’est conçu pour fonctionner seul. Renforcer l’authentification ne protège pas une session déjà ouverte. La conformité d’un device n’est pas une preuve de sécurité. La segmentation applicative ne dit rien de l’usage réel une fois l’accès accordé.
+Aucun des axes du framework n’est conçu pour fonctionner seul. Renforcer l’authentification ne protège pas une session déjà ouverte. La conformité d’un appareil n’est pas une preuve de sécurité car la segmentation applicative ne dit rien de l’usage réel une fois l’accès accordé.
 
-Ce n’est pas une faiblesse du framework, mais une caractéristique assumée. Chaque règle fournit un signal utile pour la prise de décision, jamais une garantie absolue. Le rôle du framework est d’aider à combiner ces signaux de manière cohérente, sans leur attribuer un niveau de confiance qu’ils ne peuvent pas offrir.
+Ce n’est pas une faiblesse du framework, mais une caractéristique assumée. Chaque règle fournit un signal utile pour la prise de décision, en aucun cas une garantie absolue. Le rôle du framework est d’aider à combiner ces signaux de manière cohérente, sans leur attribuer un niveau de confiance qu’ils ne peuvent pas offrir.
 
 C’est précisément ce point qui justifie un découpage par personas, par groupes de politiques et par ordre de déploiement, plutôt qu’une approche règle par règle sans vision d’ensemble.
 
