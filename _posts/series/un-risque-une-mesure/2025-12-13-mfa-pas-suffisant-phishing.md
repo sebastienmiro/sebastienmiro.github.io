@@ -7,7 +7,7 @@ categories: [identite, entra-id]
 readtime: true
 comments: true
 cover-img: "assets/img/banners/banner3.png"
-thumbnail-img: "assets/img/posts/mfa-tokens.png"
+thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-13-mfa-pas-suffisant-phishing.png"
 series: R1M
 series_order: 010
 sidebar: true
