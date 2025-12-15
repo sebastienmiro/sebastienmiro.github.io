@@ -89,7 +89,7 @@ governance analysis, and reporting.
 .LIMITATIONS
 - Effective permissions are not calculated (RBAC inheritance is not evaluated).
 - PIM-eligible role assignments are not included.
-- Visibility depends on the permissions of the executing account.
+- Visibility depends on the permissions of the executing account (eg. you are owner on a resource group, you will see only RBAC on resource group and its descendat resources)
 
 .OUTPUTS
 - Azure-RBAC-Audit.csv
@@ -102,10 +102,10 @@ Sébastien Miro
 1.0
 
 .LASTUPDATED
-2025-01-XX
+2025-12-13
 
 .SOURCE
-https://github.com/<your-account>/azure-rbac-audit
+https://github.com/sebastienmiro/azure-rbac-audit
 #>
 
 #Requires -Modules Az.Accounts, Az.Resources
