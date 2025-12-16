@@ -6,7 +6,7 @@ tags: [series:un-risque-une-mesure, entra-id, sessions, conditional-access, toke
 categories: [identite, entra-id]
 readtime: true
 comments: true
-cover-img: "assets/img/banners/banner6.png"
+cover-img: "assets/img/banners/banner2.png"
 thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-30-entra-id-session-persistante-sign-in-frequency.png"
 series: R1M
 series_order: 040
@@ -46,6 +46,8 @@ Une fois la session établie, la MFA n’est plus sollicitée.
 Le système ne se demande plus *qui* est l’utilisateur, mais uniquement *si le token présenté est valide*.
 
 C’est un choix d’architecture. Et comme tout choix d’architecture, il a des conséquences.
+
+Derrière cette continuité d’accès se trouvent des mécanismes largement transparents pour l’utilisateur, comme les tokens de session et le Primary Refresh Token (PRT), qui permettent à Entra ID de renouveler l’accès sans redemander d’authentification tant que certaines conditions sont remplies.
 
 ## Pourquoi les attaquants adorent les sessions longues
 

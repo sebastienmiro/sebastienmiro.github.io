@@ -6,7 +6,7 @@ tags: [series:un-risque-une-mesure, entra-id, identité, mfa, tokens, token-prot
 categories: [identite, entra-id]
 readtime: true
 comments: true
-cover-img: "assets/img/banners/banner-mfa-token-protection.png"
+cover-img: "assets/img/banners/banner1.png"
 thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-23-mfa-securite-tokens-point-de-rupture.png"
 series: R1M
 series_order: 030

@@ -6,7 +6,7 @@ tags: [series:conditional-access-framework, session, token]
 categories: [identite, entra-id]
 readtime: true
 comments: true
-cover-img: "assets/img/banners/banner-conditional-access-admins.png"
+cover-img: "assets/img/banners/banner-conditional-access.png"
 thumbnail-img: "assets/img/posts/series/conditional-access-framework/060/060-thumb.png"
 series: CA
 series_order: 060
