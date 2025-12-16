@@ -117,6 +117,6 @@ Sans ce cadre, l’accès conditionnel devient une dette technique. Et, le jour 
 
 ---
 
-Cet article n’a pas vocation à convaincre et n'engage que moi. Il sert de point de déaprt à cette série.
+Cet article n’a pas vocation à convaincre et n'engage que moi. Il sert de point de départ à cette série.
 
 Sans cette compréhension, les mécanismes plus avancés abordés dans la suite de la série reposent sur un socle fragile.
