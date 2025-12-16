@@ -21,7 +21,8 @@ featured_reason: "Base indispensable à comprendre avant d'aller plus loin."
 ---
 
 💡 **Activer l’accès conditionnel sans planification, c’est un peu comme retirer les airbags pour installer un ABS.**  
-Activer l’accès conditionnel dans Microsoft Entra ID est souvent vécu comme un passage obligé vers une sécurité plus mature. On quitte un mécanisme par défaut, jugé simpliste, pour entrer dans un modèle plus fin, plus contextualisé, plus conforme aux discours actuels autour du Zero Trust. Dans beaucoup d’organisations, cette bascule est présentée comme une amélioration presque mécanique du niveau de protection : l’accès conditionnel serait, par nature, supérieur aux Security Defaults.
+
+Analogie bagnolistique mise à part, activer l’accès conditionnel dans Microsoft Entra ID est souvent vécu comme un passage obligé vers une sécurité plus mature. On quitte un mécanisme par défaut, jugé simpliste, pour entrer dans un modèle plus fin, plus contextualisé, plus conforme aux discours actuels autour du Zero Trust. Dans beaucoup d’organisations, cette bascule est présentée comme une amélioration presque mécanique du niveau de protection : l’accès conditionnel serait, par nature, supérieur aux Security Defaults.
 
 Ce raisonnement est compréhensible. Il est aussi dangereux.
 
