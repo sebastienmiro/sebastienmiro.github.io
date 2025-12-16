@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 : un cadre solide pour sécuriser l’identité"
-date: 2025-12-19 09:30:00 +01:00
+date: 2025-12-14 09:30:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, conditional-access, gouvernance]
 categories: [identite, entra-id]
