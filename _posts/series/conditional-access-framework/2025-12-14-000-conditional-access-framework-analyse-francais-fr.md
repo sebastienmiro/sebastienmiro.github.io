@@ -43,7 +43,9 @@ Cette série ne s’adresse pas :
 - à des lecteurs cherchant des recettes rapides ou des configurations universelles.
 
 Le Conditional Access Framework v4 est un cadre structurant. Il suppose un minimum de maturité, de compréhension des impacts, et d’acceptation du compromis entre sécurité et usage. Les articles qui suivent assument pleinement ce positionnement.
+
 ![Conditional Access Framework dans Entra ID](/assets/img/posts/series/conditional-access-framework/000/conditional-access-framework-preview.png)
+
 ## Parcours de lecture
 
 La série est structurée pour refléter **l’ordre réel de compréhension et de déploiement du framework**, en particulier dans des environnements Microsoft et MSP.
