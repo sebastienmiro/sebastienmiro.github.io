@@ -32,8 +32,8 @@ L’accès conditionnel n’est pas une couche de sécurité supplémentaire ven
 
 Dans les environnements analysés après incident, le constat est souvent le même : l’accès conditionnel est bien activé, plusieurs politiques existent, certaines sont même avancées, et pourtant le niveau de protection global est inférieur à ce qu’il était auparavant. Non pas parce que l’outil serait défaillant, mais parce que la transition entre deux modèles de sécurité a été abordée comme un simple paramétrage, et non comme une décision structurante.
 
-Ce n’est pas un problème de configuration.  
-C’est un problème de compréhension.
+> Ce n’est pas un problème de configuration.  
+> C’est un problème de compréhension.
 
 ## Ce que font réellement les Security Defaults
 
@@ -43,8 +43,8 @@ Pourtant, leur rôle n’a jamais été de proposer un modèle optimal. Il est d
 
 Les Security Defaults imposent une authentification multifacteur généralisée, renforcent les exigences sur les comptes administrateurs et bloquent les protocoles d’authentification hérités, sans dépendre d’un découpage par groupes, d’une logique d’exception ou d’une expertise particulière. Ils s’appliquent globalement, de manière prévisible, et surtout difficile à affaiblir par inadvertance.
 
-Leur force n’est pas technique.  
-Elle est organisationnelle.
+> Leur force n’est pas technique.  
+> Elle est organisationnelle.
 
 Tant qu’ils sont actifs, il est compliqué d’introduire une régression majeure sans en être conscient. On peut trouver leur approche brutale, mais elle a une vertu essentielle : elle empêche une organisation de se raconter une histoire rassurante sur son propre niveau de sécurité. Les règles sont simples, visibles, et difficiles à contourner sans décision explicite.
 
@@ -64,8 +64,8 @@ L’accès conditionnel donne une impression de contrôle. Les écrans sont remp
 
 Sur le terrain, les situations se ressemblent souvent. Une ou deux politiques sont créées pour répondre à un besoin précis — forcer la MFA, bloquer certains pays, sécuriser un accès distant. Des exclusions sont ajoutées pour éviter les blocages. Le périmètre est limité aux utilisateurs standards. Les administrateurs sont traités à part, parfois repoussés à plus tard.
 
-Sur le papier, tout est sous contrôle.  
-Dans Entra ID, beaucoup moins.
+> Sur le papier, tout est sous contrôle.  
+> Dans Entra ID, beaucoup moins.
 
 Lorsque l’on analyse réellement le tenant, on retrouve des utilisateurs hors périmètre parce qu’ils ne font pas partie du bon groupe, des protocoles legacy encore autorisés faute de règle explicite, des comptes administrateurs exclus « temporairement », des invités totalement absents du modèle, ou encore des politiques empilées sans vision d’ensemble.
 
@@ -75,10 +75,10 @@ Pris individuellement, chaque point semble anodin. Pris ensemble, ils constituen
 
 Les constats les plus problématiques sont rarement spectaculaires. Ils sont discrets, presque banals, et passent souvent sous les radars tant qu’aucun incident ne survient.
 
-Un utilisateur sans MFA parce qu’il n’appartient pas au bon groupe.  
-Un compte administrateur exclu pour « éviter un blocage ».  
-Une application héritée jamais intégrée au modèle.  
-Une politique créée pour un besoin ponctuel, jamais revue.
+> Un utilisateur sans MFA parce qu’il n’appartient pas au bon groupe.  
+> Un compte administrateur exclu pour « éviter un blocage ».  
+> Une application héritée jamais intégrée au modèle.  
+> Une politique créée pour un besoin ponctuel, jamais revue.
 
 Dans ces situations, l’accès conditionnel n’a pas échoué. Il a fait exactement ce qu’on lui a demandé. C’est le modèle qui était incomplet.
 
