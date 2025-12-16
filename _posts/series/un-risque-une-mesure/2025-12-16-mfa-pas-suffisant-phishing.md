@@ -18,7 +18,7 @@ scope:
   - Sécurité de l’identité
 ---
 
-Dire que la MFA ne suffit plus surprend encore beaucoup d’organisations.  
+Dire que la MFA ne suffit plus surprend encore beaucoup d'entreprises, de DSI et d'administrateurs.  
 Dans Microsoft Entra ID comme dans Microsoft 365, l’authentification multifacteur est devenue un prérequis quasi systématique, au point d’être parfois perçue comme une garantie implicite de sécurité. Lorsqu’elle est activée, elle rassure. Elle coche une case devenue incontournable dans les audits, les recommandations éditeurs et les discours commerciaux. Pour certains, elle marque même une forme de ligne d’arrivée.
 
 Pourtant, lorsque l’on regarde les incidents récents avec un minimum de recul, le récit est souvent le même. Les comptes compromis disposent bien d’une MFA active. Les utilisateurs ont validé leurs demandes sans alerte particulière. Les journaux d’authentification montrent des connexions conformes, sans échec apparent ni contournement visible. Et malgré cela, l’attaquant a pu accéder aux ressources, parfois de manière durable.
