@@ -1,5 +1,5 @@
 ---
-title: "MFA ne veut pas dire sécurité : comprendre pourquoi l’authentification ne suffit plus"
+title: "MFA ne veut pas dire sécurité : comprendre pourquoi l’authentification MFA ne suffit plus"
 date: 2025-12-16 18:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, mfa, entra-id, identité, phishing, token]
@@ -21,7 +21,7 @@ scope:
 Dire que la MFA ne suffit plus surprend encore beaucoup d'entreprises.  
 Dans Microsoft Entra ID comme dans Microsoft 365, l’authentification multifacteur est devenue un prérequis quasi systématique. Elle est souvent présentée comme une garantie de sécurité, parfois même comme une ligne d’arrivée.
 
-Dans les faits, une part significative des incidents récents raconte une autre histoire : les comptes compromis avaient une MFA active, les utilisateurs validaient leurs demandes et les journaux montraient des authentifications conformes. Pourtant, l’attaquant a pu accéder aux ressources.
+Dans les faits, une part significative des incidents récents raconte une autre histoire : les comptes compromis ont une MFA active, les utilisateurs valident leurs demandes et les journaux montrent des authentifications conformes. Pourtant, l’attaquant a pu accéder aux ressources.
 
 La MFA reste indispensable, oui, mais elle ne protège qu’une partie du de la chaîne d'authentification.
 
