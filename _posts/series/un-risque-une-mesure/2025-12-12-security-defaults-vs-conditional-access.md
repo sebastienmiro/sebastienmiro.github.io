@@ -7,7 +7,7 @@ categories: [identite, entra-id]
 readtime: true
 comments: true
 cover-img: "assets/img/banners/banner4.png"
-thumbnail-img: "assets/img/posts/1765400671089.jpg"
+thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-12-security-defaults-vs-conditional-access.png"
 series: R1M
 series_order: 010
 sidebar: true
