@@ -43,7 +43,7 @@ Cette série ne s’adresse pas :
 - à des lecteurs cherchant des recettes rapides ou des configurations universelles.
 
 Le Conditional Access Framework v4 est un cadre structurant. Il suppose un minimum de maturité, de compréhension des impacts, et d’acceptation du compromis entre sécurité et usage. Les articles qui suivent assument pleinement ce positionnement.
-
+![Conditional Access Framework dans Entra ID](/assets/img/posts/series/conditional-access-framework/000/conditional-access-framework-preview.png)
 ## Parcours de lecture
 
 La série est structurée pour refléter **l’ordre réel de compréhension et de déploiement du framework**, en particulier dans des environnements Microsoft et MSP.
@@ -121,8 +121,6 @@ Chaque aspect du Conditional Access Framework sera ensuite décortiqué séparé
 
 ## Conclusion
 
-Le Conditional Access Framework v4 est un très bon framework. Il est pragmatique, largement éprouvé et adapté aux réalités des environnements Microsoft et MSP. Sa reconnaissance dans la communauté tient à sa clarté, à sa sobriété et à sa capacité à structurer l’accès conditionnel sans le surcharger.
+Le Conditional Access Framework v4 est un très bon framework. Il est pragmatique, largement éprouvé et adapté aux réalités des environnements Microsoft et plus particulièrement chez les MSP. Sa reconnaissance dans la communauté tient à sa clarté, à sa sobriété et à sa capacité à structurer l’accès conditionnel sans le surcharger.
 
 Il ne remplace ni une stratégie Zero Trust complète, ni une gouvernance des identités, ni des capacités de détection et de réponse. Il fournit en revanche un cadre solide pour utiliser l’accès conditionnel à sa juste place.
-
-Bien utilisé, il fait exactement ce pour quoi il a été conçu.
