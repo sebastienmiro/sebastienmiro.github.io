@@ -71,7 +71,7 @@ Dans un scénario AiTM, l’attaquant ne cherche pas à imiter grossièrement un
 
 La différence est invisible pour l’utilisateur : le token est intercepté avant d’arriver à son navigateur et peut ensuite être rejoué depuis un autre environnement. Du point de vue d’Entra ID, tout est conforme. La MFA n’a pas été contournée. Elle a été utilisée exactement comme prévu.
 
-🔗 Article Microsoft TechCommunity : ![TechCommunity - AiTM](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/defeating-adversary-in-the-middle-phishing-attacks/1751777)
+🔗 Article Microsoft TechCommunity : [TechCommunity - AiTM](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/defeating-adversary-in-the-middle-phishing-attacks/1751777)
 
 ### Vol de session et rejeu de tokens
 
@@ -100,13 +100,13 @@ Un token intercepté via un reverse proxy ou extrait d’un poste compromis perd
 
 ![Token Protection – Session Control](https://learn.microsoft.com/fr-fr/entra/identity/conditional-access/media/concept-token-protection/complete-policy-components-session.png)
 
-🔗 Documentation Microsoft :  ![Microsoft Learn - Token Protection](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-token-protection)
+🔗 Documentation Microsoft :  [Microsoft Learn - Token Protection](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-token-protection)
 
 ## MFA résistante au phishing : une différence fonctionnelle
 
 Toutes les MFA ne se valent pas. Microsoft distingue explicitement les méthodes résistantes au phishing, capables de bloquer techniquement les attaques AiTM. Ces méthodes lient la validation MFA à l’origine réelle de la requête et empêchent toute validation via un proxy intermédiaire.
 
-🔗 Documentation Microsoft : ![Microsoft Learn - Phishing Resistant MFA](https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-phishing-resistant)
+🔗 Documentation Microsoft : [Microsoft Learn - Phishing Resistant MFA](https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-phishing-resistant)
 
 ## Gouvernance et réalité opérationnelle
 
