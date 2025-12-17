@@ -101,7 +101,7 @@ La Conditional Access Baseline proposée par Joey Verlinden est un exemple d’a
 
 ![Joey Verlinden - Conditional Access Baseline](/assets/img/posts/joeyv-conditional-access-baseline.png)
 
-🔗 Référence :  ![Github - Conditional Access Baseline by j0eyv](https://github.com/j0eyv/ConditionalAccessBaseline)
+🔗 [Github - Conditional Access Baseline by j0eyv](https://github.com/j0eyv/ConditionalAccessBaseline)
 
 ## Tester fait partie de la sécurité
 
