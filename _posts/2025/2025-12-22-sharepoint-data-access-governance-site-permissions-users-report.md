@@ -35,7 +35,7 @@ La page du rapport affiche, pour chaque utilisateur, la liste des sites accessib
   - **CSV** pour l’utilisateur sélectionné (**limite 1 million de sites**). 
   - **Detailed report** : **ZIP** contenant les CSV **pour tous les utilisateurs** du rapport (depuis la page du rapport ou la liste des rapports).
 
-![Exemple de rapport visualisable](assets/img/posts/2025/12/2025-12-22-user-permission-report.png)
+![Exemple de rapport visualisable](/assets/img/posts/2025/12/2025-12-22-user-permission-report.png)
 
 ## Données fournies (aperçu des colonnes)
 
