@@ -28,12 +28,12 @@ Le framework prend le problème à la racine. Avant de parler de conditions, de 
 
 Les personas ne sont donc pas une abstraction théorique. Elles sont le mécanisme qui permet d’éviter que toutes les identités soient traitées de la même manière.
 
-## Une persona n’est pas un rôle, ni un groupe métier
+## un persona n’est pas un rôle, ni un groupe métier
 
 Il est important de lever un malentendu fréquent.  
-Dans le cadre du Conditional Access Framework, une persona n’est ni un rôle RH, ni un groupe fonctionnel, ni une classification métier.
+Dans le cadre du Conditional Access Framework, un persona n’est ni un rôle RH, ni un groupe fonctionnel, ni une classification métier.
 
-Une persona représente un **profil de risque et d’exposition**, du point de vue de l’identité et de l’accès. Elle répond à des questions très concrètes :  
+un persona représente un **profil de risque et d’exposition**, du point de vue de l’identité et de l’accès. Elle répond à des questions très concrètes :  
 - Quel est l’impact si ce compte est compromis ?  
 - À quelle fréquence est-il utilisé ?  
 - Dans quels contextes techniques s’authentifie-t-il ?  
@@ -64,7 +64,7 @@ Cela se traduit par des exigences plus fortes, des restrictions supplémentaires
 
 ### Comptes de secours (break-glass)
 
-Le framework traite explicitement les comptes de secours comme une persona à part entière. Ce n’est pas un détail.
+Le framework traite explicitement les comptes de secours comme un persona à part entière. Ce n’est pas un détail.
 
 Ces comptes n’existent pas pour être sécurisés comme les autres, mais pour **rester accessibles dans des scénarios de défaillance**. Leur traitement nécessite donc un équilibre délicat entre disponibilité et exposition.
 
@@ -80,7 +80,7 @@ Le framework les considère comme une catégorie distincte, avec des règles et 
 
 Enfin, le framework isole les identités externes, invités et partenaires. Leur niveau de confiance initial est par définition plus faible, et leur contexte d’authentification plus difficile à maîtriser.
 
-Les regrouper dans une persona dédiée permet d’appliquer des politiques cohérentes, sans affaiblir les règles destinées aux utilisateurs internes, ni créer des exceptions permanentes.
+Les regrouper dans un persona dédiée permet d’appliquer des politiques cohérentes, sans affaiblir les règles destinées aux utilisateurs internes, ni créer des exceptions permanentes.
 
 ## Pourquoi les personas conditionnent l’ordre de déploiement
 
