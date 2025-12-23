@@ -190,7 +190,7 @@ L’authentification se déroule normalement, les applications fonctionnent comm
 
 En revanche, lorsque certains prérequis ne sont pas respectés, l’utilisateur peut se retrouver face à un message d’erreur après une authentification pourtant réussie. L’accès est alors bloqué non pas parce que l’identité est invalide, mais parce que le contexte d’utilisation du token ne répond pas aux exigences de sécurité.
 
-Ce comportement est souvent le premier symptôme visible d’un écart structurel : des postes enrôlés selon des méthodes anciennes, des applications reposant sur des flux non pris en charge, ou des usages qui n’avaient jamais été remis en question tant qu’ils continuaient à fonctionner.
+Ce comportement est souvent le premier symptôme visible d’un écart structurel : des postes pas ou mal enrôlés, des applications reposant sur des flux non pris en charge, ou des usages qui n’avaient jamais été remis en question tant qu’ils continuaient à fonctionner.
 
 Token Protection ne crée pas ces problèmes.  
 Elle les rend visibles.
