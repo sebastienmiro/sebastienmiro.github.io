@@ -28,12 +28,12 @@ Le framework prend le problème à la racine. Avant de parler de conditions, de 
 
 Les personas ne sont donc pas une abstraction théorique. Elles sont le mécanisme qui permet d’éviter que toutes les identités soient traitées de la même manière.
 
-## un persona n’est pas un rôle, ni un groupe métier
+## Un persona n’est pas un rôle, ni un groupe métier
 
 Il est important de lever un malentendu fréquent.  
 Dans le cadre du Conditional Access Framework, un persona n’est ni un rôle RH, ni un groupe fonctionnel, ni une classification métier.
 
-un persona représente un **profil de risque et d’exposition**, du point de vue de l’identité et de l’accès. Elle répond à des questions très concrètes :  
+un persona représente un **profil de risque et d’exposition**, du point de vue de l’identité et de l’accès. Il répond à des questions très concrètes :  
 - Quel est l’impact si ce compte est compromis ?  
 - À quelle fréquence est-il utilisé ?  
 - Dans quels contextes techniques s’authentifie-t-il ?  
