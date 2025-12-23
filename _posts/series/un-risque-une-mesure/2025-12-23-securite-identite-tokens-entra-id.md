@@ -138,18 +138,35 @@ Certaines applications ou modules PowerShell restent explicitement non supporté
 
 ## Activation du contrôle de session
 
-L’activation se fait dans la section **Session** des contrôles d’accès.
+Token Protection s’active au niveau des **Session controls** dans une politique d’accès conditionnel.  
+Ce choix n’est pas anodin : on ne parle pas ici d’un simple critère d’accès, mais d’une contrainte appliquée à la **manière dont les sessions sont établies et maintenues**.
 
 ![Activation de Token Protection](/assets/img/posts/2025/12/23/complete-policy-components-session.png)
 
-Le message affiché est explicite : seules les combinaisons appareil / application supportées fonctionneront. Les autres seront bloquées.
+Le message affiché par Entra ID est volontairement explicite : seules les combinaisons appareil / application capables de garantir des tokens liés au contexte seront autorisées. Toutes les autres seront bloquées, même si l’authentification a réussi.
+
+C’est un point clé à comprendre.  
+Token Protection ne remet pas en cause l’identité de l’utilisateur, ni la validité de la MFA. Elle remet en cause la **capacité technique de l’environnement à garantir qu’un token ne pourra pas être rejoué ailleurs**.
+
+Autrement dit, l’accès peut être refusé non pas parce que l’utilisateur n’est pas légitime, mais parce que le contexte d’exécution ne l’est pas.
 
 ## Déploiement progressif et mode Report-only
 
-Microsoft recommande explicitement un déploiement progressif.  
-Le mode Report-only permet d’identifier les incompatibilités avant toute mise en production.
+Microsoft insiste sur ce point, et à juste titre : Token Protection ne doit pas être activée brutalement.  
+Le mode **Report-only** permet d’observer le comportement réel du tenant sans impacter les utilisateurs.
 
-Cette phase est essentielle pour observer les impacts réels sans perturber les utilisateurs.
+Cette phase met rapidement en évidence plusieurs réalités :
+- des applications qui reposent sur des flux non compatibles,
+- des postes mal gérés,
+- des usages qui fonctionnaient jusque-là par tolérance implicite.
+
+C’est précisément ce que permet le Report-only : transformer une décision de sécurité potentiellement disruptive en **exercice d’observation et d’analyse**.
+
+Dans la pratique, cette étape est indispensable pour distinguer :
+- ce qui relève d’un simple ajustement de périmètre,
+- de ce qui nécessitera une remise à plat plus profonde des usages ou des méthodes d’enrôlement.
+
+Passer directement en mode *enforced*, sans cette phase, revient à découvrir ces écarts en production — côté utilisateur, et rarement au bon moment.
 
 ## Lecture des journaux : comprendre ce qui est bloqué
 
