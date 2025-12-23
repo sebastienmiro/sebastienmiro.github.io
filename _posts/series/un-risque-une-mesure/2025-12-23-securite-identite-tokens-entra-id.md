@@ -1,5 +1,5 @@
 ---
-title: "MFA ≠ sécurité : comprendre pourquoi les tokens sont devenus le vrai point de rupture"
+title: "Sécurité de l’identité : le rôle critique des tokens d’accès dans Microsoft Entra ID"
 date: 2025-12-23 05:30:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, identité, mfa, tokens, token-protection, sécurité]
@@ -19,7 +19,7 @@ scope:
   - Token Protection
 ---
 
-Pendant longtemps, l’authentification multifacteur a été présentée comme une ligne d’arrivée.  
+> Pendant longtemps, l’authentification multifacteur a été présentée comme une ligne d’arrivée.  
 Une fois activée, le sujet semblait clos. Dans de nombreux environnements Microsoft 365, cette logique a conduit à une forme de confort opérationnel : la MFA était en place, donc le risque était supposément maîtrisé.
 
 Sur le terrain, les incidents racontent une autre histoire.  
