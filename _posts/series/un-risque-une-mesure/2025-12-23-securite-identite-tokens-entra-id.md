@@ -11,7 +11,7 @@ thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-23-mfa-secu
 series: R1M
 series_order: 030
 sidebar: true
-level: concepts
+level: déploiement
 scope:
   - Entra ID
   - MFA
