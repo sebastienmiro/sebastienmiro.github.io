@@ -11,7 +11,7 @@ thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-23-mfa-secu
 series: R1M
 series_order: 030
 sidebar: true
-level: concepts
+level: déploiement
 scope:
   - Entra ID
   - MFA
@@ -21,7 +21,7 @@ scope:
 
 > L’authentification multifacteur est aujourd’hui un prérequis dans Microsoft Entra ID et Microsoft 365. Dans beaucoup d'environnements, son déploiement marque implicitement la fin du sujet “authentification” : le contrôle est en place, le risque est considéré comme couvert.
 
-Les incidents récents montrent pourtant un décalage persistant entre cette perception et la réalité opérationnelle. Les comptes compromis disposent fréquemment d’une MFA active, les validations sont légitimes et les journaux d’authentification ne révèlent aucune anomalie évidente.
+Les incidents de sécurité montrent souvent un décalage persistant entre cette perception et la réalité opérationnelle. Les comptes compromis disposent fréquemment d’une MFA active, les validations sont légitimes et les journaux d’authentification ne révèlent aucune anomalie évidente.
 
 La MFA fonctionne.
 Mais elle ne couvre pas l’ensemble du problème que l’on cherche à résoudre.
@@ -190,7 +190,7 @@ L’authentification se déroule normalement, les applications fonctionnent comm
 
 En revanche, lorsque certains prérequis ne sont pas respectés, l’utilisateur peut se retrouver face à un message d’erreur après une authentification pourtant réussie. L’accès est alors bloqué non pas parce que l’identité est invalide, mais parce que le contexte d’utilisation du token ne répond pas aux exigences de sécurité.
 
-Ce comportement est souvent le premier symptôme visible d’un écart structurel : des postes enrôlés selon des méthodes anciennes, des applications reposant sur des flux non pris en charge, ou des usages qui n’avaient jamais été remis en question tant qu’ils continuaient à fonctionner.
+Ce comportement est souvent le premier symptôme visible d’un écart structurel : des postes pas ou mal enrôlés, des applications reposant sur des flux non pris en charge, ou des usages qui n’avaient jamais été remis en question tant qu’ils continuaient à fonctionner.
 
 Token Protection ne crée pas ces problèmes.  
 Elle les rend visibles.
