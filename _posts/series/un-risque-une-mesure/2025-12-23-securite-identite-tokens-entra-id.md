@@ -166,20 +166,36 @@ Les codes de statut associés permettent d’identifier précisément la cause d
 
 Ces informations permettent d’orienter rapidement les actions correctives.
 
-## Ce que voit réellement l’utilisateur
+## Ce que perçoit réellement l’utilisateur
 
-Dans les scénarios compatibles, l’utilisateur ne perçoit aucun changement.  
-Dans les autres cas, un message d’erreur apparaît après l’authentification, indiquant que l’accès est bloqué par une exigence de sécurité.
+Dans les scénarios pleinement compatibles, l’activation de Token Protection est invisible pour l’utilisateur.  
+L’authentification se déroule normalement, les applications fonctionnent comme avant, et aucun changement notable n’est perçu.
 
-Ce comportement est souvent le premier signal visible d’une dette technique jusque-là ignorée.
+En revanche, lorsque certains prérequis ne sont pas respectés, l’utilisateur peut se retrouver face à un message d’erreur après une authentification pourtant réussie. L’accès est alors bloqué non pas parce que l’identité est invalide, mais parce que le contexte d’utilisation du token ne répond pas aux exigences de sécurité.
 
-## Gouvernance implicite de Token Protection
+Ce comportement est souvent le premier symptôme visible d’un écart structurel : des postes enrôlés selon des méthodes anciennes, des applications reposant sur des flux non pris en charge, ou des usages qui n’avaient jamais été remis en question tant qu’ils continuaient à fonctionner.
 
-Token Protection agit comme un révélateur.  
-Elle met en évidence les écarts entre le modèle de sécurité souhaité et la réalité des postes, des applications et des usages.
+Token Protection ne crée pas ces problèmes.  
+Elle les rend visibles.
 
-Elle ne remplace ni la MFA, ni l’accès conditionnel, ni la supervision.  
-Elle s’inscrit dans une approche où la valeur du token devient le véritable périmètre de défense.
+## Token Protection comme révélateur de cohérence
+
+Token Protection agit moins comme une barrière supplémentaire que comme un révélateur de cohérence globale.  
+Elle met en lumière les différences entre le modèle de sécurité attendu — appareils modernes, authentification intégrée, flux supportés — et la réalité opérationnelle du tenant.
+
+Des postes Windows correctement enregistrés, des applications compatibles et des méthodes d’authentification modernes passent sans friction.  
+À l’inverse, les environnements hétérogènes, les déploiements historiques ou les usages reposant sur des compromis anciens se retrouvent immédiatement exposés.
+
+Dans ce sens, Token Protection force une clarification : soit l’environnement est aligné avec le modèle de sécurité moderne d’Entra ID, soit il ne l’est pas, et l’accès est remis en question.
+
+## Une brique, pas une solution autonome
+
+Token Protection ne remplace ni la MFA, ni l’accès conditionnel, ni la supervision des connexions.  
+Elle s’inscrit dans une approche plus large où la sécurité de l’identité ne se limite plus à l’authentification initiale, mais s’étend à la manière dont les tokens sont émis, utilisés et réutilisables dans le temps.
+
+Le véritable changement de paradigme est là :  
+le périmètre de défense ne se situe plus uniquement au moment du login, mais dans la capacité à contrôler la valeur opérationnelle d’un token après son émission.
+
 
 ---
 
