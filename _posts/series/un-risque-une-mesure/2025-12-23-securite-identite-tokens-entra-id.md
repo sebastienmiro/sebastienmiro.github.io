@@ -42,13 +42,16 @@ Autrement dit, elle ne protège ni la session, ni la durée d’accès, ni la r�
 ## Pourquoi le mot de passe n’est plus la cible principale
 
 Avec la généralisation de la MFA, le modèle d’attaque a évolué.  
-L’objectif n’est plus nécessairement de se connecter « à la place » de l’utilisateur, mais d’obtenir **un élément d’authentification réutilisable**.
+L’objectif n’est plus, dans la majorité des cas, de se connecter durablement *à la place* de l’utilisateur, mais d’obtenir ce qui permet de **se passer de l’authentification par la suite**.
 
-Dans la pratique, cela prend plusieurs formes :  
-un access token, un refresh token, ou une session persistante dans un navigateur.
+Dans des architectures modernes comme Microsoft Entra ID, l’authentification n’est qu’une étape initiale. Une fois validée, le service émet des artefacts — des jetons — qui matérialisent la confiance accordée. Ce sont ces jetons qui sont ensuite présentés aux applications, aux API et aux services pour accéder aux ressources, parfois pendant plusieurs heures, parfois plus longtemps encore.
 
-Une fois ce token obtenu, la MFA ne sera plus sollicitée tant que le jeton reste valide.  
-C’est cette réalité qui explique l’efficacité des attaques modernes malgré la MFA.
+Pour un attaquant, cette confiance peut prendre différentes formes. Il peut s’agir d’un *access token* permettant d’appeler directement une API, d’un *refresh token* capable de générer de nouveaux jetons sans repasser par une authentification interactive, ou, côté utilisateur, d’une session persistante conservée dans le navigateur et reposant elle-même sur ces jetons.
+
+Dans tous les cas, le principe est identique : **l’accès ne repose plus sur l’authentification, mais sur la validité d’un jeton déjà émis**.
+
+Une fois cet élément récupéré, la MFA ne sera plus sollicitée tant que le jeton reste valide. Elle a rempli son rôle au moment du login, mais elle n’intervient plus dans la suite du parcours d’accès.  
+C’est cette dissociation entre authentification et usage des tokens qui explique pourquoi des attaques peuvent réussir alors même que la MFA est activée et correctement configurée.
 
 ## Attaques Adversary-in-the-Middle : quand la MFA fonctionne… et l’attaque aussi
 
@@ -64,15 +67,18 @@ La MFA n’a pas été contournée. Elle a été satisfaite.
 
 Le problème n’est donc pas l’authentification, mais **la capacité du token à être rejoué hors de son contexte d’émission**.
 
-## Sessions, cookies et tokens : le vrai périmètre d’attaque
+## Sessions, cookies et tokens : le périmètre réel de l’attaque
 
-Le même raisonnement s’applique aux vols de session.  
-Une fois la session établie, un malware, une extension de navigateur malveillante ou un accès local à la machine peuvent permettre d’extraire des tokens encore valides.
+Le raisonnement ne s’arrête pas à l’authentification initiale.  
+Une fois la session établie, l’accès aux ressources repose essentiellement sur des éléments persistants stockés côté client : cookies de session, access tokens, refresh tokens, selon les applications et les flux utilisés.
 
-Ces tokens peuvent ensuite être rejoués depuis un autre environnement, sans déclencher de nouvelle MFA.  
-Dans ce modèle, la compromission ne dépend plus de l’utilisateur, mais de la valeur du token lui-même.
+Dans ce contexte, un attaquant n’a pas nécessairement besoin de rejouer une authentification complète. Un poste compromis, une extension de navigateur malveillante ou un accès local à la machine peuvent suffire à extraire des artefacts encore valides, sans interaction avec l’utilisateur et sans déclencher de nouveau contrôle MFA.
 
-C’est précisément ce point qui a conduit Microsoft à revoir la manière dont les sessions sont protégées.
+Ces éléments peuvent ensuite être présentés depuis un autre environnement, tant qu’ils respectent leurs critères de validité. Du point de vue d’Entra ID, il ne s’agit pas d’une nouvelle connexion, mais de la continuité d’une session déjà autorisée.
+
+La compromission ne dépend alors plus de l’identité de l’utilisateur ni de sa capacité à résister à une tentative de phishing. Elle repose sur la valeur intrinsèque du token et sur sa capacité à être utilisé hors de son contexte d’émission.
+
+C’est précisément cette réalité opérationnelle qui a conduit Microsoft à faire évoluer son modèle de protection des sessions, en introduisant des mécanismes visant à limiter la réutilisabilité des tokens et à remettre le contexte au centre des décisions d’accès.
 
 ## Token Protection : lier le jeton à son contexte
 
