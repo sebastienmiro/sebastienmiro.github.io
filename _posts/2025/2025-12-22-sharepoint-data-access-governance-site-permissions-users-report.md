@@ -11,7 +11,12 @@ thumbnail-img: "assets/img/posts/2025/12/2025-12-22-sharepoint-data-access-gover
 featured: true
 featured_reason: "Astuce de la semaine."
 sidebar: true
-
+level: Administrateur
+scope:
+  - Sharepoint
+  - Gouvernance
+  - Données
+platform: Microsoft Sharepoint Admin Center
 ---
 
 > Un rapport **instantané** qui dresse, pour un ou plusieurs utilisateurs, la **liste des sites** auxquels ils ont accès et **l’étendue** de cet accès (site complet vs quelques éléments, accès direct vs via des groupes). Disponible dans **SharePoint Admin Center** au sein de **Data access governance (DAG)**, avec SharePoint Advanced Management / SharePoint Premium. [1](https://learn.microsoft.com/en-us/sharepoint/data-access-governance-site-permissions-users-report)
@@ -43,8 +48,8 @@ Le CSV agrège des métadonnées de site (ID, nom, URL, modèle, admin primaire)
 
 ## Pré‑requis & disponibilité
 
-- **Licences** : licence **Microsoft 365 / Office 365** (E1/E3/E5/A5) **et** soit **au moins une licence Copilot** (qui donne accès aux fonctionnalités SharePoint Advanced Management nécessaires), soit la **licence SharePoint Advanced Management** en achat autonome.   
-- **Déploiement** : la fonctionnalité « permissions par utilisateur » est annoncée en **Message Center** (Roadmap ID 492621) et déployée entre **mi‑décembre 2025 → mi‑janvier 2026** au niveau mondial. 
+- **Licences** : licence *Microsoft 365 / Office 365* (E1/E3/E5/A5) **et** soit *au moins une licence Copilot* (qui donne accès aux fonctionnalités SharePoint Advanced Management nécessaires), soit la *licence SharePoint Advanced Management* en achat autonome.   
+- **Déploiement** : la fonctionnalité « permissions par utilisateur » est annoncée dans le Message Center (Roadmap ID 492621) et déployée entre *mi‑décembre 2025 → mi‑janvier 2026* au niveau mondial. 
 
 ## Mon regard de RSSI : où ce rapport apporte du **ROI** immédiat
 
