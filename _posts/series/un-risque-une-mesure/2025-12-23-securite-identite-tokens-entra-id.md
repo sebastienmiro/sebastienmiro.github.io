@@ -181,12 +181,12 @@ Elle les rend visibles.
 ## Token Protection comme révélateur de cohérence
 
 Token Protection agit moins comme une barrière supplémentaire que comme un révélateur de cohérence globale.  
-Elle met en lumière les différences entre le modèle de sécurité attendu — appareils modernes, authentification intégrée, flux supportés — et la réalité opérationnelle du tenant.
+Elle met en lumière les différences entre le modèle de sécurité attendu — appareils à jour, authentification intégrée, flux supportés — et la réalité opérationnelle du tenant.
 
 Des postes Windows correctement enregistrés, des applications compatibles et des méthodes d’authentification modernes passent sans friction.  
-À l’inverse, les environnements hétérogènes, les déploiements historiques ou les usages reposant sur des compromis anciens se retrouvent immédiatement exposés.
+À l’inverse, les environnements hétérogènes, les déploiements historiques ou les usages reposant sur des compromis se retrouvent immédiatement exposés.
 
-Dans ce sens, Token Protection force une clarification : soit l’environnement est aligné avec le modèle de sécurité moderne d’Entra ID, soit il ne l’est pas, et l’accès est remis en question.
+En ce sens, Token Protection force une clarification : soit l’environnement est aligné avec le modèle de sécurité  d’Entra ID, soit il ne l’est pas, et l’accès est remis en question.
 
 ## Une brique, pas une solution autonome
 
@@ -195,7 +195,6 @@ Elle s’inscrit dans une approche plus large où la sécurité de l’identité
 
 Le véritable changement de paradigme est là :  
 le périmètre de défense ne se situe plus uniquement au moment du login, mais dans la capacité à contrôler la valeur opérationnelle d’un token après son émission.
-
 
 ---
 
