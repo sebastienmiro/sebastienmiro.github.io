@@ -21,7 +21,7 @@ scope:
 
 > L’authentification multifacteur est aujourd’hui un prérequis dans Microsoft Entra ID et Microsoft 365. Dans beaucoup d'environnements, son déploiement marque implicitement la fin du sujet “authentification” : le contrôle est en place, le risque est considéré comme couvert.
 
-Les incidents récents montrent pourtant un décalage persistant entre cette perception et la réalité opérationnelle. Les comptes compromis disposent fréquemment d’une MFA active, les validations sont légitimes et les journaux d’authentification ne révèlent aucune anomalie évidente.
+Les incidents de sécurité montrent souvent un décalage persistant entre cette perception et la réalité opérationnelle. Les comptes compromis disposent fréquemment d’une MFA active, les validations sont légitimes et les journaux d’authentification ne révèlent aucune anomalie évidente.
 
 La MFA fonctionne.
 Mais elle ne couvre pas l’ensemble du problème que l’on cherche à résoudre.
