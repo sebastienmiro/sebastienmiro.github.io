@@ -39,6 +39,18 @@
   font-weight: 600;
 }
 
+.sidebar-series-link {
+  margin-top: 0.5rem;
+  font-size: 0.95em;
+}
+.sidebar-series-link a {
+  text-decoration: none;
+}
+.sidebar-series-link a:hover {
+  text-decoration: underline;
+}
+
+
 /* =========================
    Sidebar — Author micro-card
    ========================= */
