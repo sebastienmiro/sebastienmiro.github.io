@@ -19,14 +19,12 @@ scope:
   - Token Protection
 ---
 
-> Pendant longtemps, l’authentification multifacteur a été présentée comme une ligne d’arrivée.  
-Une fois activée, le sujet semblait clos. Dans de nombreux environnements Microsoft 365, cette logique a conduit à une forme de confort opérationnel : la MFA était en place, donc le risque était supposément maîtrisé.
+> L’authentification multifacteur est aujourd’hui un prérequis dans Microsoft Entra ID et Microsoft 365. Dans beaucoup d'environnements, son déploiement marque implicitement la fin du sujet “authentification” : le contrôle est en place, le risque est considéré comme couvert.
 
-Sur le terrain, les incidents racontent une autre histoire.  
-Les comptes compromis disposaient bien d’une MFA active. Les utilisateurs validaient leurs demandes. Les paramètres semblaient cohérents. Et pourtant, l’attaquant était bien là.
+Les incidents récents montrent pourtant un décalage persistant entre cette perception et la réalité opérationnelle. Les comptes compromis disposent fréquemment d’une MFA active, les validations sont légitimes et les journaux d’authentification ne révèlent aucune anomalie évidente.
 
-Le problème n’est pas la MFA.  
-Le problème est ce qu’on attend d’elle.
+La MFA fonctionne.
+Mais elle ne couvre pas l’ensemble du problème que l’on cherche à résoudre.
 
 ## Ce que fait réellement une authentification MFA
 
