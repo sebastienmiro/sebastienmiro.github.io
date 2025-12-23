@@ -5,22 +5,64 @@
 <aside class="sidebar">
 
   <!-- Série -->
-  {% if page.series != nil %}
-<div class="sidebar-block">
-  <h5>Série {{ page.series }}</h5>
-  <ul>
-    {% assign posts_in_series = site.posts
-       | where: "series", page.series
-       | sort: "series_order" %}
+  {% if page.series and page.series != "" %}
+  {% assign series_key = page.series %}
+  {% assign series_meta = site.data.series[series_key] %}
 
-    {% for post in posts_in_series %}
-      <li {% if post.url == page.url %}class="active"{% endif %}>
-        <a href="{{ post.url }}">{{ post.title }}</a>
-      </li>
-    {% endfor %}
-  </ul>
-</div>
+  {% assign posts_in_series = site.posts
+    | where: "series", series_key
+    | sort: "series_order" %}
+
+  {% assign series_size = posts_in_series | size %}
+
+  {%- comment -%} Trouver l’index de l’article courant dans la série {%- endcomment -%}
+  {% assign current_index = nil %}
+  {% for p in posts_in_series %}
+    {% if p.url == page.url %}
+      {% assign current_index = forloop.index0 %}
+    {% endif %}
+  {% endfor %}
+
+  {%- comment -%} Fallback si non trouvé (ne devrait pas arriver) {%- endcomment -%}
+  {% if current_index == nil %}
+    {% assign current_index = 0 %}
+  {% endif %}
+
+  {%- comment -%} Calcul fenêtre [current-2 ; current+2] avec clamp {%- endcomment -%}
+  {% assign start_index = current_index | minus: 2 %}
+  {% if start_index < 0 %}
+    {% assign start_index = 0 %}
+  {% endif %}
+
+  {% assign end_index = current_index | plus: 2 %}
+  {% assign last_index = series_size | minus: 1 %}
+  {% if end_index > last_index %}
+    {% assign end_index = last_index %}
+  {% endif %}
+
+  {% assign window_count = end_index | minus: start_index | plus: 1 %}
+
+  <div class="sidebar-block">
+    <h5>Série{% if series_meta and series_meta.label %} {{ series_meta.label }}{% else %} {{ series_key }}{% endif %}</h5>
+
+    <ul>
+      {% for post in posts_in_series offset:start_index limit:window_count %}
+        <li {% if post.url == page.url %}class="active"{% endif %}>
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if series_meta and series_meta.url %}
+      <div class="sidebar-series-link">
+        <a href="{{ series_meta.url | relative_url }}">
+          Voir la série{% if series_meta.label %} « {{ series_meta.label }} »{% endif %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
 {% endif %}
+
 
   <!-- Métadonnées -->
   <div class="sidebar-block">
