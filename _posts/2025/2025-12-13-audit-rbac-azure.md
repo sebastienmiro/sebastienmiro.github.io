@@ -8,7 +8,7 @@ readtime: true
 comments: true
 cover-img: "assets/img/banners/banner-ops.png"
 thumbnail-img: "assets/img/posts/2025/12/13/azure-audit.png"
-featured: true
+featured: false
 featured_reason: "Astuce de la semaine."
 sidebar: true
 

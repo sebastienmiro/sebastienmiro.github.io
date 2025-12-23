@@ -1,6 +1,6 @@
 ---
 title: "MFA ≠ sécurité : comprendre pourquoi les tokens sont devenus le vrai point de rupture"
-date: 2025-12-23 11:30:00 +01:00
+date: 2025-12-23 05:30:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, identité, mfa, tokens, token-protection, sécurité]
 categories: [identite, entra-id]
