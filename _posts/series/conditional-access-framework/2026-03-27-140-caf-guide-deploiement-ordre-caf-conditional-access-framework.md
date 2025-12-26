@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Ordre réel d’activation des politiques"
-date: 2026-10-08 09:00:00 +01:00
+date: 2026-03-27 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, methodologie, deploiement]
 categories: [identite, entra-id]

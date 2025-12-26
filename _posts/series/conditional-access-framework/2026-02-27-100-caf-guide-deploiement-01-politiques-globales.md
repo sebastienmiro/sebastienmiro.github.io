@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — CA000 à CA006 : le socle global"
-date: 2026-10-08 09:00:00 +01:00
+date: 2026-02-27 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, deploiement, baseline]
 categories: [identite, entra-id]

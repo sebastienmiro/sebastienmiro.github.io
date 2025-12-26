@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Utilisateurs standards : périmètre et protections réelles"
-date: 2026-10-08 09:00:00 +01:00
+date: 2026-01-09 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, mfa, device-trust]
 categories: [identite, entra-id]
