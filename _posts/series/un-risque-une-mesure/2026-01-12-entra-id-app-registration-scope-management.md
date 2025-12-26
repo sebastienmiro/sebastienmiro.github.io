@@ -7,7 +7,7 @@ categories: [identite, entra-id]
 readtime: true
 comments: true
 cover-img: "assets/img/banners/banner4.png"
-thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2026-01-12-entra-id-app-registration-scope-management.png"
+thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2026-01-13-entra-id-app-registration-scope-management.png"
 series: R1M
 series_order: 060
 sidebar: true
