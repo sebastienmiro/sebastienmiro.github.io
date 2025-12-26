@@ -14,13 +14,6 @@ gem "wdm", "~> 0.1", :platforms => [:mingw, :x64_mingw, :mswin]
   
 gemspec
 
-# frozen_string_literal: true
-
-source "https://rubygems.org"
-
-gemspec
-
-
 gem "tzinfo", "~> 2.0"
 gem "tzinfo-data", "~> 1.2022"
 gem 'wdm', '>= 0.1.0'
