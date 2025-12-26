@@ -18,24 +18,22 @@ scope:
 platform: Microsoft Entra ID
 ---
 
-Microsoft introduit deux évolutions structurantes dans Entra ID : l’arrivée des passkeys synchronisées et des mécanismes de récupération de compte à haut niveau d’assurance.
+Microsoft introduit dans Entra ID des évolutions autour de l’usage des passkeys et des mécanismes de récupération de compte à haut niveau d’assurance.
 
-Les passkeys visent à renforcer la résistance aux attaques de type phishing et adversary-in-the-middle, en réduisant la dépendance aux secrets réutilisables.  
-La récupération de compte, quant à elle, est repensée pour maintenir un niveau d’assurance élevé même lorsque le facteur principal est perdu ou compromis.
+Ces annonces portent à la fois sur la phase d’authentification et sur les scénarios de restauration d’accès lorsque le facteur principal est indisponible ou compromis.  
+Elles s’inscrivent dans la continuité des travaux engagés ces dernières années pour renforcer la protection des identités face aux attaques de type phishing et adversary-in-the-middle.
 
-Pris ensemble, ces deux chantiers traduisent un changement clair de posture : sécuriser l’accès ne consiste plus uniquement à contrôler l’authentification initiale, mais à garantir la sécurité **sur toute la durée de vie de l’accès**.
+L’intérêt de ces évolutions tient moins à la technologie elle-même qu’aux questions qu’elles posent sur la gestion de l’accès dans la durée.
 
 ---
 
 ## Ce que Microsoft annonce
 
-L’article présente deux évolutions majeures :
+L’article présente deux axes principaux.
 
-- l’usage de **passkeys synchronisées**, destinées à renforcer la résistance au phishing et aux attaques de type AiTM ;
-- des mécanismes de **récupération de compte** conçus pour maintenir un niveau d’assurance élevé, même en cas de perte ou de compromission du facteur d’authentification principal.
+D’une part, l’usage de passkeys synchronisées vise à réduire la dépendance aux secrets réutilisables et à améliorer la résistance aux attaques ciblant l’authentification.
 
-Le message est clair : sécuriser l’authentification ne suffit plus.  
-Il faut désormais sécuriser **tout le cycle de vie de l’accès**.
+D’autre part, les mécanismes de récupération de compte sont conçus pour maintenir un niveau d’assurance cohérent avec celui exigé lors de l’accès initial, y compris dans des scénarios dégradés.
 
 ---
 
@@ -45,23 +43,23 @@ Depuis plusieurs années, les efforts de sécurisation se concentrent principale
 La généralisation de la MFA, la suppression de l’authentification basique et le durcissement des politiques d’accès conditionnel ont permis de réduire significativement les compromissions initiales.
 
 Ces mesures restent indispensables.  
-Mais elles répondent essentiellement à une seule question : **qui peut entrer**.
+Mais elles répondent principalement à la question de l’accès initial.
 
 Or, dans les incidents réels, la compromission ne se joue pas toujours à ce moment-là.  
 Elle intervient souvent après l’authentification, lorsque l’attaquant exploite une session persistante, un jeton encore valide, ou un mécanisme de récupération insuffisamment contrôlé.
 
-Les passkeys améliorent la première ligne de défense.  
+Les passkeys contribuent à renforcer la phase d’authentification initiale.
 Elles ne suffisent pas, à elles seules, à traiter la question de la continuité d’accès.
-
 
 ---
 
-## La récupération de compte comme moment critique du cycle de vie du compte
+## La récupération de compte comme moment critique du cycle de vie de l'identité
 
-La récupération de compte est un moment particulier dans la vie d’une identité.  
-L’utilisateur est bloqué, la pression opérationnelle est forte, et l’objectif prioritaire devient le rétablissement rapide de l’accès.
+La récupération de compte constitue une étape particulière du cycle de vie d’une identité.  
+Elle intervient dans un contexte où l’accès est interrompu et où l’objectif opérationnel est le rétablissement du service.
 
-C’est précisément dans ce contexte que les contrôles sont le plus souvent affaiblis, parfois de manière durable.  
+Dans ce cadre, les contrôles appliqués lors de l’authentification initiale ne sont pas toujours reconduits avec le même niveau d’exigence.
+
 Dans de nombreux environnements, la récupération repose encore sur :
 - des facteurs secondaires peu robustes,
 - des processus manuels faiblement tracés,
@@ -75,7 +73,7 @@ Ce changement est moins visible que l’introduction de la MFA, mais il est stru
 
 ## Ce que cela implique en environnement réel
 
-Ces évolutions obligent les équipes IT et sécurité à reconsidérer la récupération de compte comme un contrôle de sécurité à part entière, et non comme un simple sujet de support.
+Ces évolutions amènent à examiner la place de la récupération de compte dans les dispositifs de contrôle existants, au même titre que les mécanismes d’accès conditionnel ou de gestion des sessions.
 
 Dans beaucoup d'entreprises, les processus existent, mais restent implicites, peu documentés ou rarement testés.  
 Le niveau d’assurance exigé lors de la récupération est parfois inférieur à celui de l’accès initial, y compris pour des comptes sensibles ou à privilèges.
@@ -88,14 +86,10 @@ L’introduction de scénarios de récupération à forte assurance impose de re
 
 ## Identité : du point d’entrée au cycle de vie complet
 
-Ce que révèle cette annonce, au-delà de la technologie, c’est un déplacement du centre de gravité :
+Ces annonces illustrent une évolution progressive des mécanismes de protection de l’identité, qui ne se limite plus à l’authentification initiale.
 
-- de l’authentification vers la **gestion de l’accès dans le temps** ;
-- du facteur vers le **contexte** ;
-- du contrôle ponctuel vers la **cohérence globale**.
-
-L’identité n’est plus seulement le point d’entrée du système d’information.  
-Elle en devient le fil conducteur, y compris lorsque l’accès est interrompu, dégradé ou reconstruit.
+La gestion de l’accès dans le temps, y compris lors des scénarios de récupération, devient un élément à part entière des architectures d’identité.  
+Les passkeys constituent un levier parmi d’autres, mais la cohérence globale du cycle de vie de l'utilisateur et de ses accès reste déterminante.
 
 ---
 
