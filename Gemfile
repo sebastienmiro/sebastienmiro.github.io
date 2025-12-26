@@ -7,25 +7,16 @@ source "https://rubygems.org"
 platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem "tzinfo", ">= 1", "< 3"
   gem "tzinfo-data"
+  gem "wdm", "~> 0.1"
 end
 
-# Performance-booster for watching directories on Windows
-gem "wdm", "~> 0.1", :platforms => [:mingw, :x64_mingw, :mswin]
-  
+# Charge le thème Beautiful Jekyll via son gemspec
 gemspec
 
-# frozen_string_literal: true
+# On force la version de Jekyll pour éviter Jekyll 4 et http_parser.rb
+gem "jekyll", "~> 3.9.3"
 
-source "https://rubygems.org"
-
-gemspec
-
-
-gem "tzinfo", "~> 2.0"
-gem "tzinfo-data", "~> 1.2022"
-gem 'wdm', '>= 0.1.0'
-gem "webrick", "~> 1.7"
+# Plugins Jekyll supplémentaires de TON site
 gem "jekyll-seo-tag"
 gem "jekyll-news-sitemap"
-gem "jekyll-sitemap"
 gem "jekyll-minifier"
