@@ -11,7 +11,7 @@ thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2026-01-06-entra-id
 series: R1M
 series_order: 050
 sidebar: true
-level: concepts
+level: sécurité opérationnelle
 scope:
   - Entra ID
   - Comptes à privilèges
@@ -19,131 +19,86 @@ scope:
   - Sécurité de l’identité
 ---
 
-💡 **Un compte à privilèges n’est pas un utilisateur “un peu plus important”.  
-C’est un point de bascule.**
+> 💡 **Un compte à privilèges n’est pas un utilisateur disposant de droits supplémentaires.  
+Il constitue un point de contrôle direct sur le système d’information.**
 
-Dans beaucoup de tenants Microsoft Entra ID, la sécurité des comptes administrateurs est traitée comme une déclinaison renforcée de celle des utilisateurs standards. Même MFA, mêmes politiques d’accès conditionnel, parfois quelques exclusions ou contraintes supplémentaires. Sur le papier, la logique semble cohérente.
+Dans de nombreux environnements Microsoft Entra ID, les comptes à privilèges sont protégés en appliquant une version renforcée des mécanismes utilisés pour les utilisateurs standards. L’authentification multifacteur est activée, des politiques d’accès conditionnel sont en place et, parfois, des restrictions supplémentaires sont ajoutées.
 
-Dans la réalité opérationnelle, c’est précisément cette approche qui pose problème.
+Cette approche peut sembler cohérente d’un point de vue technique. Elle ne l’est pas d’un point de vue du risque.
 
-Un compte à privilèges ne s’inscrit pas dans le même modèle de risque. Il ne donne pas simplement accès à des données, mais à la **capacité de modifier le système lui-même**. C’est une différence de nature, pas de degré.
+Un compte à privilèges ne se distingue pas par la quantité de données auxquelles il donne accès, mais par sa capacité à modifier les règles, les identités et les mécanismes de sécurité du système lui-même. Il s’agit d’une différence structurelle, et non d’un simple niveau de sensibilité supérieur.
 
-## Le risque : considérer un compte admin comme un utilisateur ordinaire
+## Le risque : considérer le privilège comme un attribut permanent
 
-Le risque principal n’est pas l’absence de MFA ou de contrôles. Il est conceptuel.  
-Appliquer aux comptes à privilèges les mêmes mécanismes que pour les utilisateurs standards revient à ignorer leur impact systémique.
+Le risque principal ne réside pas dans l’absence de contrôles de sécurité, mais dans une hypothèse implicite largement répandue : celle selon laquelle le privilège serait une propriété durable de l’identité.
 
-Lorsqu’un compte utilisateur est compromis, les dégâts sont souvent contenus : accès aux données, messagerie, fichiers, éventuellement des mouvements latéraux limités.  
-Lorsqu’un compte à privilèges est compromis, c’est l’architecture de confiance qui bascule. L’attaquant n’a plus besoin de persistance sophistiquée : il peut la créer.
+Dans ce modèle, un compte est administrateur en permanence, indépendamment de la tâche réalisée, du contexte d’accès ou de la durée réelle du besoin. Le privilège devient un état, et non une capacité temporaire.
 
-Et pourtant, sur le terrain, on observe régulièrement :
-- des comptes admin permanents,
-- des sessions longues,
-- des MFA identiques à celles des utilisateurs standards,
-- des exclusions “temporaires” devenues structurelles.
+Lorsqu’un compte utilisateur est compromis, l’impact est généralement limité à l’accès à des données ou à des services spécifiques. Lorsqu’un compte à privilèges est compromis, l’attaquant peut modifier les mécanismes de sécurité, créer de nouveaux accès, altérer les journaux ou désactiver les contrôles existants.
 
-La surface d’attaque est connue. Elle est simplement tolérée.
+La compromission ne concerne alors plus un accès, mais la gouvernance même du système.
 
-## Pourquoi les comptes à privilèges sont une cible à part
+## Distinguer les usages : comptes opérationnels et comptes brise-glace
 
-Un compte à privilèges concentre plusieurs caractéristiques qui le rendent particulièrement attractif.
+Un modèle réaliste de gestion des comptes à privilèges repose sur une distinction claire entre les usages.
 
-Il est rarement utilisé, ce qui réduit la capacité à détecter un usage anormal.  
-Il permet des actions à fort impact, souvent sans validation intermédiaire.  
-Il donne accès à des plans de contrôle : identités, rôles, journaux, politiques de sécurité.
+Les comptes administrateurs opérationnels sont destinés aux actions courantes d’administration : gestion des identités, configuration des politiques, administration des services. Ils doivent être strictement séparés des comptes utilisateurs standards et ne disposer d’aucun privilège permanent. Leur activation doit être limitée dans le temps et conditionnée à un besoin opérationnel identifié.
 
-Dans beaucoup d’incidents, l’objectif final n’est pas l’accès aux données, mais l’accès à **ce type de compte**. Une fois obtenu, le reste devient trivial.
+Les comptes dits « brise-glace » (break-glass) répondent à une logique différente. Ils existent pour faire face à des scénarios exceptionnels, tels qu’une perte d’accès généralisée, une défaillance de l’authentification ou un incident majeur affectant les mécanismes de sécurité. Ces comptes ne doivent jamais être utilisés dans le cadre de l’exploitation quotidienne.
 
-Ce n’est pas un hasard si les frameworks d’attaque modernes — y compris ceux observés dans les campagnes AiTM — visent explicitement les rôles à privilèges.
+Ils doivent être présents en nombre très limité, protégés par des mécanismes d’authentification particulièrement robustes, exclus des usages ordinaires et surveillés de manière spécifique. Leur existence relève de la continuité d’activité, non de l’administration courante.
 
-## MFA, accès conditionnel… et faux sentiment de robustesse
+Confondre ces deux catégories conduit à banaliser des comptes qui devraient rester exceptionnels.
 
-La MFA est souvent présentée comme le rempart ultime pour les comptes administrateurs. Dans Entra ID, elle est parfois imposée de manière plus stricte, avec des exclusions réduites et des contrôles renforcés.
+## Limiter structurellement le nombre de comptes à fort privilège
 
-Mais le problème est le même que pour les utilisateurs standards, amplifié par l’impact du rôle.
+Microsoft recommande de limiter strictement le nombre de comptes disposant du rôle Global Administrator, généralement à moins de cinq comptes par tenant. Cette recommandation ne relève pas d’une contrainte arbitraire, mais d’un principe de réduction mécanique du risque.
 
-Une fois l’authentification validée, la session existe.  
-Une fois la session établie, les jetons circulent.  
-Et tant que le contexte n’est pas remis en question, l’accès reste légitime.
+Chaque compte Global Administrator supplémentaire augmente la surface d’attaque, complexifie les contrôles et rend plus difficile la supervision des usages. Un tenant n’a pas besoin d’un grand nombre de comptes sur-privilégiés, mais de privilèges activables, contrôlés et temporaires.
 
-Un compte admin avec une session persistante est un **risque silencieux**.  
-Il n’a pas besoin d’être utilisé activement pour être dangereux.
+La multiplication des comptes à privilèges est souvent le symptôme d’un modèle d’administration mal structuré, et non d’un besoin réel.
 
-## Le piège des comptes administrateurs permanents
+## Authentification forte et accès conditionnel : des prérequis, pas une réponse complète
 
-Dans beaucoup d’organisations, les administrateurs utilisent quotidiennement des comptes à privilèges pour des tâches ordinaires : navigation dans le portail, lecture de logs, tests, diagnostics.
+Les comptes à privilèges doivent bénéficier des mécanismes d’authentification et de contrôle les plus stricts disponibles dans Entra ID. Cela inclut notamment l’usage d’une authentification multifacteur résistante au phishing, l’utilisation de clés FIDO2 lorsque cela est possible, ainsi que des politiques d’accès conditionnel dédiées.
 
-Ce modèle est confortable. Il est aussi structurellement risqué.
+Ces contrôles sont nécessaires, mais ils ne suffisent pas à eux seuls. Une fois l’authentification réussie, une session est établie et des jetons sont émis. Tant que le rôle reste actif et que la session est valide, l’accès demeure possible, indépendamment de l’évolution du contexte.
 
-Un compte permanent :
-- accumule des sessions,
-- multiplie les contextes d’accès,
-- augmente la probabilité d’exposition à un poste compromis ou à un navigateur vulnérable.
+Un compte administrateur disposant d’un rôle permanent et de sessions longues constitue un risque structurel, même lorsque l’authentification est robuste.
 
-La question n’est pas de savoir *si* ce compte sera exposé un jour, mais *quand*.
+## La mesure centrale : dissocier identité et privilège dans le temps
 
-## La mesure : désolidariser identité et privilège
+La réponse structurante consiste à ne plus considérer le privilège comme une propriété permanente de l’identité, mais comme une capacité temporaire, activée uniquement lorsqu’elle est nécessaire.
 
-La réponse ne consiste pas à “mieux protéger” les comptes à privilèges.  
-Elle consiste à **ne plus considérer le privilège comme une propriété permanente de l’identité**.
+Dans Entra ID, cette approche est mise en œuvre via Privileged Identity Management (PIM), fonctionnalité disponible avec des licences Microsoft Entra ID P2 ou Microsoft 365 E5. En l’absence de ces licences, il n’est pas possible d’appliquer un modèle de gestion des privilèges réellement dynamique.
 
-C’est exactement la logique portée par Privileged Identity Management (PIM) dans Entra ID.
+Avec PIM, les rôles à privilèges ne sont plus attribués de manière permanente. Leur activation est volontaire, limitée dans le temps, conditionnée à des contrôles explicites et systématiquement journalisée. Le privilège n’est plus un état durable associé à l’identité, mais un événement ponctuel, observable et révocable.
 
-Le privilège devient :
-- temporaire,
-- conditionnel,
-- traçable,
-- révocable.
+Ce modèle réduit mécaniquement la surface d’attaque et la durée d’exposition. Un privilège temporaire n’est exploitable que pendant une fenêtre limitée, tandis qu’un privilège permanent reste attaquable en continu, indépendamment du contexte réel d’utilisation.
 
-Un administrateur n’est plus admin par défaut.  
-Il le devient pour une durée limitée, dans un contexte précis, avec des contrôles explicites.
+## Discipline d’usage et gouvernance opérationnelle
 
-## Pourquoi le “Just-In-Time” change réellement le modèle
+Les outils fournis par Entra ID ne suffisent pas sans un modèle d’usage cohérent. Un dispositif efficace repose sur la séparation stricte des comptes utilisateurs et des comptes administrateurs, des activations de rôles courtes et justifiées, ainsi que sur des environnements d’administration durcis.
 
-Le JIT n’est pas qu’un confort ou une bonne pratique. C’est un changement de posture défensive.
+Les politiques d’accès conditionnel doivent être spécifiques aux rôles à privilèges et conçues en tenant compte des scénarios de session, de localisation et de posture des postes utilisés. La journalisation doit être exploitée, et non simplement activée.
 
-Il réduit mécaniquement :
-- la surface d’attaque,
-- la durée d’exposition,
-- l’impact d’une session compromise.
+L’administration ne doit pas être conçue pour être confortable. Elle doit être conçue pour être maîtrisée.
 
-Un attaquant qui récupère un token admin hors fenêtre d’activation n’a rien.  
-Un attaquant qui arrive après la révocation du rôle ne peut rien faire.
+## Observations issues du terrain
 
-Le privilège cesse d’être un état. Il devient un événement.
+Dans de nombreux incidents, l’accès initial n’est pas administratif. Il le devient ensuite, sans recours à des techniques complexes, simplement parce que le modèle d’administration autorise l’existence de privilèges permanents prêts à être exploités.
 
-## Gouvernance et discipline opérationnelle
+Les mécanismes sont présents, mais la confiance implicite associée aux rôles à privilèges n’est pas remise en question.
 
-Mettre en place PIM ou des politiques spécifiques aux comptes à privilèges ne suffit pas si le modèle d’usage ne change pas.
+## Conclusion
 
-Cela implique :
-- des comptes utilisateurs distincts des comptes admin,
-- des sessions courtes,
-- des postes dédiés ou durcis,
-- une journalisation réellement exploitée,
-- et surtout, une discipline assumée.
+Un compte à privilèges n’est pas un utilisateur standard disposant de droits supplémentaires. Il constitue un point de contrôle du système d’information.
 
-Les comptes à privilèges ne doivent pas être pratiques.  
-Ils doivent être **désagréables à utiliser**. C’est un signal sain.
+Le protéger de la même manière que les autres comptes, même avec des contrôles renforcés, ne suffit pas. Le privilège doit être temporaire, conditionnel et révocable, et son usage doit être considéré comme un événement exceptionnel.
 
-## Ce qu’on observe dans les incidents réels
+Tant que l’accès au plan d’administration n’est pas traité comme un risque à part entière, la sécurité de l’identité demeure fragile.
 
-Dans beaucoup d’incidents post-compromission, l’accès initial n’est pas admin.  
-Il le devient ensuite, souvent sans exploit complexe, simplement parce que le modèle l’autorise.
-
-Des comptes à privilèges existent, sont permanents, et sont déjà prêts à être utilisés.
-
-Le problème n’est pas l’outil.  
-Le problème est l’hypothèse de confiance implicite.
-
-## À retenir
-
-Un compte à privilèges n’est pas un utilisateur comme les autres.  
-Le protéger “un peu plus” ne suffit pas.  
-Le privilège doit être temporaire, conditionnel et révocable.  
-La sécurité de l’identité s’effondre dès que le contrôle du plan d’administration est perdu.
-
-Dans le prochain épisode, nous aborderons un autre angle souvent sous-estimé : **les accès applicatifs et les identités non humaines**, là où l’automatisation devient parfois un angle mort.
+Dans le prochain article, nous aborderons les identités applicatives et non humaines, pour lesquelles la notion de privilège permanent pose d’autres défis structurels.
 
 ---
 Ressources externes

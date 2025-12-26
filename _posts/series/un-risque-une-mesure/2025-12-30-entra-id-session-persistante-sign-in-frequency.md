@@ -11,7 +11,7 @@ thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2025-12-30-entra-id
 series: R1M
 series_order: 040
 sidebar: true
-level: concepts
+level: sécurité opérationnelle
 scope:
   - Entra ID
   - Sessions
@@ -34,7 +34,7 @@ L’erreur est subtile, mais répandue. Une fois l’utilisateur authentifié, o
 
 Dans le cloud, ce raisonnement ne tient plus.
 
-Une session est une **délégation de confiance dans le temps**. Elle autorise l’accès sans redemander de preuve, parfois pendant des heures, parfois pendant des jours. Tant que le token est valide, Entra ID ne remet pas en question la légitimité de l’accès, même si le contexte a radicalement changé.
+Une session est une **délégation de confiance dans le temps**. Elle autorise l’accès sans redemander de preuve, parfois pendant des heures, parfois pendant des jours. Tant que le token est valide, Entra ID ne remet pas automatiquement en question la légitimité de l’accès, sauf mécanismes explicitement configurés.
 
 C’est là que se loge le risque.
 
@@ -94,10 +94,9 @@ Il ne remet pas en cause chaque requête. Il impose une borne temporelle claire 
 Mal utilisé, il dégrade l’expérience utilisateur.  
 Bien ciblé, il réduit drastiquement la fenêtre d’exploitation d’une session compromise.
 
-![Conditional Access – Sign-in Frequency](/assets/img/posts/2025/12/conditional-access-signin-frequency.png)
+![Conditional Access – Sign-in Frequency](/assets/img/posts/series/un-risque-une-mesure/2025-12-30-conditional-access-session.png)
 
-🔗 Documentation Microsoft :  
-https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-session-controls
+🔗 [Documentation Microsoft associée - Sign-In frequency](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-session#sign-in-frequency)
 
 ## Continuous Access Evaluation : remettre le contexte au centre
 
@@ -107,10 +106,9 @@ Changement de mot de passe, révocation de compte, modification de privilèges, 
 
 Ce n’est plus une sécurité statique. C’est une sécurité réactive.
 
-![Continuous Access Evaluation overview](/assets/img/posts/2025/12/continuous-access-evaluation.png)
+![Continuous Access Evaluation overview](/assets/img/posts/series/un-risque-une-mesure/2025-12-30continuous-access-evaluation-session-controls.png)
 
-🔗 Documentation Microsoft :  
-https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-continuous-access-evaluation
+🔗 [Documentation Microsoft associée - Continuous Access Evaluation](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-session#customize-continuous-access-evaluation)
 
 ## Les limites à connaître
 
@@ -133,11 +131,29 @@ Dans de nombreux tenants, Token Protection est activée, la MFA est robuste, mai
 
 La sécurité est solide à l’entrée. Elle est laxiste dans la durée.
 
+## Ce qu’il faut vérifier concrètement dans son tenant
+
+Sans même modifier une configuration, quelques questions simples permettent d’évaluer le risque :
+
+- Quelle est la **Sign-in Frequency effective** sur les applications critiques (M365, Azure Portal, Exchange) ?
+- Continuous Access Evaluation est-elle **réellement supportée** par les clients utilisés ?
+- Existe-t-il des **exceptions CA** qui contournent les contrôles de session ?
+- Combien de temps une session reste-t-elle valide après :
+  - un changement de mot de passe ?
+  - une élévation de privilèges ?
+  - un signal de risque élevé ?
+
+Si ces réponses ne sont pas claires, le risque est probablement sous-estimé.
+
 ## À retenir
 
-Une session est une délégation de confiance.  
-Une confiance sans limite temporelle devient un risque.  
-La MFA protège l’entrée, pas la durée.  
-La sécurité de l’identité se joue aussi après l’authentification.  
+Une session persistante n’est ni une faiblesse technique, ni une mauvaise pratique en soi.  
+C’est un **choix implicite**, souvent hérité des paramètres par défaut.
 
-Dans le prochain épisode, nous aborderons un autre angle souvent négligé : **les comptes à privilèges**, et pourquoi les protéger “comme les autres” est rarement suffisant.
+Dans Entra ID, la majorité des compromis ne résultent pas d’une authentification faible, mais d’une **confiance prolongée non remise en question**. MFA, Token Protection et accès conditionnel renforcent l’entrée. Ils ne gouvernent pas, à eux seuls, la durée de validité d’un accès.
+
+Sign-in Frequency et Continuous Access Evaluation ne sont pas des options de confort ou des réglages secondaires. Ce sont des **mécanismes de maîtrise du risque dans le temps**.
+
+Tant que la durée de confiance n’est pas explicitement définie, documentée et revue, la sécurité de l’identité reste incomplète.
+
+Dans le prochain épisode, nous aborderons les comptes à privilèges, où la durée de confiance devient encore plus critique.
