@@ -57,7 +57,7 @@ Les sections suivantes décrivent ces personas, non pas comme une classification
 
 ### Utilisateurs standards
 
-C’est le persona le plus large, et souvent celle par laquelle on commence… parfois trop vite.
+C’est le persona le plus large, et souvent celui par lequel on commence… parfois trop vite.
 
 Elle regroupe les comptes utilisés au quotidien pour accéder à la messagerie, aux applications métiers, aux outils collaboratifs. Le framework considère ces identités comme **exposées par nature**, mais avec un impact *généralement* contenu en cas de compromission.
 
@@ -79,7 +79,7 @@ Les politiques associées aux utilisateurs standards constituent une base. Elles
 
 Le framework isole très clairement les comptes à privilèges des utilisateurs standards, et ce n’est pas négociable.
 
-Un compte administrateur n’est pas simplement un utilisateur “avec plus de droits”. C’est une **surface d’attaque critique**, avec un impact critique en cas de compromission. Le framework en tire une conséquence directe : ces comptes doivent sortir du flux normal d’authentification.
+Un compte administrateur n’est pas simplement un utilisateur “avec plus de droits”. C’est une **surface d’attaque critique**, avec des conséquences majeures en cas de compromission. Le framework en tire une conséquence directe : ces comptes doivent sortir du flux normal d’authentification.
 
 Cela se traduit par :
 - des exigences d’authentification plus fortes ;
