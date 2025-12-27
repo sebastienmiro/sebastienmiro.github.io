@@ -2,7 +2,7 @@
 title: "Identités applicatives et non humaines : le piège du privilège permanent"
 date: 2026-01-13 11:00:00 +01:00
 layout: post
-tags: [series:un-risque-une-mesure, entra-id, workload-identity, app-registrations, conditional-access]
+tags: [series:un-risque-une-mesure, entra-id, workload-identity, app-registrations, conditional-access, governance]
 categories: [identite, entra-id]
 readtime: true
 comments: true
@@ -19,73 +19,78 @@ scope:
   - Sécurité de l’identité
 ---
 
-> 💡 Dans Microsoft Entra ID, les applications et automatisations accèdent aux ressources à l’aide d’identités non humaines, telles que des app registrations, des comptes de service ou des identités de charge de travail. Ces identités sont utilisées pour permettre l’intégration entre services et l’exécution de traitements automatisés.
+> 💡 **Contexte :** Dans Microsoft Entra ID, les applications et automatisations accèdent aux ressources à l’aide d’identités non humaines (App Registrations, Managed Identities, Service Principals). Contrairement aux utilisateurs dont le cycle de vie est lié au contrat de travail, ces identités techniques s'accumulent souvent sans date de fin.
 
 ![Entra ID - App management overview](/assets/img/posts/series/un-risque-une-mesure/2026-01-13-app-management-overview.png)
 
-L’authentification de ces identités repose sur des moyens techniques — secrets, certificats ou identités managées — dont la durée de validité est nécessairement limitée. En revanche, les **permissions applicatives** accordées à ces identités ne sont, par défaut, ni temporaires ni soumises à un mécanisme systématique de remise en question dans le temps.
+L’authentification de ces identités repose sur des moyens techniques — secrets ou certificats — dont la durée de validité est nécessairement limitée. En revanche, les **permissions applicatives** accordées à ces identités ne sont, par défaut, ni temporaires ni soumises à un mécanisme systématique de remise en question dans le temps.
 
 Cette dissociation entre la durée de vie du moyen d’authentification et celle du privilège constitue un risque spécifique, distinct de celui des identités humaines.
 
-## Le risque : des permissions applicatives sans temporalité fonctionnelle
+## Le risque : Des permissions applicatives sans temporalité
 
-Une identité applicative ne s’authentifie pas de manière interactive et n’est pas soumise aux contrôles associés aux utilisateurs humains, tels que l’authentification multifacteur ou les signaux liés au poste ou à la localisation.
+Une identité applicative ne s’authentifie pas de manière interactive et n’est pas soumise aux contrôles classiques (MFA, localisation).
 
-Les secrets et certificats utilisés pour l’authentification disposent d’une date d’expiration et peuvent être renouvelés ou révoqués. Toutefois, les permissions applicatives associées à l’identité restent valides tant qu’elles ne sont pas explicitement retirées, indépendamment de la rotation des moyens d’authentification.
+Le piège réside dans la confusion entre sécurité de l'authentification et sécurité de l'autorisation :
+* **Authentification :** Les secrets expirent et sont renouvelés.
+* **Autorisation :** Les permissions (`User.ReadWrite.All`, `Files.Read.All`) restent valides tant qu’elles ne sont pas explicitement retirées.
 
-Dans de nombreux environnements, ces permissions sont attribuées lors de la création de l’application et conservées sans échéance fonctionnelle explicite, même lorsque l’usage réel de l’application évolue ou disparaît.
+Dans de nombreux environnements, ces permissions sont attribuées à la création de l’application et conservées indéfiniment. Le privilège devient alors durable par conception, sans lien direct avec un besoin opérationnel courant. Une compromission ultérieure de l'identité permettrait d'exploiter l'ensemble des permissions accumulées depuis des années.
 
-Le privilège devient alors durable par conception, sans lien direct avec un besoin opérationnel courant.
+### Détection et contrôles limités
+De plus, l’absence d’interaction humaine limite l’efficacité de la détection comportementale. Les accès applicatifs légitimes et malveillants peuvent présenter des caractéristiques similaires (gros volumes de données, horaires 24/7), rendant l’analyse des journaux complexe.
 
-## Permissions applicatives et portée excessive
+## L'illusion de sécurité : Identités Managées et Rotation
 
-Les permissions de type *Application permissions* permettent à une application d’accéder directement aux ressources, sans contexte utilisateur. Elles sont souvent choisies pour simplifier l’implémentation ou couvrir des cas d’usage larges dès la conception.
+On pourrait penser que l'usage des **Identités Managées (Managed Identities)** résout le problème. C'est en partie vrai pour l'authentification : la plateforme gère la rotation des secrets, éliminant le risque de fuite de mot de passe dans le code.
 
-Une fois accordées, ces permissions sont rarement réduites. Leur maintien est justifié par le bon fonctionnement de l’application, sans analyse régulière de la portée réellement nécessaire.
+Toutefois, les identités managées ne résolvent pas le problème de fond. Les permissions applicatives accordées à ces identités restent durables tant qu’elles ne sont pas explicitement révoquées. La réduction du risque d’authentification ne doit pas être confondue avec la gouvernance du privilège. Une identité managée avec trop de droits reste une identité dangereuse.
 
-Dans ce modèle, la rotation des secrets ou des certificats améliore la sécurité de l’authentification, mais ne réduit pas l’étendue ni la durée du privilège. Une compromission ultérieure permettrait toujours d’exploiter l’ensemble des permissions accordées.
+## La Mesure : Implémenter une Gouvernance du Cycle de Vie (ALM)
 
-## Détection et contrôles limités sur les accès non humains
+Pour contrer ce risque de persistance, il ne suffit pas de "durcir" la configuration technique. Il faut instaurer un processus récurrent de validation des privilèges. Voici la démarche structurée pour reprendre le contrôle.
 
-L’absence d’interaction humaine limite l’applicabilité de nombreux mécanismes de détection utilisés pour les comptes utilisateurs. Les accès applicatifs légitimes et malveillants peuvent présenter des caractéristiques similaires dans les journaux, rendant l’analyse comportementale plus complexe.
+### Niveau 1 : L'hygiène des Propriétaires (Owners)
+Aucune gouvernance n'est possible sans responsabilité (*Accountability*). La première étape consiste à auditer vos **Enterprise Applications**.
 
-Tant que les permissions applicatives restent valides, une identité compromise peut continuer à accéder aux ressources sans générer de signaux évidents de rupture de comportement, en particulier lorsque l’application est utilisée de manière régulière.
+* **Le problème :** Les applications créées par des administrateurs partis de l'entreprise deviennent "orphelines". Personne ne sait ce qu'elles font, donc personne n'ose les supprimer.
+* **L'action :** Imposer la présence d'au moins **deux propriétaires** (Owners) actifs sur chaque App Registration. Si une application n'a pas de propriétaire, elle est candidate à la désactivation.
 
-Le risque principal ne réside donc pas dans la durée de validité des secrets, mais dans la persistance du privilège associé à l’identité.
+### Niveau 2 : Access Reviews pour les Service Principals (La solution cible)
+C'est la mesure technique phare proposée par Microsoft Entra ID (requiert une licence *Workload Identities Premium*). Elle permet d'automatiser la recertification des accès.
 
-## La mesure : gouverner la durée et la portée des permissions applicatives
+**Le principe :**
+Plutôt que de faire un audit Excel annuel pénible, vous configurez une politique dans *Identity Governance* :
+1.  **Cible :** Tous les Service Principals ayant des rôles privilégiés (ex: Application Permissions sur Graph API).
+2.  **Réviseur :** Les propriétaires de l'application (Owners) ou, à défaut, un groupe de sécurité "Gouvernance".
+3.  **Fréquence :** Trimestrielle ou semestrielle.
+4.  **Action :** Si le propriétaire ne répond pas ou refuse l'accès, les permissions sont retirées ou le compte est désactivé.
 
-La réduction du risque passe par la mise en place d’un **cycle de vie explicite des permissions applicatives**, indépendant de celui des moyens d’authentification.
+**Pourquoi c'est efficace :**
+Cela déplace la charge de la preuve. Ce n'est plus à l'équipe Sécurité de prouver que l'application est dangereuse. C'est au propriétaire de l'application de signer numériquement qu'elle est toujours légitime.
 
-Cela implique notamment :
-- l’attribution de permissions strictement nécessaires à l’usage réel de l’application,
-- la justification documentée de chaque permission applicative accordée,
-- la revue périodique de ces permissions, indépendamment de la rotation des secrets,
-- la suppression des permissions devenues inutiles,
-- la suppression des identités applicatives obsolètes.
+### Niveau 3 : Le Moindre Privilège par le Partitionnement
+Pour les environnements matures, la mesure ultime est de réduire la portée des permissions via :
+* **Resource Specific Consent (RSC) :** L'application n'a accès qu'aux données d'une équipe Teams spécifique, pas à tout le tenant.
+* **Administrative Units :** Restreindre le champ d'action d'une identité applicative à uen partie de l'entreprise.
 
-Ces mesures relèvent principalement de la gouvernance et de l’exploitation, et non d’un mécanisme technique unique.
+## Défense en profondeur : Accès Conditionnel pour Workload Identities
 
-## Identités managées et réduction du risque d’authentification
+En complément de la gouvernance, l'accès conditionnel peut désormais s'appliquer aux identités de charge de travail (licences spécifiques requises).
 
-Lorsque cela est possible, l’utilisation d’identités managées permet de réduire le risque lié à la gestion des secrets et certificats. La plateforme prend en charge l’émission et la rotation des jetons, limitant ainsi l’exposition liée aux moyens d’authentification.
+Cela permet de restreindre l'usage d'un Service Principal à des adresses IP de confiance (ex: vos serveurs on-premise ou vos plages IP Azure). Bien que cela ne réduise pas les permissions, cela limite considérablement la capacité d'un attaquant à utiliser un token volé depuis l'extérieur de votre périmètre réseau.
 
-Toutefois, les identités managées ne résolvent pas le problème de fond. Les permissions applicatives accordées à ces identités restent durables tant qu’elles ne sont pas explicitement révoquées. La réduction du risque d’authentification ne doit pas être confondue avec la gouvernance du privilège.
+## Mise en œuvre pratique : Par où commencer ?
 
-## Accès conditionnel et identités de charge de travail
+Si vous devez prioriser vos actions demain matin :
 
-Certaines fonctionnalités permettent aujourd’hui d’appliquer des politiques d’accès conditionnel aux identités de charge de travail. Ces mécanismes offrent des possibilités de restriction supplémentaires selon des critères définis.
-
-Ils nécessitent toutefois des licences spécifiques (Microsoft Entra ID P1 ou P2 selon les scénarios) et ne couvrent pas l’ensemble des usages applicatifs existants. Ils doivent être considérés comme des mécanismes complémentaires, et non comme une réponse globale à la question de la temporalité des privilèges applicatifs.
-
-## Observations issues du terrain
-
-Dans de nombreux environnements, les identités applicatives sont nombreuses, parfois anciennes, et insuffisamment documentées. Certaines applications ne sont plus utilisées, tandis que leurs permissions restent actives.
-
-La rotation des secrets est souvent en place, mais la revue des permissions applicatives est inexistante ou informelle. Le risque persiste alors indépendamment des mécanismes d’authentification.
+1.  **Inventaire :** Listez toutes les applications ayant des *Application Permissions* (pas *Delegated*) sur Microsoft Graph.
+2.  **Focus Critique :** Isolez celles qui ont des droits globaux de type `*.All` (ex: `User.ReadWrite.All`, `Mail.ReadWrite`, `RoleManagement.ReadWrite`).
+3.  **Nettoyage immédiat :** Supprimez les secrets expirés depuis plus de 12 mois (signe d'abandon) et désactivez les Service Principals inactifs depuis 90 jours.
+4.  **Automatisation :** Activez une première Access Review en mode "Audit seul" (sans blocage automatique) pour éduquer les propriétaires d'applications.
 
 ## Conclusion
 
-Les identités applicatives et non humaines sont des composants indispensables des environnements Entra ID. Le risque principal associé à ces identités ne réside pas dans la durée de validité des secrets ou des jetons, mais dans la persistance des permissions applicatives accordées.
+Les identités applicatives sont des composants indispensables des environnements Microsoft 365. Le risque principal associé ne réside pas dans la durée de validité des secrets, mais dans la persistance des permissions.
 
-Tant que ces permissions ne sont pas traitées comme des capacités à gouverner dans le temps — avec une portée définie, une justification explicite et une revue régulière — elles constituent un point de fragilité durable dans la sécurité de l’identité.
+Tant que ces permissions ne sont pas traitées comme des capacités à gouverner dans le temps — avec une portée définie, une justification explicite et une revue régulière — elles constituent un point de fragilité durable (et souvent invisible) dans la sécurité de votre identité.

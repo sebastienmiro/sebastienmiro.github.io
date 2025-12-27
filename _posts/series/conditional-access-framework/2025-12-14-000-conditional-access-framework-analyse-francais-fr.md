@@ -53,16 +53,15 @@ La série est structurée pour refléter **l’ordre réel de compréhension et 
 | Ordre | Article | Lien |
 |------:|---------|------|
 | 0 | Conditional Access Framework v4 : cadre, portée et limites | *(vous êtes ici)* |
-| 1 | Les personas du Conditional Access Framework | ⏳ |
-| 2 | Le socle commun de politiques | ⏳ |
-| 3 | Utilisateurs standards : périmètre et protections réelles | ⏳ |
-| 4 | Comptes à privilèges : sortir du flux normal | ⏳ |
-| 5 | La session et les tokens : le cœur du framework v4 | ⏳ |
-| 6 | appareils : conformité, filtres et signaux | ⏳ |
-| 7 | Applications : réduire la surface d’exposition | ⏳ |
-| 8 | Ordre de déploiement du Conditional Access Framework | ⏳ |
-| 9 | Limites et angles morts du framework | ⏳ |
-| 10 | Guide de déploiement synthétique du framework | ⏳ |
+| 1 | Les personas du Conditional Access Framework | [📖 Lire l'article](https://blog.sebastienmiro.fr/identite/entra-id/010-caf-spoke-1-les-personas/) |
+| 2 | Le socle commun de politiques | ⏳02/01/2026 |
+| 3 | Utilisateurs standards : périmètre et protections réelles | ⏳ 09/01/2026 |
+| 4 | Comptes à privilèges : sortir du flux normal | ⏳ 16/01/2026|
+| 5 | La session et les tokens : le cœur du framework v4 | ⏳ 23/01/2026|
+| 6 | appareils : conformité, filtres et signaux | ⏳ 30/01/2026|
+| 7 | Applications : réduire la surface d’exposition | ⏳ 06/02/2026|
+| 8 | Guide de déploiement du Conditional Access Framework | ⏳ 13/02/2026|
+| 9 | Guide de déploiement détaillé par groupe de politiques | ⌚ |
 
 Chaque article correspond à un **bloc cohérent du framework**, et peut être lu indépendamment, même si l’ensemble prend tout son sens dans cet ordre.
 
