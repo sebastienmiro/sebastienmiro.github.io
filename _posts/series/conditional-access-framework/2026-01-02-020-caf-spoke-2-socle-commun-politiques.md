@@ -29,7 +29,7 @@ Le framework prend le problème dans l’autre sens. Avant de spécialiser les r
 
 ## Ce que couvre réellement le socle commun
 
-Le socle commun regroupe des politiques qui répondent à une même logique : réduire le bruit et supprimer les angles morts les plus grossiers avant toute différenciation des usages.
+Le socle commun regroupe des politiques qui répondent à une même logique : réduire le bruit et supprimer les angles morts les plus évidents avant toute différenciation des usages.
 
 On y retrouve notamment tout ce qui concerne l’élimination des méthodes d’authentification héritées, l’imposition d’un niveau minimal d’authentification moderne et la définition de conditions d’accès globales cohérentes. Ces règles ne cherchent pas à être fines. Elles cherchent à être **incontournables**.
 
@@ -37,7 +37,7 @@ Dans le framework, ce socle n’est pas pensé comme une “baseline de sécurit
 
 ## Pourquoi ce socle est souvent mal déployé
 
-Sur le terrain, ce socle est soit déployé trop tard, soit mal positionné.
+Sur le terrain, on retrouve souvent ce socle ajouté “à la fin”, quand les incidents commencent à s’accumuler.
 
 Dans certains environnements, on commence par créer des règles ciblées, puis on ajoute un socle global pour “compléter”. Le résultat est souvent contre-productif : les règles globales entrent en conflit avec des exceptions existantes, ce qui conduit à multiplier les exclusions et à fragiliser l’ensemble.
 
