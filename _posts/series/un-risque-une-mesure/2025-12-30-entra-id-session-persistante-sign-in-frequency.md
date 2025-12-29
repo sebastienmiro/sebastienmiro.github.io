@@ -103,7 +103,7 @@ Si l'un des événements suivants survient, la session peut être invalidée imm
 
 Ce n’est plus une sécurité statique basée sur un minuteur. C’est une sécurité réactive basée sur l'événement.
 
-![Continuous Access Evaluation overview](/assets/img/posts/series/un-risque-une-mesure/2025-12-30continuous-access-evaluation-session-controls.png)
+![Continuous Access Evaluation overview](/assets/img/posts/series/un-risque-une-mesure/2025-12-30-continuous-access-evaluation-session-controls.png)
 
 🔗 [Documentation Microsoft associée - Continuous Access Evaluation](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-session#customize-continuous-access-evaluation)
 
