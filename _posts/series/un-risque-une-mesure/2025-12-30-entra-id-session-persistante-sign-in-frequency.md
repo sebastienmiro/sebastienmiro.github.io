@@ -1,6 +1,6 @@
 ---
 title: "Sessions persistantes : gouverner l’accès après l’authentification (Sign-in Frequency & Continuous Access Evauation)"
-date: 2025-12-30 08:00:00 +01:00
+date: 2025-12-29 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, sessions, conditional-access, sign-in-frequency, cae]
 categories: [identite, entra-id]
