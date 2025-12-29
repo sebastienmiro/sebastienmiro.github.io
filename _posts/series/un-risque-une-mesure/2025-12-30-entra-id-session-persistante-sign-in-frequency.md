@@ -1,8 +1,8 @@
 ---
-title: "Sessions persistantes : Quand l’accès ne s’arrête jamais vraiment"
+title: "Sessions persistantes : gouverner l’accès après l’authentification (Sign-in Frequency & Continuous Access Evauation)"
 date: 2025-12-30 08:00:00 +01:00
 layout: post
-tags: [series:un-risque-une-mesure, entra-id, sessions, conditional-access, token-theft, cae]
+tags: [series:un-risque-une-mesure, entra-id, sessions, conditional-access, sign-in-frequency, cae]
 categories: [identite, entra-id]
 readtime: true
 comments: true
@@ -15,25 +15,27 @@ level: sécurité opérationnelle
 scope:
   - Entra ID
   - Conditional Access
-  - Token Theft
+  - Sessions
   - Continuous Access Evaluation
 ---
 
 > 💡 **Une session ouverte, c’est une confiance accordée. Le problème, ce n’est pas qu’on l’accorde… c’est qu’on oublie souvent de la reprendre.**
 
-Dans beaucoup d’environnements Microsoft Entra ID, l’authentification est solidement verrouillée. MFA généralisée, méthodes modernes (FIDO2), accès conditionnel en place, parfois même Token Protection activée. Sur le papier, tout est là.
+Lorsqu’un utilisateur s’authentifie dans Microsoft 365, l’accès aux ressources ne repose pas sur une vérification continue de son identité. Une fois l’authentification réussie, une session est établie et des jetons sont émis afin de permettre l’accès aux services sans nouvelle sollicitation explicite de l’utilisateur.
 
-Et pourtant, dans les incidents réels, l’attaquant n’a souvent rien à casser. Il n’a pas besoin de contourner la MFA, ni de rejouer un mot de passe. Il arrive après. Dans une session déjà ouverte. Encore valide. Toujours acceptée.
+Ce fonctionnement est volontaire. Il vise à assurer la continuité d’accès et l’expérience utilisateur. Il repose toutefois sur une hypothèse implicite : tant que la session est valide, l’accès reste légitime.
 
-La sécurité de l’identité ne s’arrête pas au login. Elle commence souvent là où on cesse de regarder.
+Dans les faits, cette hypothèse n’est pas toujours vérifiée. Le contexte dans lequel une session a été ouverte peut évoluer sans que l’accès soit remis en question : changement de poste, compromission ultérieure, élévation de privilèges ou signal de risque apparu après l’authentification.
+
+La sécurité de l’identité ne se limite donc pas au moment de l’authentification. Elle dépend également de la manière dont la validité des sessions est définie, contrôlée et remise en cause dans le temps.
 
 ![Session lifetime](/assets/img/posts/series/un-risque-une-mesure/2025-12-30-token-duration-timeline.png)
 
 ## Le risque : confondre authentification réussie et accès légitime durable
 
-L’erreur est subtile, mais répandue. Une fois l’utilisateur authentifié, on considère implicitement que l’accès reste légitime tant que le token n’a pas expiré. Cette logique est héritée de modèles anciens, pensés pour des réseaux fermés, des postes fixes et des menaces peu mobiles.
+L’erreur est subtile. Une fois l’utilisateur authentifié, l’accès est implicitement considéré comme légitime tant que les jetons associés à la session restent valides. Cette logique est héritée de modèles conçus pour des environnements plus statiques.
 
-Dans le cloud, ce raisonnement ne tient plus.
+Dans des environnements cloud fortement exposés, cette hypothèse devient insuffisante dès lors que le contexte peut évoluer après l’authentification.
 
 Une session est une **délégation de confiance dans le temps**. Elle autorise l’accès sans redemander de preuve, parfois pendant des heures, parfois pendant des jours (jusqu'à 90 jours par défaut pour le *Rolling Window* d'un Refresh Token). Tant que le token est valide, Entra ID ne remet pas automatiquement en question la légitimité de l’accès, sauf mécanismes explicitement configurés.
 
@@ -49,22 +51,20 @@ Le système ne se demande plus *qui* est l’utilisateur, mais uniquement *si le
 C’est un choix d’architecture pensé pour le SSO et la résilience. Et comme tout choix d’architecture, il a des conséquences. Derrière cette continuité d’accès se trouvent des mécanismes largement transparents pour l’utilisateur, comme les tokens de session et le Primary Refresh Token (PRT), qui permettent à Entra ID de renouveler l’accès sans redemander d’authentification tant que certaines conditions sont remplies.
 
 ## Pourquoi les attaquants adorent les sessions longues
+Dans plusieurs scénarios observés (vol de jetons via infostealers, attaques de type Adversary-in-the-Middle), l’objectif n’est pas nécessairement de contourner l’authentification, mais d’exploiter une session déjà établie.
 
-Dans les attaques modernes (notamment via *Infostealers* ou *Adversary-in-the-Middle*), l’objectif n’est plus nécessairement d’entrer par la force. C’est de **rester**.
+Une session persistante permet notamment :
+- l’accès aux ressources Microsoft 365 sans nouvelle authentification,
+- la mise en place de mécanismes de persistance (règles de messagerie, consentements OAuth),
+- l’accès aux données sans génération de signaux d’authentification.
 
-Une session persistante permet à un attaquant :
-- de naviguer librement dans Microsoft 365,
-- de créer des règles de persistance (règles de boîte de réception, applications OAuth),
-- d’accéder aux données sans bruit,
-- parfois même de survivre à un changement de mot de passe si les mécanismes de révocation ne sont pas instantanés.
-
-Dans ce contexte, une session de 14 ou 30 jours n’est pas un confort utilisateur. C’est une fenêtre d’opportunité pour l’attaquant.
+Dans ce contexte, des sessions valides sur plusieurs jours ou semaines augmentent mécaniquement la surface temporelle d’exploitation.
 
 ## Le faux sentiment de contrôle
 
-Beaucoup d’organisations ont le sentiment de maîtriser ce risque. Après tout, les tokens expirent. Les utilisateurs se reconnectent. Les mots de passe changent.
+Dans de nombreux cas, la maîtrise du risque repose principalement sur les contrôles d’authentification. Les tokens expirent, les mots de passe changent, et les utilisateurs se reconnectent.
 
-En réalité, la durée de vie des sessions est rarement interrogée. Les paramètres par défaut sont conservés, les contrôles de session sont absents ou mal compris, et l’accès conditionnel est utilisé principalement comme un filtre d’entrée ("Gatekeeper") plutôt que comme un contrôleur continu.
+En revanche, la durée de validité effective des sessions et les mécanismes de remise en question après authentification sont rarement analysés de manière explicite.
 
 Le raisonnement est souvent le suivant : *"Si l’utilisateur est authentifié, c’est qu’il est légitime."*
 C’est précisément ce postulat que les attaques exploitent.
@@ -83,8 +83,7 @@ Le paramètre *Sign-in Frequency* (SIF) permet d’imposer une réauthentificati
 
 Il ne remet pas en cause chaque requête. Il impose une borne temporelle claire : passé ce délai (ex: 7 jours), l’utilisateur devra prouver à nouveau son identité.
 
-Mal utilisé (trop court), il dégrade l’expérience utilisateur.
-Bien ciblé, il réduit drastiquement la fenêtre d’exploitation d’une session compromise.
+Une configuration trop agressive peut entraîner des sollicitations fréquentes de l’utilisateur. Une configuration ciblée permet en revanche de réduire la fenêtre d’exploitation sans impact disproportionné.
 
 ![Conditional Access – Sign-in Frequency](/assets/img/posts/series/un-risque-une-mesure/2025-12-30-conditional-access-session.png)
 
@@ -115,11 +114,11 @@ C’est un filet de sécurité supplémentaire, pas une excuse pour laisser des 
 
 ## Gouvernance : la durée de confiance est un choix
 
-La gestion des sessions n’est pas qu’un sujet technique. C’est un choix de gouvernance.
-* Quelle durée de confiance est acceptable pour un poste géré ? (ex: 14 jours)
-* Quelle durée pour un poste personnel ? (ex: 1 heure ou bloqué)
-* Quels contextes justifient une réauthentification ?
-* Quels signaux doivent invalider un accès ?
+Ces questions doivent être traitées explicitement dans la gouvernance des accès, en tenant compte du contexte organisationnel et des usages réels.
+- [ ] Quelle durée de confiance est acceptable pour un poste géré ? 
+- [ ] Quelle durée pour un poste personnel ?
+- [ ] Quels contextes justifient une réauthentification ?
+- [ ] Quels signaux doivent invalider un accès ?
 
 Ces questions doivent être posées explicitement. Sans réponse claire, la configuration devient arbitraire. Et l’arbitraire est l’ennemi de la sécurité.
 
@@ -144,9 +143,7 @@ Si ces réponses ne sont pas claires, le risque est probablement sous-estimé.
 
 Une session persistante n’est ni une faiblesse technique, ni une mauvaise pratique en soi. C’est un **choix implicite**, souvent hérité des paramètres par défaut de Microsoft.
 
-Dans Entra ID, la majorité des compromis modernes ne résultent pas d’une authentification faible, mais d’une **confiance prolongée non remise en question**. MFA et accès conditionnel renforcent l’entrée. Ils ne gouvernent pas, à eux seuls, la durée de validité d’un accès.
-
-Sign-in Frequency et Continuous Access Evaluation ne sont pas des options de confort ou des réglages secondaires. Ce sont des **mécanismes de maîtrise du risque dans le temps**.
+Dans Entra ID, de nombreux scénarios de compromission exploitent des accès déjà établis plutôt que des faiblesses d’authentification initiale. Sign-in Frequency et Continuous Access Evaluation ne sont pas des options de confort ou des réglages secondaires. Ce sont des **mécanismes de maîtrise du risque dans le temps**.
 
 Tant que la durée de confiance n’est pas explicitement définie, documentée et revue, la sécurité de l’identité reste incomplète.
 
