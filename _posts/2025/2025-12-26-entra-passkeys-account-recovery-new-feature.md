@@ -2,7 +2,7 @@
 title: "Passkeys et récupération de compte : ce que change réellement la gestion du cycle de vie des identités"
 date: 2025-12-29 06:30:00 +01:00
 layout: post
-categories: [identite, entra-id]
+categories: [analyse, entra-id]
 tags: [entra-id, passkeys, mfa, recuperation-compte, identite, gouvernance]
 readtime: true
 comments: true
