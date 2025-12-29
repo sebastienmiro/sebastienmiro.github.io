@@ -121,7 +121,7 @@ Pourtant, c’est souvent dans ces moments de rupture que se mesure la solidité
 ## Ressources
 
 - 🔗 [Microsoft Entra Blog - Synced passkeys and high assurance account recovery](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/synced-passkeys-and-high-assurance-account-recovery/3627343)
-- 🔗 [Microsoft Entra News and Insights | Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/products/microsoft-entra/)
-- ⁠🔗 [⁠Microsoft Entra blog | Tech Community](https://techcommunity.microsoft.com/t5/microsoft-entra-blog/bg-p/Identity)
-- 🔗 [⁠Microsoft Entra documentation | Microsoft Learn](https://learn.microsoft.com/en-us/entra/)
-- 🔗 [Microsoft Entra discussions | Microsoft Community](https://techcommunity.microsoft.com/t5/microsoft-entra/bd-p/Azure-Active-Directory)
+- 🔗 [Microsoft Entra News and Insights \| Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/products/microsoft-entra/)
+- ⁠🔗 [⁠Microsoft Entra blog \| Tech Community](https://techcommunity.microsoft.com/t5/microsoft-entra-blog/bg-p/Identity)
+- 🔗 [⁠Microsoft Entra documentation \| Microsoft Learn](https://learn.microsoft.com/en-us/entra/)
+- 🔗 [Microsoft Entra discussions \| Microsoft Community](https://techcommunity.microsoft.com/t5/microsoft-entra/bd-p/Azure-Active-Directory)
