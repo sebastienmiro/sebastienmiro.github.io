@@ -37,8 +37,6 @@ Pris séparément, ces deux sujets relèvent de l’authentification et du suppo
 
 ![Passkey improve sign-in success](/assets/img/posts/2025/12/2025-12-29-passkeys-sign-in-success.png)
 
----
-
 ## La MFA n’est plus le point de friction principal
 
 Un élément notable du discours Microsoft est le déplacement du problème.
@@ -46,8 +44,6 @@ Un élément notable du discours Microsoft est le déplacement du problème.
 La MFA n’est plus présentée comme une mesure de sécurité à déployer, mais comme un mécanisme dont **l’adoption reste incomplète** en raison de son impact opérationnel : formation, assistance, perte de productivité, erreurs utilisateur. La sécurité n’est plus le sujet à convaincre ; l’ergonomie et les coûts le sont.
 
 Les passkeys sont donc mises en avant moins comme une rupture de sécurité que comme un levier d’adoption à grande échelle. Elles cherchent à résoudre un problème connu des équipes terrain : une MFA trop complexe finit par générer des contournements, du support et, in fine, du risque résiduel.
-
----
 
 ## La récupération de compte change de statut
 
@@ -61,8 +57,6 @@ En introduisant une récupération fondée sur des preuves d’identité externe
 
 ![Recovery mode configuration in Entra ID](/assets/img/posts/2025/12/2025-12-29-entra-account-ownership-verification.png)
 
----
-
 ## Une identité qui dépasse le périmètre du SI
 
 Ce changement a des implications architecturales importantes.
@@ -71,8 +65,6 @@ La vérification d’identité ne repose plus uniquement sur des éléments inte
 
 Cette approche rapproche les architectures d’identité d’environnements historiquement réservés à l’identité civile ou réglementée. Elle introduit également de nouvelles contraintes de gouvernance : dépendance aux fournisseurs, conformité réglementaire, protection des données personnelles, acceptabilité par les utilisateurs.
 
----
-
 ## Microsoft comme orchestrateur d’identité
 
 Avec Entra ID, Verified ID, Face Check et l’intégration de fournisseurs de vérification d’identité via le Microsoft Security Store, Microsoft dépasse le rôle classique d’Identity Provider pour couvrir l’ensemble des processus liés à l’authentification et à la récupération. 
@@ -80,8 +72,6 @@ Avec Entra ID, Verified ID, Face Check et l’intégration de fournisseurs de v�
 ![Recovery mode configuration in Entra ID](/assets/img/posts/2025/12/2025-12-29-entra-account-recovery-mode.png)
 
 Cette évolution est cohérente avec la stratégie globale autour de l’identité comme socle de la sécurité, mais elle renforce également la centralité de l’écosystème Entra dans les architectures clients.
-
----
 
 ## Les points de vigilance côté entreprises et équipes IT
 
@@ -104,8 +94,6 @@ Enfin, le risque de surconfiance ne doit pas être sous-estimé. Une récupérat
 
 Le modèle inclut des composantes facturées à l’usage (vérification de documents officiels, et selon le cas Face Check).  
 Le coût dépend donc du volume de vérifications réalisées, principalement lié aux scénarios de récupération (perte de facteur, indisponibilité d’accès, réinscription).
-
----
 
 ## Du point d’entrée au cycle de vie complet
 
