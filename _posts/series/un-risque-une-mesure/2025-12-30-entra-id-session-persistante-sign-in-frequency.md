@@ -1,6 +1,6 @@
 ---
 title: "Sessions persistantes : gouverner l’accès après l’authentification (Sign-in Frequency & Continuous Access Evauation)"
-date: 2025-12-29 08:00:00 +01:00
+date: 2025-12-30 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, sessions, conditional-access, sign-in-frequency, cae]
 categories: [identite, entra-id]
@@ -108,17 +108,17 @@ Ce n’est plus une sécurité statique basée sur un minuteur. C’est une séc
 
 ### Les limites à connaître
 
-Tous les clients ne supportent pas CAE (bien que la couverture sur Office, Teams et les navigateurs modernes soit excellente). Tous les scénarios ne sont pas couverts. Et surtout, CAE ne remplace pas une stratégie de session cohérente (SIF).
+Tous les clients ne supportent pas CAE (bien que la couverture sur Office, Teams et les navigateurs modernes soit excellente). Tous les scénarios ne sont pas couverts. Et surtout, CAE ne remplace pas une stratégie de session cohérente.
 
 C’est un filet de sécurité supplémentaire, pas une excuse pour laisser des sessions ouvertes indéfiniment.
 
 ## Gouvernance : la durée de confiance est un choix
 
 Ces questions doivent être traitées explicitement dans la gouvernance des accès, en tenant compte du contexte organisationnel et des usages réels.
-- [ ] Quelle durée de confiance est acceptable pour un poste géré ? 
-- [ ] Quelle durée pour un poste personnel ?
-- [ ] Quels contextes justifient une réauthentification ?
-- [ ] Quels signaux doivent invalider un accès ?
+- Quelle durée de confiance est acceptable pour un poste géré ? 
+- Quelle durée pour un poste personnel ?
+- Quels contextes justifient une réauthentification ?
+- Quels signaux doivent invalider un accès ?
 
 Ces questions doivent être posées explicitement. Sans réponse claire, la configuration devient arbitraire. Et l’arbitraire est l’ennemi de la sécurité.
 
@@ -132,10 +132,10 @@ La sécurité est solide à l’entrée. Elle est laxiste dans la durée.
 
 Sans même modifier une configuration, quelques questions simples permettent d’évaluer le risque. Je vous invite à vérifier ces points dès demain :
 
-- [ ] Quelle est la **Sign-in Frequency effective** sur les applications critiques (M365, Azure Portal, Exchange) ? Est-elle configurée ou laissée par défaut ?
-- [ ] Continuous Access Evaluation (CAE) est-elle **activée** dans vos politiques de session ?
-- [ ] Existe-t-il des **exceptions CA** (comptes de service, VIP, legacy) qui contournent les contrôles de session ?
-- [ ] Combien de temps une session reste-t-elle techniquement valide après un changement de mot de passe ? (Faites le test).
+- Quelle est la **Sign-in Frequency effective** sur les applications critiques (M365, Azure Portal, Exchange) ? Est-elle configurée ou laissée par défaut ?
+- Continuous Access Evaluation (CAE) est-elle **activée** dans vos politiques de session ?
+- Existe-t-il des **exceptions CA** (comptes de service, VIP, legacy) qui contournent les contrôles de session ?
+- Combien de temps une session reste-t-elle techniquement valide après un changement de mot de passe ? (Faites le test).
 
 Si ces réponses ne sont pas claires, le risque est probablement sous-estimé.
 
