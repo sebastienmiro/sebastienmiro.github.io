@@ -64,8 +64,11 @@ Ce risque est particulièrement marqué sur des postes non maîtrisés, des navi
 
 > 🟡 Ce qu’il faut garder en tête concernant le “vol de token”
 > Le risque lié aux sessions persistantes n’implique pas que tout token volé soit automatiquement exploitable, ni que l’attaque soit triviale à réaliser.
+> 
 > Dans la plupart des cas, la réutilisation d’un token reste fortement dépendante du contexte (type d’application, posture du poste, mécanismes de contrôle actifs, support CAE / Token Protection, etc.).
+> 
 > Dans les environnements bien configurés, ce risque n’est pas à considérer comme une faille structurelle, mais plutôt comme un vecteur d’opportunité dans des situations où la surface d’exposition n’a pas été suffisamment cadrée.
+>
 > L’enjeu n’est donc pas d’alarmer, mais d’encadrer la durée et les conditions de confiance afin de réduire l’impact potentiel d’une session compromise.
 
 ## Le faux sentiment de contrôle
