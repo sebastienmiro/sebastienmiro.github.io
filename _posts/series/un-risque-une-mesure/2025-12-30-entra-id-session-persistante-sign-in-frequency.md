@@ -120,7 +120,7 @@ C’est un filet de sécurité supplémentaire, pas une excuse pour laisser des 
 >
 > Les valeurs proposées ci-dessous sont des repères et doivent être adaptées au contexte.
 > Sur des postes **non gérés et non protégés par Intune / MAM**, une réauthentification très fréquente
-> (par exemple quotidienne) peut devenir **lourde pour l’utilisateur** et générer de la **fatigue MFA**.
+> (par exemple quotidienne) peut devenir **lourde pour l’utilisateur** et générer de la [**fatigue MFA**](https://blog.sebastienmiro.fr/identite/entra-id/mfa-pas-suffisant-phishing/).
 >
 > Dans ces situations, la décision doit être prise dans un cadre global de gouvernance des accès
 > (segmentation des usages, durcissement navigateur, séparation des comptes, intégration à Intune, etc.),
