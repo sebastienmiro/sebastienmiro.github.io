@@ -62,6 +62,12 @@ Dans ce contexte, des sessions valides sur plusieurs jours ou semaines augmenten
 
 Ce risque est particulièrement marqué sur des postes non maîtrisés, des navigateurs non durcis, ou en présence d’infostealers : le token n’est alors pas compromis au moment du login, mais dans un second temps.
 
+> 🟡 Ce qu’il faut garder en tête concernant le “vol de token”
+> Le risque lié aux sessions persistantes n’implique pas que tout token volé soit automatiquement exploitable, ni que l’attaque soit triviale à réaliser.
+> Dans la plupart des cas, la réutilisation d’un token reste fortement dépendante du contexte (type d’application, posture du poste, mécanismes de contrôle actifs, support CAE / Token Protection, etc.).
+> Dans les environnements bien configurés, ce risque n’est pas à considérer comme une faille structurelle, mais plutôt comme un vecteur d’opportunité dans des situations où la surface d’exposition n’a pas été suffisamment cadrée.
+> L’enjeu n’est donc pas d’alarmer, mais d’encadrer la durée et les conditions de confiance afin de réduire l’impact potentiel d’une session compromise.
+
 ## Le faux sentiment de contrôle
 
 Dans de nombreux cas, la maîtrise du risque repose principalement sur les contrôles d’authentification. Les tokens expirent, les mots de passe changent, et les utilisateurs se reconnectent.
