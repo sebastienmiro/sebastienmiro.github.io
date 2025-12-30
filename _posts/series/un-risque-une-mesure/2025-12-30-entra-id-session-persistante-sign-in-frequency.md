@@ -37,7 +37,7 @@ L’erreur est subtile. Une fois l’utilisateur authentifié, l’accès est im
 
 Dans des environnements cloud fortement exposés, cette hypothèse devient insuffisante dès lors que le contexte peut évoluer après l’authentification.
 
-Une session est une **délégation de confiance dans le temps**. Elle autorise l’accès sans redemander de preuve, parfois pendant des heures, parfois pendant des jours (jusqu'à 90 jours par défaut pour le *Rolling Window* d'un Refresh Token). Tant que le token est valide, Entra ID ne remet pas automatiquement en question la légitimité de l’accès, sauf mécanismes explicitement configurés.
+Une session est une **délégation de confiance dans le temps**. Elle autorise l’accès sans redemander de preuve, parfois pendant des heures, parfois pendant des jours (jusqu'à 90 jours par défaut pour le *Rolling Window* d'un Refresh Token). Tant que le token reste valide, l’accès n’est généralement pas remis en question, sauf si un événement de sécurité ou une politique explicite déclenche une réévaluation (CAE, Identity Protection, révocation de session, etc.).
 
 C’est là que se loge le risque.
 
@@ -51,7 +51,7 @@ Le système ne se demande plus *qui* est l’utilisateur, mais uniquement *si le
 C’est un choix d’architecture pensé pour le SSO et la résilience. Et comme tout choix d’architecture, il a des conséquences. Derrière cette continuité d’accès se trouvent des mécanismes largement transparents pour l’utilisateur, comme les tokens de session et le Primary Refresh Token (PRT), qui permettent à Entra ID de renouveler l’accès sans redemander d’authentification tant que certaines conditions sont remplies.
 
 ## Pourquoi les attaquants adorent les sessions longues
-Dans plusieurs scénarios observés (vol de jetons via infostealers, attaques de type Adversary-in-the-Middle), l’objectif n’est pas nécessairement de contourner l’authentification, mais d’exploiter une session déjà établie.
+Dans plusieurs scénarios (vol de jetons via infostealers, attaques de type Adversary-in-the-Middle), l’objectif n’est pas nécessairement de contourner l’authentification, mais d’exploiter une session déjà établie.
 
 Une session persistante permet notamment :
 - l’accès aux ressources Microsoft 365 sans nouvelle authentification,
@@ -59,6 +59,8 @@ Une session persistante permet notamment :
 - l’accès aux données sans génération de signaux d’authentification.
 
 Dans ce contexte, des sessions valides sur plusieurs jours ou semaines augmentent mécaniquement la surface temporelle d’exploitation.
+
+Ce risque est particulièrement marqué sur des postes non maîtrisés, des navigateurs non durcis, ou en présence d’infostealers : le token n’est alors pas compromis au moment du login, mais dans un second temps.
 
 ## Le faux sentiment de contrôle
 
@@ -112,6 +114,32 @@ Tous les clients ne supportent pas CAE (bien que la couverture sur Office, Teams
 
 C’est un filet de sécurité supplémentaire, pas une excuse pour laisser des sessions ouvertes indéfiniment.
 
+### Exemples de durée de confiance des sessions dans Entra ID selon le contexte
+
+> ⚠️ **Important — recommandations à adapter au contexte**
+>
+> Les valeurs proposées ci-dessous sont des repères et doivent être adaptées au contexte.
+> Sur des postes **non gérés et non protégés par Intune / MAM**, une réauthentification très fréquente
+> (par exemple quotidienne) peut devenir **lourde pour l’utilisateur** et générer de la **fatigue MFA**.
+>
+> Dans ces situations, la décision doit être prise dans un cadre global de gouvernance des accès
+> (segmentation des usages, durcissement navigateur, séparation des comptes, intégration à Intune, etc.),
+> plutôt que par un simple raccourcissement des sessions.
+>
+> 👉 Pour une approche structurée, voir la série d'articles [**Conditional Access Framework v4**](https://blog.sebastienmiro.fr/identite/entra-id/000-conditional-access-framework-analyse-francais-fr/).
+
+| Contexte d’accès | Type de poste | Sensibilité du compte | Sign-in Frequency recommandée | CAE | Logique de sécurité |
+|---|---|---:|:---:|:---:|---|
+| Utilisateur standard | Poste géré — Entra ID joined / Hybrid joined | Standard | **7 jours** | Oui | Le PRT permet un renouvellement fluide ; bon équilibre sécurité / UX |
+| Utilisateur standard | Navigateur sur poste non géré (BYOD / perso) | Standard | **1 jour** | Oui | Réduit la fenêtre d’exploitation en cas d’infostealer ou AiTM |
+| Utilisateur standard — mobilité | Mobile géré (MDM/MAM + App Protection) | Standard | **7 à 14 jours** | Oui | Acceptable si l’isolation applicative est correctement mise en œuvre |
+| Comptes techniques étendus / IT Ops | Poste géré dédié | Élevée | **1 jour** | Oui | Limite la persistance de session sur des comptes à exposition accrue |
+| Comptes administrateurs (Global / Security / Entra / Exchange) | Poste / bastion d’administration dédié | Critique | **8 à 12 heures** | Oui | Administration = activité ponctuelle → confiance courte et située |
+| Comptes invités (B2B) | Contexte partenaire non maîtrisé | Variable | **1 jour** | Oui | Contexte hétérogène, principe de prudence |
+| Accès à données sensibles / régulées | Poste géré | Standard+ | **1 à 3 jours** | Oui | Ajuster selon contraintes conformité / exigences d’audit |
+| Applications non compatibles CAE | Variable | Variable | **≤ 1 jour** | Partiel | La SIF compense partiellement l’absence d’invalidation événementielle |
+
+
 ## Gouvernance : la durée de confiance est un choix
 
 Ces questions doivent être traitées explicitement dans la gouvernance des accès, en tenant compte du contexte organisationnel et des usages réels.
@@ -124,7 +152,7 @@ Ces questions doivent être posées explicitement. Sans réponse claire, la conf
 
 ## Ce qu’on observe sur le terrain
 
-Dans de nombreux tenants, Token Protection est activée, la MFA est robuste, mais les sessions durent toujours plusieurs semaines, même pour des comptes sensibles. L’attaquant n’a plus besoin de voler un token au moment du login. Il lui suffit d’arriver pendant la fenêtre de validité.
+Dans de nombreux tenants, la MFA et parfois Token Protection sont en place mais les sessions durent toujours plusieurs semaines, même pour des comptes sensibles. L’attaquant n’a plus besoin de voler un token au moment du login. Il lui suffit d’arriver pendant la fenêtre de validité.
 
 La sécurité est solide à l’entrée. Elle est laxiste dans la durée.
 
