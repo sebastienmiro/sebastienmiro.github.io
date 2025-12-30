@@ -29,7 +29,7 @@ Le framework prend le problème dans l’autre sens. Avant de spécialiser les r
 
 ## Ce que couvre réellement le socle commun
 
-Le socle commun regroupe des politiques qui répondent à une logique simple : réduire les angles morts les plus évidents avant toute différenciation des usages.
+Le socle commun regroupe des politiques qui répondent à une même logique : réduire le bruit et supprimer les angles morts les plus grossiers avant toute différenciation des usages.
 
 On y retrouve notamment :
 - l’élimination des méthodes d’authentification legacy ;
@@ -40,24 +40,11 @@ Ces règles ne cherchent pas à être fines. Elles cherchent à être **incontou
 
 Dans le Conditional Access Framework v4, le socle n’est pas pensé comme une “baseline de sécurité” au sens marketing du terme. Il joue plutôt le rôle d’une **ligne de flottaison** : en dessous, le risque devient trop élevé pour que les politiques plus spécifiques puissent réellement compenser.
 
-## Un rôle double : structurant dans le modèle, protecteur dans l’exécution
+## Pourquoi ce socle est souvent mal déployé
 
-Le socle commun joue un double rôle, souvent mal compris.
+Sur le terrain, ce socle est soit déployé trop tard, soit mal positionné.
 
-Conceptuellement, il structure l’ensemble du framework. Il définit des invariants implicites sur lesquels reposent toutes les politiques spécialisées. Sans ce socle, chaque bloc devrait redéfinir ses propres hypothèses de sécurité, ce qui rend l’ensemble fragile et difficile à maintenir.
-
-Opérationnellement, en revanche, le socle agit comme un **mécanisme de rattrapage**. Il n’est pas destiné à piloter les cas nominaux, mais à prendre la décision lorsque :
-- une politique plus ciblée n’existe pas encore ;
-- un périmètre a été oublié ;
-- un usage n’a pas été anticipé.
-
-Ce point est fondamental : le socle n’est pas la couche principale de protection. Il est la dernière ligne avant le “laisser passer”.
-
-## Pourquoi ce socle est souvent mal positionné sur le terrain
-
-Dans la pratique, le socle commun est fréquemment mal déployé.
-
-Dans certains environnements, il est introduit trop tard, une fois que de nombreuses règles spécialisées existent déjà. Les politiques globales entrent alors en conflit avec des exceptions existantes, ce qui conduit à multiplier les exclusions et à fragiliser l’ensemble.
+Dans certains environnements, on commence par créer des règles ciblées, puis on ajoute un socle global pour “compléter”. Le résultat est souvent contre-productif : les règles globales entrent en conflit avec des exceptions existantes, ce qui conduit à multiplier les exclusions et à fragiliser l’ensemble.
 
 À l’inverse, d’autres déploient un socle très strict sans avoir clarifié les personas ni préparé les usages. Le résultat est immédiat : blocages, contournements, et pression pour assouplir les règles sans réelle compréhension de leur rôle.
 
