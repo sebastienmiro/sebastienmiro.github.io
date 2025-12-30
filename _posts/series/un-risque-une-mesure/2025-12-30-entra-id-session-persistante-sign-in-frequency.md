@@ -139,6 +139,15 @@ C’est un filet de sécurité supplémentaire, pas une excuse pour laisser des 
 | Accès à données sensibles / régulées | Poste géré | Standard+ | **1 à 3 jours** | Oui | Ajuster selon contraintes conformité / exigences d’audit |
 | Applications non compatibles CAE | Variable | Variable | **≤ 1 jour** | Partiel | La SIF compense partiellement l’absence d’invalidation événementielle |
 
+> 💡 **Ces durées ne remplacent pas les contrôles de sécurité du poste**
+>
+> Les réglages de session réduisent la durée d’exploitation d’un accès compromis,
+> mais ils ne remplacent pas le **durcissement du poste et du navigateur**, l’EDR,
+> la détection d’infostealers, la séparation des usages et — lorsque compatible —
+> l’utilisation de **Token Protection**.
+>
+> Dans la majorité des incidents, le risque provient d’une **session navigateur déjà active** ;
+> la réduction de durée limite l’impact, elle ne supprime pas la cause.
 
 ## Gouvernance : la durée de confiance est un choix
 
