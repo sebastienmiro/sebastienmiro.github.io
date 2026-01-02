@@ -19,8 +19,6 @@ scope:
 platform: Microsoft Entra
 ---
 
-## Pourquoi le framework définit un socle commun
-
 Après avoir posé les personas, le Conditional Access Framework v4 introduit un ensemble de politiques transverses, souvent regroupées sous le terme de *socle commun*. Ce choix n’est pas organisationnel. Il est avant tout technique.
 
 Dans de nombreux environnements, l’accès conditionnel est construit presque exclusivement par exception : une règle pour les administrateurs, une autre pour les invités, une autre encore pour un besoin ponctuel. Cette approche repose implicitement sur une hypothèse risquée : que tout ce qui n’est pas explicitement couvert est acceptable par défaut.
