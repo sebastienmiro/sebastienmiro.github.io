@@ -267,7 +267,7 @@ homepage:
 #################################################################################
 
 # Output options (more information on Jekyll's site)
-timezone: "Europe/Paris"
+timezone: Europe/Paris
 markdown: kramdown
 highlighter: rouge
 permalink: /:categories/:title/
