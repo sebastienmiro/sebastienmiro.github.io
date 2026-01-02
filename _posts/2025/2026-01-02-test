@@ -1,0 +1,19 @@
+---
+title: "Test Post for 2026-01-02"
+date: 2026-01-02 10:00:00 +0100
+layout: post
+categories: [analyse, technique]
+tags: [entra-id, passkeys, mfa, recuperation-compte, identite, gouvernance]
+readtime: true
+comments: true
+cover-img: "assets/img/banners/banner-architecture-best-practices.png"
+thumbnail-img: "assets/img/posts/2025/12/2025-12-26-entra-passkeys-account-recovery-new-feature.png"
+featured: false
+sidebar: true
+level: Analyse
+scope:
+  - Entra ID
+  - Passkeys
+  - Récupération de compte
+platform: Microsoft Entra ID
+---
