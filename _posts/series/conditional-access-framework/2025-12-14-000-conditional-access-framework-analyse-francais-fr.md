@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 : un cadre solide pour sécuriser l’identité"
-date: 2025-12-14 09:30:00 +01:00
+date: 2025-12-14 09:30:00
 layout: post
 tags: [series:conditional-access-framework, conditional-access, gouvernance]
 categories: [identite, entra-id]
@@ -11,6 +11,7 @@ thumbnail-img: "assets/img/posts/series/conditional-access-framework/000/000-thu
 series: CA
 series_order: 000
 sidebar: true
+last_reviewed: 2026-01-02 09:00:00
 level: présentation
 scope:
   - Entra ID
@@ -54,7 +55,7 @@ La série est structurée pour refléter **l’ordre réel de compréhension et 
 |------:|---------|------|
 | 0 | Conditional Access Framework v4 : cadre, portée et limites | *(vous êtes ici)* |
 | 1 | Les personas du Conditional Access Framework | [📖 Lire l'article](https://blog.sebastienmiro.fr/identite/entra-id/010-caf-spoke-1-les-personas/) |
-| 2 | Le socle commun de politiques | ⏳02/01/2026 |
+| 2 | Le socle commun de politiques | [📖 Lire l'article](https://blog.sebastienmiro.fr/identite/entra-id/020-caf-spoke-2-socle-commun-politiques/) |
 | 3 | Utilisateurs standards : périmètre et protections réelles | ⏳ 09/01/2026 |
 | 4 | Comptes à privilèges : sortir du flux normal | ⏳ 16/01/2026|
 | 5 | La session et les tokens : le cœur du framework v4 | ⏳ 23/01/2026|
