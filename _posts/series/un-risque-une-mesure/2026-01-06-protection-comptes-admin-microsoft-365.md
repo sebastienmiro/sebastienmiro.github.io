@@ -72,7 +72,7 @@ Privileged Identity Management ne cherche pas à “renforcer” l’authentific
 
 Dans un modèle basé sur PIM, un administrateur n’est plus détenteur permanent d’un rôle. Il y est éligible. Par défaut, son compte ne dispose d’aucun droit d’administration actif. Il peut s’authentifier, accéder aux portails, mais il n’a pas la capacité d’agir tant qu’il n’a pas explicitement demandé une élévation.
 
-Lorsqu’une action administrative est nécessaire, cette élévation doit être formulée comme une intention claire : activer un rôle précis, pour une durée limitée, avec une justification. Cette demande déclenche alors un contrôle renforcé — typiquement une authentification forte — indépendamment du fait que l’utilisateur se soit déjà connecté auparavant. Le privilège n’est accordé que dans ce cadre strict, et pour un temps borné.
+Lorsqu’une action administrative est nécessaire, cette élévation doit être formulée comme une intention claire : activer un rôle précis, pour une durée limitée, avec une justification. Cette demande déclenche alors un contrôle renforcé — typiquement une authentification forte — indépendamment du fait que l’utilisateur se soit déjà connecté auparavant. Le privilège n’est accordé que dans ce cadre strict, et pour un temps donné.
 
 À l’issue de cette période, le rôle est retiré automatiquement, sans action manuelle. Le compte revient à son état initial, dépourvu de tout privilège actif.
 
