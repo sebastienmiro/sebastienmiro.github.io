@@ -1,5 +1,5 @@
 ---
-title: "Comptes à privilèges : Pourquoi les protéger comme les autres ne suffit pas"
+title: "Comptes à privilèges : pourquoi les protéger comme les autres ne suffit pas"
 date: 2026-01-06 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, privileged-access, pim, just-in-time, tiering-model]
@@ -19,109 +19,94 @@ scope:
   - Sécurité de l’identité
 ---
 
-> 💡 **Le privilège n'est pas un attribut de l'identité, c'est une fonction critique du système.**
-> Un compte à privilèges n’est pas un utilisateur avec "plus de droits". C’est un point de contrôle capable de modifier les règles de sécurité pour l'ensemble de l'organisation.
+> 💡 **Un compte à privilèges n’est pas un utilisateur avec plus de droits.
+> 
+> C’est un point de contrôle critique pour l’ensemble du tenant.**
 
-Dans la majorité des environnements Microsoft Entra ID, la protection des comptes à privilèges se résume souvent à une version "renforcée" de la politique standard : on applique le MFA à tout le monde, admins compris, et l'on se sent protégé. Parfois, on ajoute une conformité de l'appareil via Intune. Sur le papier, les voyants sont au vert.
+Dans Microsoft 365, la protection des comptes à privilèges commence — et s’arrête souvent — au moment de l’authentification : MFA généralisée, parfois renforcée pour les administrateurs, éventuellement couplée à une exigence de conformité du poste. Sur le papier, le dispositif semble solide.
 
-Cette approche, bien que nécessaire, est dangereusement incomplète. Elle traite l'administrateur comme un "super-utilisateur", alors qu'il est la clé de voûte du système.
+Pourtant, cette approche repose sur une hypothèse fragile : qu’un compte à privilèges serait avant tout un utilisateur « comme les autres », simplement doté de droits supplémentaires.  
+Dans les faits, ce n’est pas le cas.
 
-Protéger l'authentification d'un administrateur est une condition *nécessaire*, mais ce n'est pas une condition *suffisante*. Le véritable risque ne réside pas uniquement dans la manière dont l'administrateur se connecte, mais dans la **permanence de son pouvoir**.
+Un compte à privilèges n’est pas seulement un compte utilisateur puissant. C’est un point de contrôle capable de modifier les règles de sécurité, d’altérer les mécanismes de défense et, dans certains cas, de rendre invisibles les actions qui suivent. Le risque ne tient donc pas uniquement à *la manière dont l’administrateur se connecte*, mais à *la permanence de son pouvoir*.
 
-## Le risque structurel : L'accès permanent (Standing Access)
+## Le risque structurel : l’accès permanent
 
-La faille majeure de la plupart des modèles d'administration actuels réside dans le concept d'**accès permanent** (*Standing Access*).
+Dans beaucoup de tenants, le modèle dominant reste celui de l’accès permanent, ou *standing access*.  
+Un administrateur global, Exchange ou Security détient ses privilèges en continu, indépendamment de l’usage réel qu’il en fait.
+
+Qu’il soit en train d’exécuter une opération critique un mardi matin, de consulter ses mails personnels à la pause déjeuner, en déplacement à l’étranger ou simplement inactif le week-end, le niveau de privilège reste strictement identique. Le rôle est attaché à l’identité de manière statique.
 
 ![Microsoft 365 - Standing access](/assets/img/posts/series/un-risque-une-mesure/2026-01-06-microsoft-admins-standing-privileges.png)
 
-Dans ce modèle traditionnel, si un collaborateur est nommé "Administrateur Global" ou "Administrateur Exchange", il détient ce privilège 24 heures sur 24, 7 jours sur 7, 365 jours par an.
-* Qu'il soit en train d'effectuer une migration critique le mardi matin.
-* Qu'il soit en train de lire ses mails personnels à la pause déjeuner.
-* Qu'il soit en vacances à l'autre bout du monde.
-* Ou qu'il dorme le dimanche à 3 heures du matin.
+Dans un environnement cloud, cette situation est particulièrement problématique.  
+Si ce compte est compromis — par phishing, vol de token ou malware sur le poste — l’attaquant n’a pas besoin d’escalader quoi que ce soit. Il hérite immédiatement de l’intégralité des privilèges. La compromission d’une identité devient mécaniquement une compromission du tenant.
 
-Le privilège est attaché à son identité de manière statique.
+La surface d’attaque n’est plus technique, elle est temporelle : tant que le privilège existe, il peut être exploité.
 
-### Pourquoi c'est critique dans le Cloud
-Si ce compte est compromis (Phishing, vol de token, malware sur le poste), l'attaquant hérite **immédiatement** et **sans effort** de la totalité des pouvoirs. Il n'a pas besoin d'effectuer une escalade de privilèges complexe ou de se déplacer latéralement : il est *déjà* Dieu dans le tenant.
+## Une hygiène d’architecture souvent négligée : séparer les identités
 
-La surface d'attaque est temporelle : elle est égale à 100% du temps d'existence du compte. C'est une fenêtre d'opportunité gigantesque offerte aux attaquants.
+Avant même de parler d’outils, la première mesure est architecturale.  
+Elle consiste à accepter un principe simple : **une même identité ne peut pas être à la fois exposée et privilégiée**.
 
-## Hygiène d'architecture : La séparation des identités
+Ce principe, bien connu dans les modèles de *tiering* hérités d’Active Directory, reste parfaitement valide dans le cloud.
 
-Avant même d'aborder les outils techniques, la première mesure de protection est architecturale. Un principe fondamental, hérité du modèle de *Tiering* Active Directory (Red Forest), s'applique tout autant au Cloud : la séparation des comptes.
+Le compte de productivité — celui utilisé pour Teams, Outlook, le web et les outils collaboratifs — est, par nature, fortement exposé. Il reçoit des mails externes, navigue sur Internet et constitue une cible idéale pour le phishing. Lui confier des rôles d’administration revient à étendre cette surface d’attaque à l’ensemble du système.
 
-### 1. Le compte "Bureautique" (Productivité)
-C'est le compte synchronisé (Hybrid) ou Cloud utilisé pour Teams, Outlook, le web, et l'accès aux données.
-* **Surface d'attaque :** Élevée (reçoit des mails externes, navigue sur internet, cible de phishing).
-* **Privilège :** **Zéro**. Ce compte ne doit jamais avoir de rôle d'administration.
+À l’inverse, le compte d’administration doit être pensé comme un outil d’exploitation, pas comme une identité du quotidien.
+Il est distinct du compte de productivité, idéalement cloud-only et non synchronisé depuis l’Active Directory local, afin d’éviter toute propagation de compromission depuis l’on-premise. Il n’a pas vocation à être utilisé comme un compte de messagerie classique. 
+Idéalement, les alertes et notifications de sécurité devraient être centralisées via des canaux dédiés (DL sécurité, SIEM, ITSM), afin de réduire la surface d’attaque liée au phishing. Dans la pratique, l’objectif reste le même : limiter au maximum les usages non strictement nécessaires.
 
-### 2. Le compte "Admin" (Cloud-Only)
-C'est un compte dédié, distinct (ex: `admin-jean.dupont@societe.onmicrosoft.com`).
-* **Licence :** Aucune licence Office 365. Pas de boîte mail (donc insensibilisé au Phishing par email), pas de Teams.
-* **Usage :** Strictement réservé aux tâches d'administration via le portail Azure/Entra ou PowerShell.
-* **Type :** "Cloud-Only" (non synchronisé depuis l'AD local) pour éviter qu'une compromission de l'AD on-prem ne permette une escalade vers le Cloud.
+À ces deux catégories s’ajoutent les comptes dits *brise-glace*. Leur rôle n’est pas opérationnel, mais résilient. Ils existent pour les situations de crise absolue : erreur de configuration bloquant tout le tenant, incident majeur... Leur protection repose moins sur l’automatisation que sur des mesures organisationnelles strictes : mots de passe complexes conservés hors ligne, exclusion explicite des politiques d’accès conditionnel et surveillance renforcée de chaque authentification.
 
-### 3. Les comptes "Brise-Glace" (Break Glass)
-Ce sont les comptes de la dernière chance, utilisés uniquement en cas de panne majeure (ex: panne du service MFA Azure ou erreur de configuration CA verrouillant tout le monde).
-* **Usage :** Jamais, sauf en cas de crise absolue.
-* **Protection :** Exclus des politiques d'Accès Conditionnel standard, mot de passe complexe coffré physiquement, et surveillance SIEM hyper-critique (toute authentification génère une alerte P1 au SOC).
+## Le cœur du problème : la permanence du privilège
 
-*Note : Nous détaillerons la gestion spécifique des comptes Brise-Glace dans un prochain article dédié.*
+Même avec une séparation correcte des comptes, le problème principal demeure tant que le privilège est permanent.  
+Un administrateur qui détient ses droits 24 heures sur 24 reste une cible à haute valeur, même lorsqu’il n’administre rien.
 
-## La Mesure : Le Juste-à-Temps (Just-In-Time)
+C’est précisément ce point que Microsoft adresse avec **Microsoft Entra Privileged Identity Management (PIM)**.
 
-Une fois l'architecture de comptes assainie, il faut traiter le problème de l'accès permanent. La réponse de l'industrie, et de Microsoft, est le modèle **Just-In-Time (JIT)**.
+## Microsoft Entra PIM : transformer le privilège en événement
 
-Le principe est simple : par défaut, votre compte `admin-jean.dupont` n'a **aucun droit**. S'il se connecte au portail Azure, il ne voit rien de plus qu'un utilisateur lambda. Il est "éligible" au rôle, mais il ne le "détient" pas.
+Privileged Identity Management ne cherche pas à “renforcer” l’authentification existante. Son apport est ailleurs. Il agit sur la nature même du privilège et sur la manière dont celui-ci est exercé dans le temps.
 
-### L'implémentation via Privileged Identity Management (PIM)
-Dans l'écosystème Entra, c'est le service **PIM** (nécessite des licences Entra ID P2 / E5) qui opère cette mécanique.
+Dans un modèle basé sur PIM, un administrateur n’est plus détenteur permanent d’un rôle. Il y est éligible. Par défaut, son compte ne dispose d’aucun droit d’administration actif. Il peut s’authentifier, accéder aux portails, mais il n’a pas la capacité d’agir tant qu’il n’a pas explicitement demandé une élévation.
 
-Le workflow de sécurité se transforme radicalement :
+Lorsqu’une action administrative est nécessaire, cette élévation doit être formulée comme une intention claire : activer un rôle précis, pour une durée limitée, avec une justification. Cette demande déclenche alors un contrôle renforcé — typiquement une authentification forte — indépendamment du fait que l’utilisateur se soit déjà connecté auparavant. Le privilège n’est accordé que dans ce cadre strict, et pour un temps borné.
 
-1.  **L'intention :** L'administrateur a besoin de modifier une configuration Exchange.
-2.  **L'activation :** Il se rend dans PIM et demande à "activer" son rôle *Exchange Administrator*.
-3.  **Le contrôle (MFA Step-Up) :** Entra ID exige une authentification forte à cet instant précis (par exemple, une clé FIDO2 ou un défi Authenticator), même si l'utilisateur s'est déjà connecté auparavant.
-4.  **La justification :** L'admin doit saisir un motif (ou un numéro de ticket ITSM).
-5.  **L'élévation :** Le rôle lui est attribué temporairement (par exemple pour 4 heures).
-6.  **La révocation :** Au bout de 4 heures, le rôle est retiré automatiquement. L'administrateur redevient un utilisateur standard.
+À l’issue de cette période, le rôle est retiré automatiquement, sans action manuelle. Le compte revient à son état initial, dépourvu de tout privilège actif.
 
-### Le gain de sécurité
-Si un attaquant compromet ce compte à 3h du matin, il se retrouve dans une coquille vide. Pour faire des dégâts, il doit tenter une activation de rôle. Ce faisant, il déclenche un défi MFA (qu'il ne peut pas passer) et génère des logs d'activation suspects.
+Ce changement n’est pas cosmétique. Il modifie profondément le modèle de risque. Le privilège cesse d’être un état permanent attaché à une identité ; il devient un événement ponctuel, traçable et réversible.
 
-Le privilège n'est plus un état ("Je suis Admin"), c'est un événement ("J'administre").
+D’un point de vue défensif, l’effet est immédiat. Un attaquant qui compromet un compte administrateur en dehors d’une fenêtre d’activation ne récupère aucun pouvoir exploitable. Pour aller plus loin, il lui faudrait initier une élévation, franchir un contrôle MFA supplémentaire et générer des événements d’audit explicites — autant de signaux qui transforment une compromission silencieuse en tentative détectable.
 
-## Durcissement de l'accès : Authentification et Poste
+## Durcir l’activation : authentification et poste
 
-Le JIT réduit la fenêtre de tir, mais pendant les 4 heures d'activation, le risque persiste. Il faut donc durcir les conditions d'accès de manière drastique pour ces rôles.
+Le Just-In-Time réduit la fenêtre d’exposition, mais il ne supprime pas le risque pendant la période d’activation.  
+C’est pourquoi PIM doit être combiné à des exigences d’accès spécifiques pour les rôles sensibles.
 
-### 1. Authentification résistante au Phishing
-Pour les rôles hautement privilégiés (Global Admin, Privileged Role Admin, Security Admin), le MFA par notification push ou SMS n'est plus suffisant (vulnérable au *MFA Fatigue* ou *SIM Swapping*).
-Il est impératif d'imposer, via l'Accès Conditionnel, une **Force d'authentification** (Authentication Strength) exigeant une clé de sécurité FIDO2 ou Windows Hello for Business.
+Sur le plan de l’authentification, Microsoft recommande explicitement l’usage de méthodes résistantes au phishing pour les rôles critiques : clés FIDO2 ou Windows Hello for Business. Les notifications push ou les codes SMS, acceptables pour des utilisateurs standards, ne sont plus adaptées à des comptes capables de modifier les règles du tenant.
 
-### 2. Contexte du poste (Device Trust)
-Un administrateur ne devrait jamais administrer le tenant depuis un PC personnel ou une machine non maîtrisée.
-La politique d'accès conditionnel doit exiger un poste **Conforme** (géré par Intune et sain) ou **Hybrid Join**. Pour les environnements très sensibles, l'usage de stations d'administration privilégiées (PAW - Privileged Access Workstations) permet de garantir que le poste utilisé pour l'administration ne sert pas à lire des mails ou naviguer sur le web.
+Sur le plan du poste, l’administration depuis un environnement non maîtrisé constitue un risque majeur. Les politiques d’accès conditionnel doivent imposer un appareil conforme, géré par Intune, voire une station dédiée à l’administration dans les environnements les plus sensibles. Administrer depuis un poste utilisé pour la messagerie ou la navigation web revient à mélanger deux surfaces d’attaque incompatibles.
 
-## Gouvernance : La confiance n'est pas éternelle
+## Gouvernance : contrôler la légitimité dans le temps
+La dernière dimension, souvent négligée, est celle de la gouvernance.
+Dans les grands environnements, le risque prend souvent la forme d’une accumulation progressive des droits : un administrateur change d’équipe, conserve ses anciens rôles et en acquiert de nouveaux, sans remise en question formelle. Dans les PME, la situation est différente, mais pas moins risquée.
 
-Enfin, la protection des comptes à privilèges inclut leur cycle de vie. Dans beaucoup d'entreprises, on accumule les droits : un admin change d'équipe, garde ses anciens droits et en gagne de nouveaux.
+On y observe fréquemment des comptes administrateurs laissés à l’abandon, des rôles attribués “temporairement” qui deviennent permanents, ou des utilisateurs qui ne sont ni administrateurs de métier ni formés aux enjeux de sécurité, mais qui se retrouvent avec des privilèges étendus — parfois même des rôles de type Global Administrator. Non par malveillance, mais à la suite de décisions prises dans l’urgence, de contraintes de temps ou simplement faute de cadre clair pour attribuer, limiter et retirer ces droits.
 
-L'outil **Access Reviews** (Revue d'accès) doit être configuré pour les rôles PIM.
-* **Fréquence :** Mensuelle ou trimestrielle.
-* **Processus :** Chaque administrateur (ou son manager) doit reconfirmer qu'il a toujours besoin d'être éligible à ce rôle.
-* **Sanction :** Sans réponse, le droit d'éligibilité est retiré.
+Dans ces contextes, le problème n’est pas tant la sophistication des attaques que la banalisation du privilège.
 
-Cela permet de lutter contre la dérive des droits (*Privilege Creep*) et de s'assurer que la liste des administrateurs correspond à la réalité de l'organigramme, et non à l'historique de l'AD.
+Les revues d’accès intégrées à PIM permettent précisément de remettre de l’ordre dans cette réalité. À intervalle régulier, chaque rôle éligible doit être explicitement reconfirmé, soit par l’administrateur concerné, soit par son responsable. En l’absence de validation, l’éligibilité est retirée automatiquement.
 
-## Conclusion
+Ce mécanisme introduit une discipline là où il n’y en avait pas. Il oblige à se poser une question simple, mais rarement formulée : cette personne a-t-elle encore besoin de ce privilège aujourd’hui ? La gestion des comptes à privilèges cesse alors d’être une accumulation historique pour devenir un processus vivant, aligné sur l’organisation réelle — qu’elle soit grande, petite ou très peu structurée.
 
-Protéger un compte à privilèges demande un changement de mentalité. Il ne s'agit pas seulement de "sécuriser le login", mais de repenser la nature même du pouvoir dans le système d'information.
+## En filigrane : un changement de mentalité
 
-Tant que vous tolérez des accès permanents (*Standing Access*), vous acceptez qu'une simple compromission d'identité se transforme instantanément en compromission totale du système.
+Protéger les comptes à privilèges ne consiste pas à empiler des contrôles autour d’un modèle inchangé.  
+Cela implique de reconnaître que le privilège est, en soi, un risque systémique.
 
-Le passage au modèle **Just-In-Time** via PIM, couplé à une ségrégation stricte des comptes (Cloud-Only), est la seule réponse structurelle adaptée aux menaces actuelles. L'administration ne doit pas être un état de fait, mais un acte conscient, temporaire et surveillé.
+Tant que l’administration reste un état permanent, chaque compromission d’identité porte en elle le potentiel d’un incident majeur.  
+Le modèle Just-In-Time, rendu opérationnel par PIM, associé à une séparation stricte des identités et à un durcissement contextuel de l’accès, constitue aujourd’hui la seule réponse structurelle cohérente face aux menaces modernes.
 
----
-*Dans le prochain article de la série, nous quitterons le monde des humains pour nous attaquer aux **Identités Applicatives**, ces comptes de service silencieux qui accumulent souvent des privilèges permanents sans aucune surveillance.*
+Dans le prochain épisode, nous quitterons le monde des utilisateurs humains pour nous intéresser à des identités plus discrètes, mais tout aussi critiques : **les identités applicatives et les comptes de service**, souvent dotés de privilèges permanents sans véritable supervision.
