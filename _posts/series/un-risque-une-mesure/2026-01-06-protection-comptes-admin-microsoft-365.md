@@ -1,6 +1,6 @@
 ---
 title: "Comptes à privilèges : pourquoi les protéger comme les autres ne suffit pas"
-date: 2026-01-06 08:00:00 +01:00
+date: 2026-01-06 07:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, privileged-access, pim, just-in-time, tiering-model]
 categories: [identite, entra-id]
