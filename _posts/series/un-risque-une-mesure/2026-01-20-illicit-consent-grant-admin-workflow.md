@@ -1,6 +1,6 @@
 ---
 title: "Le clic qui contourne le MFA : Le Consent Phishing"
-date: 2026-01-19 08:00:00 +01:00
+date: 2026-01-20 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, security, oauth, consent-framework]
 categories: [securite, entra-id]

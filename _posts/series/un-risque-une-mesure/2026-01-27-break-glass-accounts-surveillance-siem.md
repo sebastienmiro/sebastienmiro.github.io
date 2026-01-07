@@ -1,6 +1,6 @@
 ---
 title: "S’enfermer dehors : le risque du Lockout et la stratégie Brise-Glace"
-date: 2026-01-26 08:00:00 +01:00
+date: 2026-01-27 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, break-glass, emergency-access, sentinel, monitoring]
 categories: [identite, entra-id]
@@ -149,6 +149,3 @@ Les comptes Brise-Glace sont les airbags de votre tenant Entra ID. Vous espérez
 Ne tombez pas dans le piège de vouloir trop les sécuriser technologiquement (MFA, PIM, CA) au point de les rendre inutilisables en cas de crise. La sécurité de ces comptes repose sur leur **obscurité** (login inconnu), leur **protection physique** (coffre-fort) et leur **surveillance numérique** (SIEM).
 
 Le jour où vous serez enfermé dehors, ces deux comptes seront les seuls amis qu'il vous restera.
-
----
-*Dans le prochain article, nous aborderons la sécurité du poste d'administration et les risques liés au BYOD non maîtrisé.*

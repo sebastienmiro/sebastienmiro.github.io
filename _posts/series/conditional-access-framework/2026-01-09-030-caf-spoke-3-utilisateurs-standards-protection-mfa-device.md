@@ -28,7 +28,7 @@ Ils héritent du socle commun, puis servent implicitement de référence pour to
 Cette approche est compréhensible, mais elle conduit souvent à une attente irréaliste : que les règles appliquées aux usages quotidiens couvrent l’ensemble des risques liés à l’identité.
 
 Le Conditional Access Framework v4 adopte une position plus claire.  
-Les utilisateurs standards constituent une **persona à part entière**, caractérisée par une forte exposition, mais un impact généralement contenu en cas de compromission. L’objectif n’est donc pas de tout bloquer, mais de **réduire efficacement les scénarios les plus probables**, sans casser les usages.
+Les utilisateurs standards constituent un **persona à part entière**, caractérisée par une forte exposition, mais un impact généralement contenu en cas de compromission. L’objectif n’est donc pas de tout bloquer, mais de **réduire efficacement les scénarios les plus probables**, sans casser les usages.
 
 ## Exemple terrain : ce que le framework cherche réellement à éviter
 
