@@ -5,7 +5,7 @@ layout: post
 categories: [gouvernance, information]
 tags: [exchange-online, archivage, retention, support, gouvernance, m365]
 cover-img: "assets/img/banners/banner1.png"
-thumbnail-img: "assets/img/posts/2026/01/2026-01-07-exchange-online-auto-archiving.png"
+thumbnail-img: "assets/img/posts/2026/01/2026-01-07-exchange-online-auto-archiving-thumbnail.png"
 readtime: true
 comments: true
 sidebar: true
