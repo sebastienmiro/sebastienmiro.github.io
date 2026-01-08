@@ -22,7 +22,7 @@ platform: Microsoft Entra
 ## Rôle de cet article
 
 Cet article constitue le **catalogue de référence** des politiques du *Conditional Access Framework v4*.  
-Il s’appuie exclusivement sur la nomenclature officielle des politiques (fichiers JSON CAxxx) et en reprend fidèlement la structure.
+Il s’appuie exclusivement sur la nomenclature officielle des politiques *(CAxxx-Persona-Intention)* et en reprend fidèlement la structure.
 
 Ce catalogue n’est ni un guide de configuration, ni une checklist de déploiement.  
 Il sert de **point de vérité** pour comprendre :
