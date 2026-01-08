@@ -102,9 +102,13 @@ C’est volontairement après ce spoke que la série pourra entrer dans le déta
 
 ## Conclusion
 
-Le Conditional Access Framework v4 traite les comptes à privilèges pour ce qu’ils sont réellement : des identités à fort impact, nécessitant des contrôles spécifiques et assumés.
+Les comptes à privilèges posent un problème fondamental : leur usage est rare, mais leur impact est disproportionné.  
+Le Conditional Access Framework v4 part de ce constat, sans chercher à l’édulcorer.
 
-En les sortant du flux normal d’authentification, il réduit significativement les scénarios d’attaque les plus critiques.  
-Cette approche est plus contraignante, mais elle est cohérente avec le niveau de risque traité.
+En les sortant du flux d’authentification standard, le framework ne “durcit pas pour durcir”.  
+Il reconnaît simplement que les compromis acceptables pour les usages quotidiens ne le sont plus lorsqu’il s’agit d’administration.
 
-Elle constitue l’un des véritables points de bascule du framework.
+Cette approche a un coût opérationnel.  
+Elle impose des parcours distincts, des contraintes assumées et une discipline d’usage plus forte. Mais elle permet aussi de réduire des scénarios d’attaque qui restent, sur le terrain, parmi les plus critiques.
+
+Dans la suite de la série, ces principes serviront de base pour analyser concrètement les politiques associées aux comptes à privilèges, sans les présenter comme des recettes universelles, mais comme des leviers à adapter selon le niveau de maturité et les contraintes réelles de votre environnement.
