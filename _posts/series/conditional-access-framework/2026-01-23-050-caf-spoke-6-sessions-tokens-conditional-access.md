@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Session et tokens : le vrai point de rupture"
-date: 2026-01-30 09:00:00 +01:00
+date: 2026-01-23 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, session, token]
 categories: [identite, entra-id]
@@ -9,7 +9,7 @@ comments: true
 cover-img: "assets/img/banners/banner-conditional-access.png"
 thumbnail-img: "assets/img/posts/series/conditional-access-framework/060/060-thumb.png"
 series: CA
-series_order: 060
+series_order: 050
 sidebar: true
 level: concepts
 scope:
