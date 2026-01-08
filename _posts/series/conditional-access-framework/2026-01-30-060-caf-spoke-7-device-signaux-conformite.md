@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Devices : signaux, conformité et faux amis"
-date: 2026-02-06 09:00:00 +01:00
+date: 2026-01-30 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, device-compliance, signaux]
 categories: [identite, entra-id]
@@ -9,7 +9,7 @@ comments: true
 cover-img: "assets/img/banners/banner-conditional-access.png"
 thumbnail-img: "assets/img/posts/series/conditional-access-framework/070/070-thumb.png"
 series: CA
-series_order: 070
+series_order: 060
 sidebar: true
 level: concepts
 scope:
