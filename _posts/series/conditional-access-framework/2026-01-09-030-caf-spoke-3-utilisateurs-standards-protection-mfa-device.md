@@ -6,7 +6,7 @@ tags: [series:conditional-access-framework, mfa, device-trust]
 categories: [identite, entra-id]
 readtime: true
 comments: true
-cover-img: "assets/img/banners/banner-conditional-access-users.png"
+cover-img: "assets/img/banners/banner1.png"
 thumbnail-img: "assets/img/posts/series/conditional-access-framework/030/030-thumb.png"
 series: Conditional Access Framework
 series_order: 030
