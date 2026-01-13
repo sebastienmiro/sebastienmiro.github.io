@@ -19,78 +19,105 @@ scope:
   - Sécurité de l’identité
 ---
 
-> 💡 **Contexte :** Dans Microsoft Entra ID, les applications et automatisations accèdent aux ressources à l’aide d’identités non humaines (App Registrations, Managed Identities, Service Principals). Contrairement aux utilisateurs dont le cycle de vie est lié au contrat de travail, ces identités techniques s'accumulent souvent sans date de fin.
+> 💡 **Contexte**  
+> Dans Microsoft Entra ID, une part croissante des accès n’est plus réalisée par des utilisateurs humains, mais par des identités techniques : applications, automatisations, scripts, services. Ces identités — App Registrations, Service Principals, Managed Identities — ne quittent jamais l’entreprise, ne changent pas de poste et ne prennent pas de congés. Elles s’accumulent.
 
 ![Entra ID - App management overview](/assets/img/posts/series/un-risque-une-mesure/2026-01-13-app-management-overview.png)
 
-L’authentification de ces identités repose sur des moyens techniques — secrets ou certificats — dont la durée de validité est nécessairement limitée. En revanche, les **permissions applicatives** accordées à ces identités ne sont, par défaut, ni temporaires ni soumises à un mécanisme systématique de remise en question dans le temps.
+Dans la plupart des tenants, ces identités sont créées pour répondre à un besoin ponctuel : synchroniser des données, automatiser un traitement, interfacer un outil tiers. L’authentification repose sur des mécanismes techniques — secrets ou certificats — dont la durée de vie est, par construction, limitée.
 
-Cette dissociation entre la durée de vie du moyen d’authentification et celle du privilège constitue un risque spécifique, distinct de celui des identités humaines.
+En revanche, les **permissions applicatives** accordées à ces identités suivent une logique très différente. Elles ne sont ni temporaires, ni réévaluées automatiquement, ni liées à une échéance métier. Une fois accordées, elles restent valides jusqu’à ce qu’un humain décide explicitement de les retirer.
 
-## Le risque : Des permissions applicatives sans temporalité
+Cette dissociation entre la durée de vie du moyen d’authentification et celle du privilège constitue un risque structurel, souvent sous-estimé, et profondément différent de celui des identités humaines.
 
-Une identité applicative ne s’authentifie pas de manière interactive et n’est pas soumise aux contrôles classiques (MFA, localisation).
+## Le risque : des permissions sans horizon temporel
 
-Le piège réside dans la confusion entre sécurité de l'authentification et sécurité de l'autorisation :
-* **Authentification :** Les secrets expirent et sont renouvelés.
-* **Autorisation :** Les permissions (`User.ReadWrite.All`, `Files.Read.All`) restent valides tant qu’elles ne sont pas explicitement retirées.
+Une identité applicative ne s’authentifie pas de manière interactive.  
+Elle ne reçoit pas de notification MFA, ne subit pas de fatigue utilisateur et n’est pas sensible aux contrôles de localisation ou d’anomalies comportementales classiques.
 
-Dans de nombreux environnements, ces permissions sont attribuées à la création de l’application et conservées indéfiniment. Le privilège devient alors durable par conception, sans lien direct avec un besoin opérationnel courant. Une compromission ultérieure de l'identité permettrait d'exploiter l'ensemble des permissions accumulées depuis des années.
+Le piège réside dans une confusion fréquente entre deux notions distinctes :
 
-### Détection et contrôles limités
-De plus, l’absence d’interaction humaine limite l’efficacité de la détection comportementale. Les accès applicatifs légitimes et malveillants peuvent présenter des caractéristiques similaires (gros volumes de données, horaires 24/7), rendant l’analyse des journaux complexe.
+- l’**authentification**, qui est souvent bien maîtrisée (rotation des secrets, certificats à durée limitée) ;
+- l’**autorisation**, qui repose sur des permissions applicatives parfois extrêmement larges (`User.ReadWrite.All`, `Files.Read.All`, `Directory.ReadWrite.All`) et rarement remises en question.
 
-## L'illusion de sécurité : Identités Managées et Rotation
+Dans de nombreux environnements, ces permissions sont attribuées lors de la création de l’application, puis simplement oubliées. Le privilège devient durable par défaut, sans lien avec un besoin opérationnel courant. Si l’identité est compromise plusieurs mois ou années plus tard, l’attaquant hérite immédiatement de l’ensemble des capacités accumulées au fil du temps.
 
-On pourrait penser que l'usage des **Identités Managées (Managed Identities)** résout le problème. C'est en partie vrai pour l'authentification : la plateforme gère la rotation des secrets, éliminant le risque de fuite de mot de passe dans le code.
+### Une détection structurellement plus difficile
 
-Toutefois, les identités managées ne résolvent pas le problème de fond. Les permissions applicatives accordées à ces identités restent durables tant qu’elles ne sont pas explicitement révoquées. La réduction du risque d’authentification ne doit pas être confondue avec la gouvernance du privilège. Une identité managée avec trop de droits reste une identité dangereuse.
+À cela s’ajoute une difficulté opérationnelle bien connue des équipes sécurité : les accès applicatifs légitimes ressemblent souvent, dans les journaux, à des accès malveillants. Volumes importants, exécution continue, plages horaires étendues… Les signaux faibles sont rares, et les faux positifs nombreux.
 
-## La Mesure : Implémenter une Gouvernance du Cycle de Vie (ALM)
+L’absence d’interaction humaine réduit mécaniquement l’efficacité des mécanismes de détection basés sur le comportement utilisateur. Le problème n’est pas l’absence de logs, mais leur interprétation.
 
-Pour contrer ce risque de persistance, il ne suffit pas de "durcir" la configuration technique. Il faut instaurer un processus récurrent de validation des privilèges. Voici la démarche structurée pour reprendre le contrôle.
+## L’illusion de sécurité : rotation et identités managées
 
-### Niveau 1 : L'hygiène des Propriétaires (Owners)
-Aucune gouvernance n'est possible sans responsabilité (*Accountability*). La première étape consiste à auditer vos **Enterprise Applications**.
+Face à ce constat, beaucoup d’équipes se tournent vers les **Managed Identities**, à juste titre. Elles permettent d’éliminer toute gestion manuelle de secrets, de réduire drastiquement les risques de fuite dans le code et de déléguer la rotation à la plateforme.
 
-* **Le problème :** Les applications créées par des administrateurs partis de l'entreprise deviennent "orphelines". Personne ne sait ce qu'elles font, donc personne n'ose les supprimer.
-* **L'action :** Imposer la présence d'au moins **deux propriétaires** (Owners) actifs sur chaque App Registration. Si une application n'a pas de propriétaire, elle est candidate à la désactivation.
+Sur le plan de l’authentification, le gain est réel.
 
-### Niveau 2 : Access Reviews pour les Service Principals (La solution cible)
-C'est la mesure technique phare proposée par Microsoft Entra ID (requiert une licence *Workload Identities Premium*). Elle permet d'automatiser la recertification des accès.
+Mais ce mécanisme ne traite pas le cœur du problème.  
+Les permissions applicatives accordées à une identité managée restent, elles aussi, permanentes tant qu’elles ne sont pas explicitement révoquées. Une identité managée trop permissive reste une identité dangereuse, même si son secret est parfaitement protégé.
 
-**Le principe :**
-Plutôt que de faire un audit Excel annuel pénible, vous configurez une politique dans *Identity Governance* :
-1.  **Cible :** Tous les Service Principals ayant des rôles privilégiés (ex: Application Permissions sur Graph API).
-2.  **Réviseur :** Les propriétaires de l'application (Owners) ou, à défaut, un groupe de sécurité "Gouvernance".
-3.  **Fréquence :** Trimestrielle ou semestrielle.
-4.  **Action :** Si le propriétaire ne répond pas ou refuse l'accès, les permissions sont retirées ou le compte est désactivé.
+Réduire le risque d’authentification ne suffit pas lorsque le privilège, lui, reste sans limite temporelle.
 
-**Pourquoi c'est efficace :**
-Cela déplace la charge de la preuve. Ce n'est plus à l'équipe Sécurité de prouver que l'application est dangereuse. C'est au propriétaire de l'application de signer numériquement qu'elle est toujours légitime.
+## La mesure : gouverner le cycle de vie des identités applicatives
 
-### Niveau 3 : Le Moindre Privilège par le Partitionnement
-Pour les environnements matures, la mesure ultime est de réduire la portée des permissions via :
-* **Resource Specific Consent (RSC) :** L'application n'a accès qu'aux données d'une équipe Teams spécifique, pas à tout le tenant.
-* **Administrative Units :** Restreindre le champ d'action d'une identité applicative à uen partie de l'entreprise.
+La réponse n’est pas uniquement technique. Elle est organisationnelle et procédurale.  
+Il s’agit d’introduire une **gouvernance explicite du privilège applicatif**, alignée sur le cycle de vie réel des usages.
 
-## Défense en profondeur : Accès Conditionnel pour Workload Identities
+### Niveau 1 : rétablir la responsabilité
 
-En complément de la gouvernance, l'accès conditionnel peut désormais s'appliquer aux identités de charge de travail (licences spécifiques requises).
+Aucune gouvernance n’est possible sans responsable identifié.  
+Dans beaucoup de tenants, on trouve des applications sans propriétaire clair, héritées de projets terminés ou créées par des collaborateurs partis depuis longtemps.
 
-Cela permet de restreindre l'usage d'un Service Principal à des adresses IP de confiance (ex: vos serveurs on-premise ou vos plages IP Azure). Bien que cela ne réduise pas les permissions, cela limite considérablement la capacité d'un attaquant à utiliser un token volé depuis l'extérieur de votre périmètre réseau.
+La première étape consiste à imposer une règle simple : **toute application doit avoir des propriétaires actifs**. À défaut, elle devient candidate à la désactivation. Cette mesure, basique en apparence, permet déjà de réduire significativement l’angle mort.
 
-## Mise en œuvre pratique : Par où commencer ?
+### Niveau 2 : recertifier les privilèges dans le temps
 
-Si vous devez prioriser vos actions demain matin :
+Microsoft Entra ID propose, via **Identity Governance**, un mécanisme adapté à ce problème : les **Access Reviews** appliquées aux Service Principals (licences spécifiques requises).
 
-1.  **Inventaire :** Listez toutes les applications ayant des *Application Permissions* (pas *Delegated*) sur Microsoft Graph.
-2.  **Focus Critique :** Isolez celles qui ont des droits globaux de type `*.All` (ex: `User.ReadWrite.All`, `Mail.ReadWrite`, `RoleManagement.ReadWrite`).
-3.  **Nettoyage immédiat :** Supprimez les secrets expirés depuis plus de 12 mois (signe d'abandon) et désactivez les Service Principals inactifs depuis 90 jours.
-4.  **Automatisation :** Activez une première Access Review en mode "Audit seul" (sans blocage automatique) pour éduquer les propriétaires d'applications.
+Plutôt que de reposer sur des audits ponctuels, ce mécanisme permet d’instaurer une revue périodique des permissions applicatives. Les propriétaires de l’application doivent confirmer que les accès sont toujours nécessaires. En l’absence de réponse, ou en cas de refus, les permissions sont retirées.
+
+Ce changement est fondamental : la légitimité d’un privilège n’est plus implicite, elle doit être régulièrement réaffirmée.
+
+### Niveau 3 : réduire la portée des permissions
+
+Lorsque le contexte le permet, la réduction de la surface d’exposition passe aussi par le **partitionnement** des accès.  
+Des mécanismes comme le *Resource Specific Consent* ou l’usage ciblé des *Administrative Units* permettent de limiter l’impact potentiel d’une compromission, en restreignant le périmètre d’action de l’identité applicative.
+
+Ce n’est pas toujours possible, mais lorsque ça l’est, le gain est considérable.
+
+## Complément défensif : accès conditionnel pour identités de charge de travail
+
+En complément de la gouvernance, Microsoft permet désormais d’appliquer des politiques d’accès conditionnel aux **Workload Identities**. Cela ne réduit pas les permissions accordées, mais limite les contextes dans lesquels elles peuvent être exploitées.
+
+Restreindre l’usage d’un Service Principal à des plages IP connues ou à des environnements maîtrisés permet de contenir l’impact d’un token volé et d’ajouter une barrière supplémentaire à l’exploitation.
+
+## Mise en œuvre pratique : par où commencer ?
+
+La difficulté avec les identités applicatives n’est pas tant le manque d’outils que le manque de priorisation. Vouloir tout traiter d’un coup conduit souvent à l’inaction. À l’inverse, quelques actions ciblées permettent rapidement de reprendre le contrôle.
+
+La première étape consiste à **objectiver le périmètre**. Microsoft recommande explicitement de commencer par identifier les applications utilisant des *Application Permissions*, en particulier sur Microsoft Graph, car ce sont elles qui disposent d’un accès autonome et potentiellement global au tenant.  
+🔗 Documentation Microsoft – Permissions et consentement :  
+https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview
+
+Une fois cet inventaire établi, l’attention doit se porter sur les permissions les plus larges, notamment celles se terminant par `*.All`. Microsoft souligne que ces permissions doivent être considérées comme équivalentes à des privilèges élevés, et justifiées uniquement lorsqu’aucune alternative plus restrictive n’est possible.  
+🔗 Microsoft Graph – Application permissions reference :  
+https://learn.microsoft.com/en-us/graph/permissions-reference
+
+Dans un second temps, un **nettoyage basique mais efficace** s’impose : suppression des secrets expirés depuis longtemps, désactivation des Service Principals inactifs, et identification des applications sans propriétaire actif. Microsoft insiste sur ce point : une application sans owner clairement identifié est, par définition, une dette de sécurité.  
+🔗 Documentation Microsoft – App ownership and lifecycle :  
+https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals
+
+Une fois ce socle assaini, la mise en place de **revues d’accès** permet d’introduire une gouvernance dans la durée. Les Access Reviews appliquées aux Service Principals déplacent la responsabilité vers les équipes métiers ou techniques réellement consommatrices de l’application, conformément aux recommandations Microsoft en matière d’Identity Governance.  
+🔗 Documentation Microsoft – Access reviews for applications :  
+https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-application-access
+
+Enfin, lorsque le contexte le permet, Microsoft encourage à réduire la portée des accès via des mécanismes comme le *Resource Specific Consent*, afin d’éviter les permissions globales lorsque le besoin est localisé.  
+🔗 Documentation Microsoft – Resource-specific consent :  
+https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent
 
 ## Conclusion
 
-Les identités applicatives sont des composants indispensables des environnements Microsoft 365. Le risque principal associé ne réside pas dans la durée de validité des secrets, mais dans la persistance des permissions.
+Les identités applicatives sont devenues indispensables au fonctionnement des environnements Microsoft 365. Le risque principal qu’elles introduisent ne réside pas dans la gestion des secrets, mais dans la **persistance silencieuse des permissions**.
 
-Tant que ces permissions ne sont pas traitées comme des capacités à gouverner dans le temps — avec une portée définie, une justification explicite et une revue régulière — elles constituent un point de fragilité durable (et souvent invisible) dans la sécurité de votre identité.
+Tant que ces privilèges ne sont pas considérés comme des capacités à gouverner dans le temps — avec une justification, une portée et une remise en question régulière — ils constituent un point de fragilité durable, souvent invisible, mais parfaitement exploitable.
