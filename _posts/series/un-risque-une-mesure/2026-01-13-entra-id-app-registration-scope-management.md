@@ -116,6 +116,36 @@ Enfin, lorsque le contexte le permet, Microsoft encourage à réduire la portée
 🔗 Documentation Microsoft – Resource-specific consent :  
 https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent
 
+## Lecture croisée : recommandations Microsoft et usages réels
+
+La documentation Microsoft sur les identités applicatives est globalement claire sur un point :  
+les permissions applicatives doivent être limitées, justifiées et régulièrement revues.
+
+Sur le papier, le modèle est sain. Dans la réalité, l’écart se creuse vite.
+
+Côté Microsoft, les recommandations reposent sur quelques principes structurants :
+- chaque application doit avoir un **propriétaire identifié** ;
+- les permissions doivent suivre le **principe du moindre privilège** ;
+- les accès applicatifs doivent être **revus périodiquement**, via Identity Governance ;
+- les secrets et certificats doivent être **rotés automatiquement** ou gérés par la plateforme.
+
+Ces principes sont documentés, cohérents, et techniquement atteignables dans Entra ID.
+
+Dans les environnements que l’on observe au quotidien, la situation est souvent différente.  
+Non par négligence volontaire, mais par accumulation progressive de décisions pragmatiques.
+
+Les applications sont créées pour répondre à un besoin ponctuel — intégration métier, automatisation, script d’administration — puis laissées en place.  
+Les permissions accordées “pour que ça marche” ne sont jamais réévaluées.  
+Les propriétaires initiaux changent de rôle ou quittent l’entreprise.  
+Et l’identité applicative continue d’exister, silencieusement, avec exactement les mêmes droits.
+
+Le point de friction n’est donc pas la technologie, mais le **cycle de vie**.  
+Microsoft fournit les mécanismes de gouvernance, mais ceux-ci ne sont jamais activés par défaut.  
+Sans processus explicite, la sécurité des identités non humaines repose entièrement sur la mémoire collective — ce qui, en pratique, ne tient pas dans le temps.
+
+C’est précisément là que se situe l’enjeu réel :  
+non pas “sécuriser une application”, mais accepter que **toute permission applicative est un privilège durable tant qu’elle n’est pas explicitement remise en question**.
+
 ## Conclusion
 
 Les identités applicatives sont devenues indispensables au fonctionnement des environnements Microsoft 365. Le risque principal qu’elles introduisent ne réside pas dans la gestion des secrets, mais dans la **persistance silencieuse des permissions**.
