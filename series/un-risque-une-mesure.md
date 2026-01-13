@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Conditional Access Framework
+title: Série "Un risque, une mesure"
 sidebar: true
-series: Conditional Access Framework
+series: R1M
 permalink: /series/un-risque-une-mesure/
 tags: [series:un-risque-une-mesure]
 
