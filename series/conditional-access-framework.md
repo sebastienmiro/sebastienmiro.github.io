@@ -26,7 +26,7 @@ Chaque billet peut être lu indépendamment, mais l’ensemble forme un **parcou
 
 ## Parcours de lecture
 
-{% assign posts = site.posts | where: "series", "CA" | sort: "series_order" %}
+{% assign posts = site.posts | where: "series", "CAF" | sort: "series_order" %}
 <ul>
 {% for post in posts %}
   <li>
