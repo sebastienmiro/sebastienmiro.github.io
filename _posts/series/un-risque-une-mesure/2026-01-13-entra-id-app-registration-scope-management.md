@@ -1,6 +1,6 @@
 ---
 title: "Identités applicatives et non humaines : le piège du privilège permanent"
-date: 2026-01-13 11:00:00 +01:00
+date: 2026-01-13 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, workload-identity, app-registrations, conditional-access, governance]
 categories: [identite, entra-id]
