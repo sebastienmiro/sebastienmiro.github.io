@@ -8,7 +8,7 @@ readtime: true
 comments: true
 cover-img: "assets/img/banners/banner-conditional-access.png"
 thumbnail-img: "assets/img/posts/series/conditional-access-framework/020/020-thumb.png"
-series: Conditional Access Framework
+series: CA
 series_order: 020
 sidebar: true
 level: concepts
