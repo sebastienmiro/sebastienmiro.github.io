@@ -97,24 +97,19 @@ Restreindre l’usage d’un Service Principal à des plages IP connues ou à de
 La difficulté avec les identités applicatives n’est pas tant le manque d’outils que le manque de priorisation. Vouloir tout traiter d’un coup conduit souvent à l’inaction. À l’inverse, quelques actions ciblées permettent rapidement de reprendre le contrôle.
 
 La première étape consiste à **objectiver le périmètre**. Microsoft recommande explicitement de commencer par identifier les applications utilisant des *Application Permissions*, en particulier sur Microsoft Graph, car ce sont elles qui disposent d’un accès autonome et potentiellement global au tenant.  
-🔗 Documentation Microsoft – Permissions et consentement :  
-https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview
+🔗 [Documentation Microsoft – Permissions et consentement](https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview)
 
 Une fois cet inventaire établi, l’attention doit se porter sur les permissions les plus larges, notamment celles se terminant par `*.All`. Microsoft souligne que ces permissions doivent être considérées comme équivalentes à des privilèges élevés, et justifiées uniquement lorsqu’aucune alternative plus restrictive n’est possible.  
-🔗 Microsoft Graph – Application permissions reference :  
-https://learn.microsoft.com/en-us/graph/permissions-reference
+🔗 [Microsoft Graph – Application permissions reference](https://learn.microsoft.com/en-us/graph/permissions-reference)
 
 Dans un second temps, un **nettoyage basique mais efficace** s’impose : suppression des secrets expirés depuis longtemps, désactivation des Service Principals inactifs, et identification des applications sans propriétaire actif. Microsoft insiste sur ce point : une application sans owner clairement identifié est, par définition, une dette de sécurité.  
-🔗 Documentation Microsoft – App ownership and lifecycle :  
-https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals
+🔗 [Documentation Microsoft – App ownership and lifecycle](https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals)
 
 Une fois ce socle assaini, la mise en place de **revues d’accès** permet d’introduire une gouvernance dans la durée. Les Access Reviews appliquées aux Service Principals déplacent la responsabilité vers les équipes métiers ou techniques réellement consommatrices de l’application, conformément aux recommandations Microsoft en matière d’Identity Governance.  
-🔗 Documentation Microsoft – Access reviews for applications :  
-https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-application-access
+🔗 [Documentation Microsoft – Access reviews for applications](https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-application-access)
 
 Enfin, lorsque le contexte le permet, Microsoft encourage à réduire la portée des accès via des mécanismes comme le *Resource Specific Consent*, afin d’éviter les permissions globales lorsque le besoin est localisé.  
-🔗 Documentation Microsoft – Resource-specific consent :  
-https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent
+🔗 [Documentation Microsoft – Resource-specific consent](https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent)
 
 ## Lecture croisée : recommandations Microsoft et usages réels
 
