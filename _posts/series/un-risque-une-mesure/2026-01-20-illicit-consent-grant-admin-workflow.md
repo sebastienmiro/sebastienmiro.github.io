@@ -1,5 +1,5 @@
 ---
-title: "Le clic qui contourne le MFA : Le Consent Phishing"
+title: "Le clic qui contourne la MFA : comprendre le Consent Phishing"
 date: 2026-01-20 08:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, security, oauth, consent-framework]
@@ -18,69 +18,133 @@ scope:
   - Application Governance
 ---
 
-> 💡 **Le constat :** Nous avons martelé à nos utilisateurs de ne jamais donner leur mot de passe. Les attaquants se sont adaptés : ils ne demandent plus le mot de passe, ils demandent la **permission**. C'est le "Consentement Illicite" (Illicit Consent Grant), une technique qui rend le MFA inopérant.
+Nous avons passé des années à expliquer aux utilisateurs qu’il ne fallait jamais communiquer son mot de passe.  
+La plupart ont intégré le message. Les attaquants aussi.
 
-Aujourd'hui, la compromission de compte ne passe plus nécessairement par le vol d'identifiants. Le **Consent Phishing** est particulièrement dangereux car il détourne les mécanismes de confiance de Microsoft pour piéger l'utilisateur.
+Aujourd’hui, de nombreuses compromissions ne passent plus par le vol d’identifiants, ni même par le contournement de la MFA. Elles reposent sur un mécanisme parfaitement légitime, documenté et encouragé par les plateformes cloud : **le consentement OAuth**.
 
-## Le Risque : L'utilisateur devient complice malgré lui
+Le *Consent Phishing* ne cherche pas à casser l’authentification. Il l’utilise exactement comme prévu.
 
-Dans un phishing classique, l'utilisateur atterrit sur une fausse page de connexion. S'il est vigilant ou équipé d'une clé de sécurité, l'attaque échoue.
+## Le risque : quand l’authentification fonctionne
+
+Dans un scénario de phishing classique, l’utilisateur est redirigé vers une fausse page de connexion.  
+S’il est vigilant, ou s’il utilise une MFA résistante au phishing, l’attaque échoue.
+
+Avec le consent phishing, le déroulé est différent.
 
 ![Entra ID - Illicit consent workflow](/assets/img/posts/series/un-risque-une-mesure/2026-01-19-illicit-consent-grant.png)
 
-Ici, le scénario est différent. L'utilisateur reçoit un lien vers une application (souvent déguisée en outil légitime). Il s'authentifie sur la véritable page Microsoft, avec son certificat valide, et valide son MFA avec succès.
-C'est alors que le piège se referme : une fenêtre standard lui demande : *"L'application 'Upgrade Office 365' souhaite accéder à vos emails et vos contacts. Accepter ?"*
+L’utilisateur reçoit un lien vers une application présentée comme légitime : outil collaboratif, mise à jour Office, connecteur métier.  
+Il clique, arrive sur **la vraie page Microsoft**, s’authentifie normalement et valide sa MFA sans anomalie.
 
-L'utilisateur clique sur "Accepter". À cet instant :
-1.  Une **application tierce malveillante** est autorisée dans votre tenant.
-2.  L'attaquant récupère un jeton d'accès (Access Token) et un jeton de rafraîchissement (Refresh Token).
-3.  Il obtient un accès durable à la boîte mail, sans jamais avoir connu le mot de passe.
+C’est seulement après cette étape qu’apparaît l’écran de consentement standard :  
+*l’application souhaite accéder à votre profil, vos fichiers ou vos emails*.
 
-Pour le système, l'accès est légitime : l'utilisateur s'est authentifié et a explicitement validé la demande.
+Lorsque l’utilisateur accepte, il ne donne ni son mot de passe, ni son second facteur.  
+Il **délègue des permissions**.
 
-### Pourquoi c'est critique
-* **Invisibilité :** Pas d'échec de connexion, pas d'alerte classique "Impossible travel".
-* **Persistance :** Changer le mot de passe ne révoque pas toujours les droits de l'application (selon la configuration de révocation des tokens).
-* **Crédibilité :** L'attaque utilise l'infrastructure officielle de Microsoft.
+À partir de cet instant, une application tierce est autorisée dans le tenant, avec les droits accordés. Elle peut obtenir des access tokens et des refresh tokens, et accéder aux données sans interaction utilisateur supplémentaire.
 
-## La Mesure : Filtrer la confiance (Verified Publishers)
+Pour Entra ID, tout est conforme.  
+L’utilisateur s’est authentifié et a explicitement consenti.
 
-Le réflexe immédiat serait de bloquer tout consentement utilisateur (`Do not allow user consent`). C'est techniquement robuste, mais cela paralyse les usages métiers : plus aucune connexion possible à des outils SaaS légitimes (Adobe, Trello, outils RH) sans ticket au support. Le Shadow IT risque alors d'exploser.
+## Pourquoi la MFA ne protège pas contre ce scénario
 
-La bonne posture consiste à **filtrer la confiance** et **déléguer le contrôle**.
+Ce point est essentiel à comprendre.
 
-### 1. La configuration "Filtre"
-Plutôt que de tout interdire, configurez la politique de consentement pour autoriser les utilisateurs à valider seuls une demande **uniquement si** deux conditions sont réunies :
-* L'application provient d'un **Éditeur Vérifié** (Verified Publisher) par Microsoft (identité certifiée via le Microsoft Partner Network).
-* ET les permissions demandées sont "à faible impact" (ex: connexion simple `openid`, lecture du profil de base).
+La MFA protège l’authentification de l’utilisateur.  
+Elle ne protège pas la **délégation de droits OAuth**.
 
-Toute demande sortant de ce cadre (éditeur inconnu ou demande d'accès aux fichiers/mails) sera bloquée.
+Dans un consent phishing, il n’y a pas d’usurpation d’identité. Il y a une **autorisation volontaire**, obtenue par tromperie, mais techniquement valide. La MFA est satisfaite, car l’utilisateur est bien à l’origine de l’action.
 
-### 2. Le Filet de Sécurité : Admin Consent Workflow
-Lorsque le consentement est bloqué, l'utilisateur ne doit pas être dans une impasse. Activez le **flux de demande d'approbation administrateur**.
+C’est ce qui rend ce type d’attaque particulièrement efficace et difficile à détecter par les mécanismes classiques :  
+pas d’échec de connexion, pas de signal de risque évident, pas d’anomalie géographique.
 
-* **Côté utilisateur :** Une fenêtre indique *"L'approbation d'un administrateur est requise"*. Il peut saisir une justification.
-* **Côté Admin :** Vous recevez la demande dans le portail Entra. Vous vérifiez la réputation de l'application et l'approuvez pour le demandeur (ou pour toute l'organisation).
+## Les conséquences concrètes
 
-## Mise en œuvre
+Une application malveillante consentie peut, selon les permissions accordées :
 
-Dans **Entra ID > Enterprise applications > Consent and permissions** :
+- lire les emails et les pièces jointes,
+- accéder aux fichiers OneDrive et SharePoint,
+- maintenir un accès durable via des refresh tokens,
+- survivre à un changement de mot de passe utilisateur.
 
-1.  **User consent settings :** Cochez *"Allow user consent for apps from verified publishers, for selected permissions"*.
-2.  **Permission classifications :** Définissez explicitement les permissions à faible risque (Low impact).
-3.  **Admin consent settings :** Activez le workflow et désignez des réviseurs (équipe Sécurité ou Helpdesk niveau 2). Ne laissez pas cette tâche au seul Global Admin.
+Dans de nombreux environnements, la révocation du consentement n’est pas automatisée et passe inaperçue. L’attaquant n’a plus besoin de revenir : l’accès persiste tant que l’application reste autorisée.
+
+## Pourquoi bloquer tout le consentement utilisateur n’est pas une réponse viable
+
+La réaction instinctive consiste souvent à désactiver complètement le consentement utilisateur.  
+D’un point de vue sécurité, la mesure est efficace. D’un point de vue opérationnel, elle est rarement tenable.
+
+De nombreux outils SaaS légitimes reposent sur OAuth et nécessitent un consentement initial.  
+Tout bloquer revient à déplacer la friction vers le support, à multiplier les demandes d’exception et, dans certains cas, à encourager le contournement par des solutions non maîtrisées.
+
+Le vrai enjeu n’est pas d’empêcher tout consentement.  
+Il est de **distinguer ce qui peut être accepté sans risque majeur de ce qui doit être contrôlé**.
+
+## La mesure : filtrer la confiance plutôt que l’interdire
+
+Microsoft fournit un cadre précis pour réduire drastiquement le risque de consent phishing sans bloquer les usages légitimes.
+
+L’approche repose sur deux principes complémentaires :
+- limiter le consentement utilisateur aux applications dignes de confiance,
+- imposer un contrôle administratif pour tout le reste.
+
+### Filtrer par éditeur vérifié et permissions à faible impact
+
+La première brique consiste à autoriser le consentement utilisateur **uniquement** lorsque l’application répond à des critères stricts :
+- l’éditeur est **vérifié** par Microsoft,
+- les permissions demandées sont classées comme **faible impact**.
+
+Cela permet de bloquer automatiquement :
+- les applications créées par des attaquants,
+- les éditeurs anonymes,
+- les demandes d’accès aux emails, fichiers ou données sensibles.
+
+🔗[Configure user consent settings](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-user-consent)
+
+🔗[Verified publisher status](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/verified-publisher)
+
+🔗[Permission classifications](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-permission-classifications)
+
+### Mettre en place un workflow d’approbation administrateur
+
+Lorsque le consentement utilisateur est bloqué, il est essentiel de proposer une alternative encadrée.
+
+Le **Admin Consent Workflow** permet à l’utilisateur de demander une approbation, avec justification, sans avoir à comprendre les implications techniques des permissions demandées.  
+La décision est déplacée vers des profils capables d’évaluer le risque.
+
+🔗[Configure the admin consent workflow](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-admin-consent-workflow)
+
+Ce mécanisme permet :
+- de conserver la traçabilité des décisions,
+- d’éviter les exceptions sauvages,
+- de répartir la charge sans la concentrer sur un seul Global Admin.
 
 ![Entra ID - Admin approval workflow](/assets/img/posts/series/un-risque-une-mesure/2026-01-19-illicit-consent.png)
 
-## Le nettoyage
+## Traiter l’existant : le consent phishing d’hier est encore actif aujourd’hui
 
-Cette mesure protège l'avenir. Pour l'existant, une analyse s'impose.
-Filtrez vos applications d'entreprise (**Enterprise Applications**) pour identifier celles qui ont des noms génériques ("App", "Test", "Upgrade"), des éditeurs non vérifiés, et des permissions critiques (Read Mail, Read Files).
+La configuration protège les consentements futurs.  
+Elle ne corrige pas ceux déjà accordés.
 
-*Note :* Les alertes **Defender for Cloud Apps** ("Misleading publisher name", "App with suspicious permissions") sont ici très efficaces pour automatiser cette détection.
+Un travail de revue est indispensable dans **Enterprise Applications** :
+- identifier les applications avec des noms génériques ou trompeurs,
+- vérifier les éditeurs non vérifiés,
+- analyser les permissions applicatives étendues.
 
-## Conclusion
+Sur ce point, Microsoft Defender for Cloud Apps apporte des signaux particulièrement utiles pour détecter les applications à risque ou trompeuses.
 
-L'Admin Consent Workflow est le compromis nécessaire entre verrouillage total et permissivité dangereuse. Il ne s'agit pas d'empêcher les utilisateurs de travailler, mais de leur retirer la responsabilité de valider des accès techniques qu'ils ne sont pas en mesure d'évaluer.
+🔗[Investigate OAuth apps](https://learn.microsoft.com/en-us/defender-cloud-apps/investigate-apps)
 
-Ne laissez pas vos utilisateurs décider seuls qui a le droit d'exfiltrer les données de l'entreprise.
+## Ce que révèle le consent phishing
+
+Le consent phishing met en lumière un point souvent sous-estimé :  
+la sécurité de l’identité ne se limite pas à l’authentification.
+
+Tant que des utilisateurs peuvent déléguer, seuls, des accès techniques qu’ils ne sont pas en mesure d’évaluer, la MFA ne suffit pas. Le problème n’est pas l’erreur humaine, mais l’absence de cadre.
+
+Le consentement OAuth est un mécanisme puissant.  
+Sans gouvernance explicite, il devient un angle mort.
+
+Dans le prochain article, nous aborderons un autre détournement du modèle OAuth : **les permissions applicatives accordées sans temporalité**, et pourquoi leur gouvernance est souvent plus critique encore que celle des identités humaines.
