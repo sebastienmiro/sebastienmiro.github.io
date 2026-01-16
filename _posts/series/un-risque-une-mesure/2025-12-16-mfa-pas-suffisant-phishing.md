@@ -1,5 +1,5 @@
 ---
-title: "MFA ne veut pas dire sécurité : comprendre pourquoi l’authentification MFA ne suffit plus"
+title: "MFA ne veut pas dire sécurité : comprendre pourquoi l’authentification MFA ne suffit plus (Episode 2)"
 date: 2025-12-16 18:00:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, mfa, entra-id, identité, phishing, token]
