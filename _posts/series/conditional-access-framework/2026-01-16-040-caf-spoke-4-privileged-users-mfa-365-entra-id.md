@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Comptes à privilèges : sortir du flux normal"
-date: 2026-01-16 08:00:00 +01:00
+date: 2026-01-16 08:10:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, privileged-access, mfa]
 categories: [identite, entra-id]
