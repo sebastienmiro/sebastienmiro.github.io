@@ -1,5 +1,5 @@
 ---
-title: "Security Defaults vs. Conditional Access : le faux sentiment de sécurité"
+title: "Security Defaults vs. Conditional Access : le faux sentiment de sécurité (Episode 1)"
 date: 2025-12-12 11:30:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, conditional-access, security-defaults]
