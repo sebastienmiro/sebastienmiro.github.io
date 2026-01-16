@@ -1,5 +1,5 @@
 ---
-title: "Sécurité de l’identité : le rôle critique des tokens d’accès dans Microsoft Entra ID"
+title: "Sécurité de l’identité : le rôle critique des tokens d’accès dans Microsoft Entra ID (Episode 3)"
 date: 2025-12-23 05:30:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, identité, mfa, tokens, token-protection, sécurité]
