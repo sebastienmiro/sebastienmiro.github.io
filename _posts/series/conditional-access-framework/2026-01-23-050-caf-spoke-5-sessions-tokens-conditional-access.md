@@ -20,118 +20,107 @@ scope:
 platform: Microsoft Entra
 ---
 
-## Pourquoi la MFA ne suffit plus à elle seule
+## Ce que cet article couvre réellement
 
-Pendant longtemps, la sécurité des accès s’est concentrée sur l’authentification.  
-Mot de passe, puis MFA, puis MFA renforcée. Une fois cette étape franchie, l’accès était considéré comme légitime jusqu’à la fin naturelle de la session.
+Cet article ne vise pas à démontrer que la MFA est insuffisante.  [Ce point est déjà largement documenté dans un de mes articles.](https://blog.sebastienmiro.fr/identite/entra-id/entra-id-session-persistante-sign-in-frequency/)
 
-Dans la pratique, ce raisonnement ne tient plus.  
-Une authentification réussie n’épuise pas le risque. Elle ouvre une session, émet des tokens, et accorde une confiance qui peut durer bien au-delà du contexte initial.
+L’objectif est plus précis : **comprendre comment le Conditional Access Framework v4 traite concrètement la session et les tokens**, et pourquoi ces mécanismes arrivent à ce stade du framework.
 
-Le Conditional Access Framework v4 part de ce constat : **le problème principal n’est pas l’authentification, mais ce qui se passe après**.  
-Durée de session, persistance, réutilisation des tokens et capacité à remettre en cause un accès déjà accordé deviennent des sujets centraux.
+Les politiques abordées ici n’introduisent pas de nouveaux concepts.  
+Elles organisent, positionnent et combinent des leviers déjà existants dans Entra ID.
 
-## Session, token, cookie : ce que l’accès conditionnel contrôle réellement
+## Session, token, cookie : le périmètre réel de l’accès conditionnel
 
-Avant d’aborder les politiques, il faut clarifier un point souvent mal compris.
+L’accès conditionnel ne s’applique pas à un utilisateur au sens abstrait.  
+Il agit sur des objets techniques précis :
+- tokens d’accès,
+- tokens de rafraîchissement,
+- cookies de session.
 
-L’accès conditionnel ne protège pas un utilisateur au sens abstrait.  
-Il agit sur des éléments techniques précis : des tokens d’accès, des tokens de rafraîchissement et des cookies de session, chacun avec ses propres règles de validité.
+Une authentification réussie entraîne l’émission de tokens. Tant qu’ils restent valides, l’accès est accordé, même si le contexte évolue.
 
-Une fois les tokens émis, l’accès reste possible tant qu’ils sont acceptés, même si :
-- l’utilisateur change de contexte,
-- le niveau de risque évolue,
-- ou que le poste utilisé n’est plus le même.
+Le CAF v4 part de cette réalité technique.  
+Il ne cherche pas à empêcher l’émission des tokens, mais à **encadrer leur durée de validité, leur persistance et les conditions dans lesquelles ils restent acceptés**.
 
-Les attaques actuelles exploitent précisément ce décalage entre le moment de l’authentification et la durée réelle de validité de la session.
+## Sign-in frequency : encadrer la durée de validité d’une session
 
-Le framework v4 ne cherche pas à empêcher l’émission des tokens.  
-Il cherche à **en limiter la durée, la portée et les conditions de réutilisation**.
+Les politiques **CA102**, **CA202** et **CA402** introduisent un contrôle explicite sur la durée pendant laquelle une session peut rester valide sans nouvelle authentification.
 
-## Sign-in frequency : limiter la durée d’un accès valide
+Le framework applique ce levier différemment selon les personas :
+- pour les comptes à privilèges, la session doit être courte et régulièrement réévaluée ;
+- pour les utilisateurs standards, la durée est modulée selon le type de poste et son niveau de maîtrise.
 
-Les politiques **CA102**, **CA202** et **CA402** introduisent ou renforcent le contrôle de la fréquence de connexion.
+Ces politiques ne détectent pas une compromission.  
+Elles limitent simplement la période pendant laquelle un accès reste exploitable sans interaction supplémentaire.
 
-Leur objectif est simple : éviter qu’une session reste exploitable trop longtemps sans réauthentification.
+## Persistent browser : contrôler la persistance implicite
 
-Pour les comptes à privilèges, l’enjeu est évident. Une session administrative persistante constitue un point d’entrée critique.  
-Pour les utilisateurs standards, l’approche est plus progressive, avec des fréquences adaptées selon le type de poste et son niveau de maîtrise.
+Les politiques **CA103**, **CA206** et **CA403** adressent un point souvent sous-estimé : la persistance des sessions navigateur.
 
-Ces politiques ne bloquent pas une attaque en cours.  
-Elles **réduisent la durée pendant laquelle un accès volé reste utilisable**, ce qui suffit souvent à casser des scénarios automatisés ou opportunistes.
+Une session persistante prolonge mécaniquement la validité des tokens, parfois bien au-delà de ce que l’utilisateur perçoit.
 
-## Persistent browser : réduire les sessions qui durent sans être visibles
+Dans le CAF v4 :
+- la persistance est explicitement évitée pour les comptes à privilèges ;
+- elle peut être tolérée pour les utilisateurs standards, mais uniquement dans des contextes maîtrisés.
 
-Les politiques **CA103**, **CA206** et **CA403** ciblent un comportement courant : la persistance des sessions dans le navigateur.
+Ces règles ne sont pas accessoires.  
+Elles conditionnent directement l’impact d’un vol de session, en particulier dans les scénarios de phishing par proxy.
 
-Ces sessions, souvent invisibles pour l’utilisateur, prolongent mécaniquement la validité des tokens, parfois pendant plusieurs jours ou semaines.
+## Continuous Access Evaluation : remettre en cause une session existante
 
-Le framework v4 recommande une position claire :
-- pour les comptes à privilèges, la persistance est un risque à éviter ;
-- pour les utilisateurs standards, elle peut être tolérée dans des contextes maîtrisés, mais jamais par défaut.
+La **Continuous Access Evaluation** (politiques **CA104** et **CA209**) permet de remettre en cause une session **après** son établissement.
 
-Ces règles sont souvent sous-estimées.  
-Sur le terrain, elles ont un impact direct sur la réduction des attaques par phishing proxy et par réutilisation de session.
-
-## Continuous Access Evaluation : remettre en cause un accès déjà accordé
-
-La **Continuous Access Evaluation** (politiques **CA104** et **CA209**) permet de remettre en cause une session **après** l’authentification.
-
-Concrètement, une session n’est plus considérée comme valide jusqu’à son expiration naturelle. Elle peut être invalidée lorsque certains événements surviennent, comme :
+Concrètement, une session peut être invalidée en fonction de signaux tels que :
 - une évolution du risque utilisateur,
-- un changement d’état du compte,
-- ou une action administrative critique.
+- une modification de l’état du compte,
+- ou certains événements de sécurité.
 
-Ce mécanisme ne couvre pas tous les scénarios et n’est pas instantané dans tous les cas.  
-Mais il réduit fortement l’écart entre la détection d’un problème et la remise en cause effective de l’accès.
+Le framework intègre la CAE comme un mécanisme complémentaire, sans en faire une garantie absolue.  
+Elle ne couvre pas tous les cas et n’est pas instantanée dans toutes les situations, mais elle réduit l’écart entre détection et prise d’effet.
 
-## Phishing-resistant MFA : limiter l’obtention initiale du token
+## Phishing-resistant MFA : agir au moment de l’émission du token
 
-La politique **CA105** se concentre sur un point précis : l’émission du token.
+La politique **CA105** se concentre sur la phase d’authentification des comptes à fort impact.
 
-Même avec une MFA classique, un attaquant capable de relayer l’authentification peut obtenir un token valide. Le framework v4 réserve donc les méthodes de MFA résistantes au phishing aux comptes à fort impact, en particulier les comptes à privilèges.
+Même avec une MFA classique, un attaquant peut obtenir un token valide s’il est capable de relayer l’authentification. Le CAF v4 réserve donc les méthodes de MFA résistantes au phishing aux comptes à privilèges.
 
-L’objectif n’est pas de généraliser ces méthodes à tous les utilisateurs.  
-Il s’agit de réduire la probabilité qu’un attaquant puisse **obtenir un token exploitable dès le départ**.
+Cette politique ne protège pas la session une fois le token émis.  
+Elle vise uniquement à réduire la probabilité qu’un token exploitable soit obtenu dès l’origine.
 
-Cette politique ne protège pas la session une fois le token émis. Elle agit en amont, au moment le plus critique.
+## Ce que ces politiques apportent, et ce qu’elles n’apportent pas
 
-## Ce que ces politiques permettent, et leurs limites
+Les politiques de session et de tokens ne remplacent :
+- ni la détection,
+- ni la réponse à incident,
+- ni la supervision des usages.
 
-Les politiques liées aux sessions et aux tokens ne rendent pas un environnement invulnérable.  
-Elles ne remplacent ni la détection, ni la réponse à incident, ni la supervision des usages.
+Elles n’empêchent pas toutes les compromissions.  
+Elles limitent la durée, la persistance et la réutilisation des accès accordés.
 
-En revanche, elles modifient les conditions d’exploitation :
-- un token volé est valide moins longtemps,
-- une session est plus facilement remise en cause,
-- et l’accès devient plus dépendant du contexte réel.
+Dans le CAF v4, ces mécanismes sont positionnés comme des **réducteurs d’impact**, pas comme des contrôles préventifs universels.
 
-Le framework v4 formalise cette approche sans promesse excessive.  
-Il ne supprime pas les attaques, il en **réduit la portée et la durée**.
+## Pourquoi ces politiques arrivent à ce stade du framework
 
-## Pourquoi ces politiques arrivent après les personas et le socle
+Ces leviers sont efficaces, mais sensibles.
 
-Ces contrôles sont efficaces, mais sensibles.
-
-Déployés trop tôt ou sans cadre, ils génèrent rapidement :
+Déployés sans cadre, ils entraînent rapidement :
 - des déconnexions fréquentes,
 - de l’incompréhension côté utilisateurs,
-- et des tentatives de contournement.
+- et des contournements.
 
-C’est pour cette raison que le framework les positionne après :
+C’est pour cette raison que le CAF v4 les positionne après :
 - la définition des personas,
-- la mise en place du socle commun,
+- le socle commun,
 - et la séparation claire entre utilisateurs standards et comptes à privilèges.
 
-Ce séquencement conditionne leur acceptation et leur efficacité réelle.
+Ils ne constituent pas un point de départ, mais un **niveau d’affinement**.
 
 ## Conclusion
 
-Dans le Conditional Access Framework v4, la session et les tokens ne sont pas des effets secondaires de l’authentification. Ils sont traités comme des éléments à contrôler explicitement.
+Le Conditional Access Framework v4 ne redéfinit pas la gestion des sessions et des tokens.  
+Il les place explicitement dans un ensemble cohérent de politiques, avec un périmètre et un ordre d’application clairs.
 
-Les politiques **CA102, CA103, CA104, CA105, CA202, CA206 et CA209** ne cherchent pas à tout bloquer. Elles visent à limiter ce qui cause encore une grande partie des incidents terrain : des accès valides trop longtemps, peu remis en question, et exploitables bien après l’authentification initiale.
+Les politiques **CA102, CA103, CA104, CA105, CA202, CA206 et CA209** n’introduisent pas de nouveaux mécanismes.  
+Elles structurent des contrôles existants pour limiter des situations bien connues sur le terrain : des accès valides trop longtemps et insuffisamment remis en cause.
 
-Le framework ne propose pas une approche nouvelle par principe.  
-Il formalise des mécanismes déjà connus, mais souvent mal positionnés ou mal combinés dans les déploiements réels.
-
-Dans la suite de la série, les politiques liées aux appareils seront abordées avec la même logique : non pas comme des garanties de sécurité, mais comme des signaux, utiles uniquement lorsqu’ils sont correctement intégrés dans l’ensemble du framework.
+Dans les articles suivants, le framework sera analysé avec la même approche pour les politiques liées aux appareils, sans les présenter comme des garanties en soi, mais comme des signaux dont l’efficacité dépend entièrement de leur positionnement global.
