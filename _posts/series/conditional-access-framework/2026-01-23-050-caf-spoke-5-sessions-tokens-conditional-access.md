@@ -20,8 +20,6 @@ scope:
 platform: Microsoft Entra
 ---
 
-## Ce que cet article couvre réellement
-
 Cet article ne vise pas à démontrer que la MFA est insuffisante.  [Ce point est déjà largement documenté dans un de mes articles.](https://blog.sebastienmiro.fr/identite/entra-id/entra-id-session-persistante-sign-in-frequency/)
 
 L’objectif est plus précis : **comprendre comment le Conditional Access Framework v4 traite concrètement la session et les tokens**, et pourquoi ces mécanismes arrivent à ce stade du framework.
