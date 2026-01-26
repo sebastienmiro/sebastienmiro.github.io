@@ -1,6 +1,6 @@
 ---
 title: "S’enfermer dehors : le risque du lockout et la stratégie brise-glace"
-date: 2026-01-26 21:08:00 +01:00
+date: 2026-01-27 07:30:00 +01:00
 layout: post
 tags: [series:un-risque-une-mesure, entra-id, break-glass, emergency-access, sentinel, monitoring]
 categories: [identite, entra-id]

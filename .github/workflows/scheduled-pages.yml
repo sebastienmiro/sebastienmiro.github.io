@@ -2,7 +2,7 @@ name: Scheduled Pages rebuild
 
 on:
   schedule:
-    - cron: "5 8 * * *" # 08:05 UTC, ajuste si tu veux
+    - cron: "45 8 * * *" # 08:05 UTC, ajuste si tu veux
   workflow_dispatch:
 
 permissions:
