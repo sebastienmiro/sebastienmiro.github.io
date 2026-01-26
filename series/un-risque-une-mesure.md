@@ -28,7 +28,7 @@ Ils peuvent être lus isolément, mais l’ensemble constitue une bibliothèque 
 
 ## Parcours de lecture
 
-{% assign posts = site.posts | where: "series", "R1M" | sort: "series_order" %}
+{% assign posts = site.posts | where: "series", "R1M" | sort: "date" %}
 <ul>
 {% for post in posts %}
   <li>
