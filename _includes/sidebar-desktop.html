@@ -11,7 +11,7 @@
 
   {% assign posts_in_series = site.posts
     | where: "series", series_key
-    | sort: "series_order" %}
+    | sort: "date" %}
 
   {% assign series_size = posts_in_series | size %}
 
