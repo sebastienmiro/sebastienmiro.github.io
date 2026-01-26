@@ -13,5 +13,5 @@ end
 gem "wdm", "~> 0.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
 gem "jekyll-seo-tag"
-
+gem "jekyll-news-sitemap"
 gemspec
