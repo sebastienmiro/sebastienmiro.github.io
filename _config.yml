@@ -308,7 +308,6 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-news-sitemap
-  - jekyll-sitemap
   - jekyll-minifier
 
 jekyll-minifier:
