@@ -26,7 +26,6 @@ jobs:
         with:
           source: ./
           destination: ./_site
-          future: false
 
       - uses: actions/upload-pages-artifact@v3
 
