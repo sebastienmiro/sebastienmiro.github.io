@@ -29,10 +29,9 @@ C’est à partir de cette lecture que le CAF v4 construit ses politiques. Les a
 
 ## Ce que l’accès conditionnel contrôle réellement
 
-Dans Entra ID, une application ne constitue pas un périmètre fonctionnel ou métier.  
-Du point de vue de l’accès conditionnel, elle est avant tout un **point de délivrance de jetons**.
+Dans Entra ID, une application n’est pas sécurisée par l’accès conditionnel en tant que telle, mais sert uniquement à identifier la ressource pour laquelle un jeton est émis lors de l’authentification.
 
-L’accès conditionnel s’exerce exclusivement au moment où une identité tente d’obtenir un token pour une application donnée. La décision repose sur un contexte précis, évalué à cet instant : identité, type de compte, posture du device, niveau de risque, localisation, méthode d’authentification, etc.
+L’accès conditionnel s’exerce exclusivement au moment où une identité tente d’obtenir un token pour une application donnée. La décision repose sur un contexte précis, évalué à cet instant : identité, type de compte, posture de l'appareil, niveau de risque, localisation, méthode d’authentification, etc.
 
 Une fois le token émis et accepté par l’application, le rôle de l’accès conditionnel est terminé.  
 Il n’intervient plus sur :
@@ -51,8 +50,7 @@ Tout ce qui relève du comportement applicatif, de la gouvernance des rôles ou 
 
 ## Le périmètre applicatif comme outil de réduction de surface
 
-Dans le Conditional Access Framework v4, le périmètre applicatif n’est pas un mécanisme de protection fonctionnelle.  
-Il joue un rôle plus simple et plus structurant : **réduire la surface d’exposition initiale**.
+Dans le Conditional Access Framework v4, le périmètre applicatif ne constitue pas un mécanisme de protection fonctionnelle, mais un levier destiné à **réduire la surface d’exposition lors de l’accès initial**.
 
 Le scoping applicatif permet de limiter les conséquences immédiates d’une compromission générique. Sans ce levier, un compte compromis peut souvent obtenir des tokens pour un large ensemble d’applications, y compris celles dont l’impact est élevé ou transversal. En ciblant explicitement certaines applications, le framework évite que cet accès soit automatique.
 
@@ -71,8 +69,7 @@ Le CAF v4 utilise le périmètre applicatif comme un mécanisme de confinement e
 
 ## Une limite souvent mal acceptée sur le terrain
 
-Cette posture volontairement limitée est souvent source d’incompréhension.  
-Dans de nombreux environnements, une application soumise à des règles d’accès conditionnel strictes est rapidement qualifiée de « sécurisée ». Cette interprétation est trompeuse.
+Cette posture volontairement limitée est souvent mal comprise. Dans de nombreux environnements, le fait d’appliquer des règles d’accès conditionnel strictes à une application conduit à la qualifier abusivement de « sécurisée », alors que l’accès conditionnel ne contrôle que les conditions d’obtention du jeton, pas la sécurité intrinsèque de l’application.
 
 L’accès conditionnel ne corrige pas :
 - une application vulnérable,
