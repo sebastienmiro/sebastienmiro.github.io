@@ -7,7 +7,7 @@ categories: [identite, entra-id]
 readtime: true
 comments: true
 cover-img: "assets/img/banners/banner-conditional-access.png"
-thumbnail-img: "assets/img/posts/series/conditional-access-framework/080/080-thumb.png"
+thumbnail-img: "assets/img/posts/series/conditional-access-framework/070/070-thumb.png"
 series: CA
 series_order: 070
 sidebar: true
