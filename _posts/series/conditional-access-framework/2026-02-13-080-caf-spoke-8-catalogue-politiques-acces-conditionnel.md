@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access Framework v4 — Catalogue des politiques"
-date: 2026-02-06 09:00:00 +01:00
+date: 2026-02-13 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, conditional-access, design]
 categories: [identite, entra-id]
