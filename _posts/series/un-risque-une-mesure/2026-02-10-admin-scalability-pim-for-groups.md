@@ -7,7 +7,7 @@ categories: [gouvernance, entra-id]
 readtime: true
 comments: true
 cover-img: "assets/img/banners/banner02.png"
-thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2026-02-10-pim-groups.png"
+thumbnail-img: "assets/img/posts/series/un-risque-une-mesure/2026-02-10-admin-scalability-pim-for-groups.png"
 series: R1M
 series_order: 100
 sidebar: true
