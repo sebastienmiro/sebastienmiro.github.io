@@ -1,4 +1,4 @@
-
+---
 title: "Conditional Access Framework v2026.2.1 - Guide de déploiement progressif"
 date: 2026-02-20 09:00:00 +01:00
 layout: post
@@ -17,7 +17,7 @@ scope:
   - Déploiement
   - Audit
 platform: Microsoft Entra
-
+---
 
 ## Pourquoi le déploiement progressif n'est pas une option
 
