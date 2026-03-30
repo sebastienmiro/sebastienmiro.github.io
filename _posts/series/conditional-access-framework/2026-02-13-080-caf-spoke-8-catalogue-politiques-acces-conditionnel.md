@@ -1,13 +1,13 @@
 ---
-title: "Conditional Access Framework v2026.1 - Catalogue des politiques"
-date: 2026-02-30 09:00:00 +01:00
+title: "Conditional Access Framework v2026.2.1 - Catalogue des politiques"
+date: 2026-02-13 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, conditional-access, design]
 categories: [identite, entra-id]
 readtime: true
 comments: true
 cover-img: "assets/img/banners/banner-conditional-access.png"
-thumbnail-img: "assets/img/posts/series/conditional-access-framework/050/050-thumb.png"
+thumbnail-img: "assets/img/posts/series/conditional-access-framework/080/080-thumb.png"
 series: CA
 series_order: 050
 sidebar: true
@@ -21,14 +21,9 @@ platform: Microsoft Entra
 
 ## Rôle de cet article
 
-Cet article constitue le **catalogue de référence** des politiques du *Conditional Access Framework*, dans sa version **2026.2.1** publiée par Joey Verlinden le 13 février 2026.
+Cet article est le catalogue de référence des politiques du *Conditional Access Framework* dans sa version **2026.2.1**, publiée par Joey Verlinden le 13 février 2026.
 
-Ce catalogue n'est ni un guide de configuration, ni une checklist de déploiement. Il sert de **point de vérité** pour comprendre :
-
-- quelles politiques composent réellement le framework,
-- à quelles personas elles s'appliquent,
-- quelles intentions de sécurité elles portent,
-- et quels sont leurs prérequis implicites.
+Ce n'est ni un guide de configuration ni une checklist de déploiement. L'objectif est de disposer d'un point de vérité sur la structure du framework : quelles politiques le composent, à quelles personas elles s'appliquent, quelle intention de sécurité elles portent, et quels prérequis elles impliquent réellement.
 
 Les analyses détaillées font l'objet d'articles dédiés, référencés progressivement depuis ce catalogue.
 
@@ -38,33 +33,33 @@ Les analyses détaillées font l'objet d'articles dédiés, référencés progre
 
 ## Changelog v2026.2.1
 
-Deux modifications notables dans cette version :
+**CA005 - migration obligatoire.** Microsoft déprécie le contrôle *Require approved client app* en mars 2026. CA005 bascule sur *RequireAppProtection* (Intune MAM). Les tenants qui s'appuient encore sur l'ancien contrôle pour protéger l'accès à Office 365 depuis des appareils non gérés sont directement concernés.
 
-**CA501 — nouvelle politique** : une politique *template* pour les agents à haut risque est intégrée au framework. Elle crée par la même occasion une nouvelle persona : **Agents**.
-
-**CA005 — mise à jour** : le contrôle *Require approved client app* est remplacé par *RequireAppProtection*. Ce changement fait suite à la **dépréciation de "Require approved client app" par Microsoft en mars 2026**. Les tenants qui utilisaient encore l'ancien contrôle doivent migrer vers `RequireAppProtection` pour maintenir la couverture de protection des données sur les appareils non gérés.
+**CA501 - nouvelle politique, nouvelle persona.** Une politique template ciblant les agents à haut risque est intégrée au framework. Elle s'accompagne d'une nouvelle persona dédiée : **Agents**.
 
 ---
 
 ## Personas
 
-Le framework structure ses politiques autour de cinq personas distinctes. Chacune représente un profil d'identité avec ses propres exigences de sécurité.
+Le framework organise ses politiques autour de six personas. Chacune correspond à un profil d'identité distinct, avec ses propres exigences de sécurité et son périmètre d'application.
 
-**Global** regroupe les politiques transversales qui s'appliquent à toutes les identités, ou qui couvrent des scénarios non rattachables à une persona unique. C'est le socle commun du framework.
+**Global** regroupe les politiques transversales applicables à toutes les identités, ou couvrant des scénarios non rattachables à une persona unique. C'est le socle commun du framework.
 
-**Admins** couvre toute identité non-invitée — synchronisée ou cloud — disposant d'un rôle d'administration Microsoft 365 ou Azure AD (Exchange, MDCA, Defender for Endpoint, Compliance, etc.). Les comptes invités avec des rôles admin relèvent de la persona Guests, pas de celle-ci.
+**Admins** cible toute identité non invitée - synchronisée ou cloud - disposant d'un rôle d'administration Microsoft 365 ou Azure AD (Exchange, MDCA, Defender for Endpoint, Compliance...). Les comptes invités avec des rôles admin relèvent de la persona Guests.
 
-**Internals** désigne les utilisateurs disposant d'un compte AD synchronisé, employés de l'organisation, occupant un rôle utilisateur standard.
+**Internals** désigne les utilisateurs avec un compte AD synchronisé, employés de l'organisation, en rôle utilisateur standard.
 
-**Guests** regroupe tous les comptes invités Azure AD (B2B) ayant été invités dans le tenant.
+**Guests** regroupe les comptes invités Azure AD (B2B) invités dans le tenant.
 
-**Agents** — persona introduite en v2026.2.1 — couvre les ressources agentiques gérables via Conditional Access.
+**Service accounts** couvre les identités non humaines : comptes de service, identités utilisées par des automatisations ou des applications.
+
+**Agents** couvre les ressources agentiques gérables via Conditional Access. Persona introduite en v2026.2.1, elle ne contient pour l'instant qu'une seule politique.
 
 ---
 
-## CA000–CA006 — Global policies
+## CA000-CA006 - Global policies
 
-Ces politiques constituent le **socle transversal** du framework. Elles s'appliquent indépendamment des personas et visent à éliminer les vecteurs de compromission les plus évidents avant toute spécialisation par profil.
+Le socle transversal du framework. Ces politiques s'appliquent indépendamment des personas et ciblent les vecteurs de compromission les plus directs : authentification legacy, transferts de flux, protection des données sur appareils non gérés.
 
 | ID | Politique (nom exact) | Persona(s) | Intention | Contrôle principal | Pré-requis | Analyse |
 |----|-----------------------|------------|-----------|-------------------|------------|---------|
@@ -73,64 +68,66 @@ Ces politiques constituent le **socle transversal** du framework. Elles s'appliq
 | CA002 | Global-IdentityProtection-AnyApp-AnyPlatform-Block-LegacyAuthentication | Toutes | Identity Protection | Block legacy auth | Aucun | ⏳ |
 | CA003 | Global-BaseProtection-RegisterOrJoin-AnyPlatform-MFA | Toutes | Base Protection | MFA | MFA + désactivation du paramètre natif d'enregistrement d'appareils | ⏳ |
 | CA004 | Global-IdentityProtection-AnyApp-AnyPlatform-AuthenticationFlows | Toutes | Identity Protection | Blocage des transferts de flux d'auth (device code flow) | Fonctionnalité en preview | ⏳ |
-| CA005 | Global-DataProtection-Office365-AnyPlatform-Unmanaged-**RequireAppProtection** | Toutes | Data Protection | App Protection Policies (Intune MAM) | Intune MAM, appareils non gérés | ⏳ |
+| CA005 | Global-DataProtection-Office365-AnyPlatform-Unmanaged-RequireAppProtection | Toutes | Data Protection | App Protection Policies (Intune MAM) | Intune MAM, appareils non gérés | ⏳ |
 | CA006 | Global-DataProtection-Office365-iOSandAndroid-RequireAppProtection | Toutes | Data Protection | App protection iOS/Android | Intune MAM | ⏳ |
 
-> **Note CA005** : le nom de la politique a évolué en v2026.2.1. L'ancien contrôle *Require approved client app* est déprécié par Microsoft depuis mars 2026 ; il est remplacé par *RequireAppProtection*. Le nom officiel de la politique dans le framework est désormais `Global-DataProtection-Office365-AnyPlatform-Unmanaged-RequireAppProtection`.
+> **CA005** : le contrôle *Require approved client app* est déprécié par Microsoft en mars 2026. Le nom officiel de la politique est désormais `Global-DataProtection-Office365-AnyPlatform-Unmanaged-RequireAppProtection`.
 
-> **Note CA006** : selon le GitHub de référence, cette politique sera prochainement modifiée ou supprimée en raison d'un chevauchement avec CA005.
+> **CA006** : cette politique sera prochainement modifiée ou supprimée. Elle présente un chevauchement fonctionnel avec CA005.
 
 ---
 
-## CA100–CA105 — Admin policies
+## CA100-CA105 - Admin policies
 
-Ces politiques sont exclusivement dédiées aux **comptes à privilèges**. Elles sortent les administrateurs du flux d'authentification standard et réduisent leur surface et durée d'exposition.
+Politiques dédiées aux comptes à privilèges. Elles isolent les administrateurs du flux d'authentification standard, réduisent la durée des sessions et imposent des méthodes d'authentification plus robustes.
 
 | ID | Politique (nom exact) | Persona(s) | Intention | Contrôle principal | Pré-requis | Analyse |
 |----|-----------------------|------------|-----------|-------------------|------------|---------|
 | CA100 | Admins-IdentityProtection-AdminPortals-AnyPlatform-MFA | Admins | Identity Protection | MFA sur portails admin | MFA | ⏳ |
 | CA101 | Admins-IdentityProtection-AnyApp-AnyPlatform-MFA | Admins | Identity Protection | MFA toutes apps | MFA | ⏳ |
 | CA102 | Admins-IdentityProtection-AllApps-AnyPlatform-SigninFrequency | Admins | Identity Protection | Fréquence de reconnexion (12h max) | Session controls | ⏳ |
-| CA103 | Admins-IdentityProtection-AllApps-AnyPlatform-PersistentBrowser | Admins | Identity Protection | Désactivation des sessions persistantes | Session controls | ⏳ |
-| CA104 | Admins-IdentityProtection-AllApps-AnyPlatform-ContinuousAccessEvaluation | Admins | Identity Protection | CAE (réévaluation en quasi-temps réel) | Pas de mode Report-only — ON/OFF uniquement | ⏳ |
+| CA103 | Admins-IdentityProtection-AllApps-AnyPlatform-PersistentBrowser | Admins | Identity Protection | Sessions non persistantes | Session controls | ⏳ |
+| CA104 | Admins-IdentityProtection-AllApps-AnyPlatform-ContinuousAccessEvaluation | Admins | Identity Protection | CAE (réévaluation en quasi-temps réel) | Mode ON/OFF uniquement, pas de Report-only | ⏳ |
 | CA105 | Admins-IdentityProtection-AnyApp-AnyPlatform-PhishingResistantMFA | Admins | Identity Protection | MFA phishing-resistant | FIDO2 / CBA | ⏳ |
 
 ---
 
-## CA200–CA210 — Internals
+## CA200-CA210 - Internals
 
-Ces politiques couvrent les **utilisateurs internes standards**. Elles visent à réduire les attaques opportunistes et à introduire des contrôles contextuels sans bloquer les usages quotidiens.
+Politiques pour les utilisateurs internes standards. Elles couvrent la gestion des risques identité, la conformité des appareils Windows et macOS, et les contrôles de session sur les appareils non gérés.
 
 | ID | Politique (nom exact) | Persona(s) | Intention | Contrôle principal | Pré-requis | Analyse |
 |----|-----------------------|------------|-----------|-------------------|------------|---------|
 | CA200 | Internals-IdentityProtection-AnyApp-AnyPlatform-MFA | Internals | Identity Protection | MFA | MFA | ⏳ |
 | CA201 | Internals-IdentityProtection-AnyApp-AnyPlatform-BLOCK-HighRiskUser | Internals | Identity Protection | Blocage user risk élevé | Entra ID Protection | ⏳ |
 | CA202 | Internals-IdentityProtection-AllApps-WindowsMacOS-SigninFrequency-UnmanagedDevices | Internals | Identity Protection | Fréquence de reconnexion (12h) sur appareils non gérés | Détection de conformité appareil | ⏳ |
-| CA203 | Internals-AppProtection-MicrosoftIntuneEnrollment-AnyPlatform-MFA | Internals | App Protection | MFA à l'enrôlement Intune | Intune (attention : incompatible Autopilot v2 sans exclusion) | ⏳ |
+| CA203 | Internals-AppProtection-MicrosoftIntuneEnrollment-AnyPlatform-MFA | Internals | App Protection | MFA à l'enrôlement Intune | Intune - exclure les utilisateurs Autopilot Device Preparation v2 | ⏳ |
 | CA204 | Internals-AttackSurfaceReduction-AllApps-AnyPlatform-BlockUnknownPlatforms | Internals | Attack Surface Reduction | Blocage plateformes inconnues | Détection de plateforme | ⏳ |
 | CA205 | Internals-BaseProtection-AnyApp-Windows-CompliantorAADHJ | Internals | Base Protection | Conformité ou Hybrid Join (Windows) | Intune / Entra Hybrid Join | ⏳ |
 | CA206 | Internals-IdentityProtection-AllApps-AnyPlatform-PersistentBrowser | Internals | Identity Protection | Sessions non persistantes (appareils non gérés) | Session controls | ⏳ |
 | CA207 | Internals-AttackSurfaceReduction-SelectedApps-AnyPlatform-BLOCK | Internals | Attack Surface Reduction | Blocage d'applications spécifiques | Ciblage applicatif | ⏳ |
 | CA208 | Internals-BaseProtection-AnyApp-MacOS-Compliant | Internals | Base Protection | Conformité appareil macOS | Intune | ⏳ |
-| CA209 | Internals-IdentityProtection-AllApps-AnyPlatform-ContinuousAccessEvaluation | Internals | Identity Protection | CAE | Pas de mode Report-only — ON/OFF uniquement | ⏳ |
+| CA209 | Internals-IdentityProtection-AllApps-AnyPlatform-ContinuousAccessEvaluation | Internals | Identity Protection | CAE | Mode ON/OFF uniquement, pas de Report-only | ⏳ |
 | CA210 | Internals-IdentityProtection-AnyApp-AnyPlatform-BLOCK-HighRiskSignIn | Internals | Identity Protection | Blocage sign-in risk élevé | Entra ID Protection | ⏳ |
+
+> **CA210** : cette politique n'est pas présente dans les fichiers exportés du dépôt GitHub à date. À vérifier avant déploiement.
 
 ---
 
-## CA300–CA301 — Service accounts
+## CA300-CA301 - Service accounts
 
-Ces politiques couvrent les **identités non humaines**. L'objectif est de limiter leur exposition sans tenter d'appliquer des contrôles pensés pour des authentifications interactives.
+Politiques pour les identités non humaines. L'enjeu est de contraindre leur périmètre d'accès géographique et d'imposer une authentification forte, sans chercher à appliquer des contrôles de session conçus pour des utilisateurs interactifs.
 
 | ID | Politique (nom exact) | Persona(s) | Intention | Contrôle principal | Pré-requis | Analyse |
 |----|-----------------------|------------|-----------|-------------------|------------|---------|
-| CA300 | ServiceAccounts-IdentityProtection-AnyApp-AnyPlatform-MFA | Service accounts | Identity Protection | MFA | MFA supportée | ⏳ |
+| CA300 | ServiceAccounts-IdentityProtection-AnyApp-AnyPlatform-MFA | Service accounts | Identity Protection | MFA | MFA supportée par le compte | ⏳ |
 | CA301 | ServiceAccounts-AttackSurfaceReduction-AllApps-AnyPlatform-BlockUntrustedLocations | Service accounts | Attack Surface Reduction | Blocage des localisations non approuvées | Named location `ALLOWED COUNTRIES - SERVICE ACCOUNTS` | ⏳ |
 
 ---
 
-## CA400–CA404 — Guest users
+## CA400-CA404 - Guest users
 
-Ces politiques traitent les **identités externes et invités**, avec un niveau de confiance initial volontairement plus faible et des périmètres applicatifs restreints.
+Politiques pour les identités externes. Le niveau de confiance de départ est volontairement bas : les guests sont bloqués par défaut sur toutes les applications hors exceptions explicites, et soumis à des contrôles de session stricts.
 
 | ID | Politique (nom exact) | Persona(s) | Intention | Contrôle principal | Pré-requis | Analyse |
 |----|-----------------------|------------|-----------|-------------------|------------|---------|
@@ -142,9 +139,9 @@ Ces politiques traitent les **identités externes et invités**, avec un niveau 
 
 ---
 
-## CA500–CA501 — Agents *(nouveau — v2026.2.1)*
+## CA501 - Agents *(v2026.2.1)*
 
-Nouvelle persona introduite dans la version 2026.2.1 pour couvrir les **identités agentiques** — ressources d'agents gérables via Conditional Access. Elle ne contient pour l'instant qu'une seule politique.
+Nouvelle persona introduite pour couvrir les ressources agentiques gérables via Conditional Access. Un seul fichier de politique à ce stade, conçu comme template.
 
 | ID | Politique (nom exact) | Persona(s) | Intention | Contrôle principal | Pré-requis | Analyse |
 |----|-----------------------|------------|-----------|-------------------|------------|---------|
@@ -154,15 +151,14 @@ Nouvelle persona introduite dans la version 2026.2.1 pour couvrir les **identit�
 
 ## Utilisation du catalogue
 
-Ce catalogue est une **cartographie du framework**, pas une liste de politiques à activer immédiatement.
+Ce catalogue est une cartographie du framework, pas une liste de politiques à activer immédiatement. L'ordre de déploiement, les exclusions et les dépendances entre politiques sont déterminants.
 
-Toutes les politiques ne sont ni simultanées, ni universelles. L'**ordre de déploiement**, les **exclusions** (notamment le groupe break-glass) et les **dépendances** entre politiques sont déterminants pour un déploiement sécurisé.
+Quelques points d'attention avant de déployer :
 
-Quelques points d'attention transversaux :
+- Désactivez les *Security Defaults* dans le tenant avant d'importer les politiques.
+- Vérifiez que l'application **Microsoft Intune Enrollment** (`d4ebce55-015a-49b5-a083-c84d1797ae8c`) existe dans le tenant. Elle est requise par CA203, CA205 et CA208. Si elle est absente : `New-MgServicePrincipal -AppId d4ebce55-015a-49b5-a083-c84d1797ae8c`.
+- CA104 et CA209 (Continuous Access Evaluation) ne supportent pas le mode *Report-only*. Elles s'activent directement en ON ou OFF.
+- Ajoutez vos comptes break-glass au groupe d'exclusion `CA-BreakGlassAccounts - Exclude` avant d'activer quoi que ce soit.
+- Activez les politiques une par une, en mode *Report-only* quand c'est possible.
 
-- Avant tout déploiement, désactivez les *Security Defaults* dans le tenant.
-- Vérifiez que l'application **Microsoft Intune Enrollment** (`d4ebce55-015a-49b5-a083-c84d1797ae8c`) existe dans le tenant — elle est requise par CA203, CA205 et CA208.
-- CA104 et CA209 (Continuous Access Evaluation) ne supportent pas le mode *Report-only* : elles doivent être activées directement en mode ON ou OFF.
-- Activez les politiques **une par une**, en commençant par le mode *Report-only* lorsque c'est possible.
-
-Les articles suivants entreront dans le détail des politiques par groupe et par persona. Ce catalogue servira de point d'ancrage à l'ensemble de la série.
+Les articles suivants couvriront les politiques par groupe et par persona. Ce catalogue en est le point d'ancrage.
