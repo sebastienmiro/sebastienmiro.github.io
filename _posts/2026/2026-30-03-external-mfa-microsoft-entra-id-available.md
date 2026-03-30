@@ -24,9 +24,7 @@ cover-img: "assets/img/banners/banner2.png"
 thumbnail-img: "assets/img/posts/2026/20260331-thumb.png"
 ---
 
-## Pourquoi cet article hors série
-
-Le 25 mars 2026, Microsoft a annoncé la disponibilité générale (GA) de l'External MFA dans Microsoft Entra ID. Cette fonctionnalité, anciennement connue sous le nom d'External Authentication Methods (EAM), permet d'intégrer des fournisseurs MFA tiers directement dans le flux d'authentification Entra ID.
+> Le 25 mars 2026, Microsoft a annoncé la disponibilité générale (GA) de l'External MFA dans Microsoft Entra ID. Cette fonctionnalité, anciennement connue sous le nom d'External Authentication Methods (EAM), permet d'intégrer des fournisseurs MFA tiers directement dans le flux d'authentification Entra ID.
 
 Pour toute organisation qui travaille avec le Conditional Access Framework, cette annonce a des implications concrètes. Elle ouvre de nouvelles possibilités d'architecture MFA, mais introduit aussi des limitations qu'il faut connaître avant de modifier ses politiques.
 
