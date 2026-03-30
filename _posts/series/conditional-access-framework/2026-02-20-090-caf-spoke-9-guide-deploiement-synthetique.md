@@ -1,5 +1,5 @@
----
-title: "Conditional Access Framework v4 — Guide de déploiement maîtrisé (audit-first)"
+
+title: "Conditional Access Framework v2026.2.1 - Guide de déploiement progressif"
 date: 2026-02-20 09:00:00 +01:00
 layout: post
 tags: [series:conditional-access-framework, deploiement, synthese]
@@ -17,131 +17,165 @@ scope:
   - Déploiement
   - Audit
 platform: Microsoft Entra
----
-## Conditional Access Framework v4 — Guide de déploiement maîtrisé (audit-first)
 
-Déployer l’accès conditionnel n’est jamais une opération neutre. Que l’on parte de *Security Defaults*, d’un tenant avec déjà des politiques d’accès conditionnel, ou d’un déploiement automatisé via un outil tiers, la même réalité s’impose : une mauvaise séquence crée immédiatement des blocages, des angles morts ou une régression de sécurité difficile à corriger a posteriori.
 
-Ce guide ne décrit pas où cliquer dans le portail.  
-Il décrit **comment introduire le Conditional Access Framework v4 sans casser l’existant**, en respectant la logique interne du framework et en s’appuyant systématiquement sur une phase d’observation avant toute activation.
+## Pourquoi le déploiement progressif n'est pas une option
 
-### Étape 1 — Audit de l’existant (point de départ obligatoire)
+Déployer le Conditional Access Framework v2026.2.1 dans un tenant de production, c'est intervenir sur le plan de contrôle de toutes les authentifications. Une mauvaise séquence se traduit immédiatement : blocage d'utilisateurs, régression de sécurité, ou pire, une configuration apparemment cohérente qui laisse passer ce qu'elle est censée bloquer.
 
-Avant toute modification, il faut comprendre précisément ce qui est déjà en place.
+Ce guide ne décrit pas où cliquer dans le portail. Il décrit la séquence, la logique et les points de contrôle qui permettent d'introduire le framework sans casser l'existant et sans avancer à l'aveugle.
 
-Cela implique au minimum :
-- vérifier si *Security Defaults* est actif ;
-- recenser toutes les politiques d’accès conditionnel existantes, leur état (On / Audit), leur périmètre réel et leurs exclusions ;
-- identifier les méthodes d’authentification réellement utilisables ;
-- lister les comptes à privilèges effectivement utilisés ;
-- vérifier l’existence et le test récent des comptes de secours.
 
-À ce stade, **on ne touche à rien**.  
-On observe, on cartographie, on documente.
 
-Cette étape conditionne tout le reste. Sans elle, le déploiement du framework devient un exercice théorique.
+## Étape 1 - Audit de l'existant
 
-### Étape 2 — Cas n°1 : Security Defaults actif
+C'est le point de départ non négociable. Sans cartographie précise de ce qui est en place, toute décision de déploiement repose sur des hypothèses.
 
-Si *Security Defaults* est actif, la première erreur serait de le désactiver pour « repartir proprement ».
+### Ce qu'on cherche
 
-Security Defaults assure implicitement plusieurs protections critiques. Les supprimer sans équivalent explicite crée immédiatement une fenêtre de vulnérabilité.
+**Security Defaults.** Premier réflexe : vérifier dans le portail Entra ID si Security Defaults est actif (`Entra ID > Properties > Manage security defaults`). S'il est actif, il coexiste avec d'éventuelles politiques d'accès conditionnel mais prend la main sur certains scénarios. Sa désactivation ne peut pas être la première action.
 
-La transition correcte se fait en deux temps.
+**Les politiques d'accès conditionnel existantes.** Il ne s'agit pas de les lister, mais de les comprendre :
+- Quel est leur périmètre réel d'inclusion (utilisateurs, groupes, rôles) ?
+- Quelles exclusions sont en place, et pourquoi ?
+- Sont-elles en mode ON ou Report-only ?
+- Quelle décision prennent-elles réellement sur les authentifications en cours ?
 
-D’abord, on met en place explicitement un socle minimal de politiques d’accès conditionnel couvrant a minima :
-- le blocage de l’authentification legacy ;
-- une exigence MFA cohérente sur les accès sensibles ;
-- la protection des accès administratifs ;
-- l’utilisation exclusive de l’authentification moderne.
+Une politique active dont personne ne comprend plus les exclusions est un risque, pas une protection.
 
-Ces règles **ne sont pas encore le Conditional Access Framework v4**.  
-Elles servent uniquement à garantir qu’aucune protection implicite n’est perdue.
+**Les méthodes d'authentification disponibles.** Vérifier dans `Entra ID > Authentication methods` quelles méthodes sont activées et pour quels utilisateurs. Le framework exige MFA pour l'ensemble des personas. Si les méthodes ne sont pas configurées cohéremment, les politiques MFA bloqueront des utilisateurs légitimes dès leur activation.
 
-Une fois ce socle validé, *Security Defaults* peut être désactivé.  
-Ce n’est qu’à partir de là que le framework peut être introduit.
+**Les comptes à privilèges réellement utilisés.** Lister les comptes portant des rôles Entra ID ou Microsoft 365 (Global Administrator, Privileged Role Administrator, Exchange Administrator, etc.). Identifier ceux qui sont utilisés pour des tâches quotidiennes non administratives - situation courante, et incompatible avec les politiques CA100-CA105 sans exclusions réfléchies.
 
-### Étape 3 — Cas n°2 : accès conditionnel déjà présent
+**Les comptes break-glass.** Vérifier leur existence, leur état MFA, et la date de leur dernier test. Ces comptes doivent impérativement être dans le groupe d'exclusion `CA-BreakGlassAccounts - Exclude` avant toute activation. Si ce groupe n'existe pas, le créer maintenant.
 
-Dans de nombreux tenants, des politiques d’accès conditionnel existent déjà. Elles ont été créées pour répondre à des besoins ponctuels, souvent sans cadre global.
+**Les applications cibles.** Identifier les applications clés de l'environnement : lesquelles sont couvertes par des politiques existantes, lesquelles ne le sont pas, et lesquelles ont des comportements d'authentification spécifiques (applications legacy, applications sans support MFA, Autopilot Device Preparation v2...).
 
-Dans ce cas :
-- on ne supprime rien ;
-- on ne modifie rien immédiatement ;
-- on ne cherche pas à simplifier avant d’avoir observé.
+### Les outils
 
-On **déploie l’intégralité du Conditional Access Framework v4 en mode Audit**, par-dessus l’existant.
+[**idPowerToys**](https://idpowertoys.merill.net/) génère une documentation visuelle et exportable des politiques Conditional Access existantes. C'est le meilleur point de départ pour avoir une vue d'ensemble exploitable rapidement.
 
-L’objectif n’est pas de remplacer immédiatement, mais de **poser une grille de lecture cohérente** sur une configuration hétérogène.
+**Log Analytics / Microsoft Entra Sign-in logs** permettent d'observer les authentifications réelles sur les 30 derniers jours : qui s'authentifie, depuis quoi, sur quelles applications, avec quelle méthode. Ces données sont indispensables pour anticiper l'impact des politiques avant leur activation.
 
-### Étape 4 — Pourquoi le framework doit être déployé en totalité, en mode Audit
+**Microsoft Entra Recommendations** signale les configurations à risque détectées automatiquement dans le tenant. À consulter systématiquement en début d'audit.
 
-Le Conditional Access Framework v4 ne fonctionne pas comme une simple liste de règles indépendantes. Il repose sur une logique de spécialisation progressive, dans laquelle les politiques globales servent de socle et cèdent volontairement la place à des politiques plus ciblées.
+À ce stade, on ne modifie rien. On observe, on cartographie, on documente.
 
-Cette spécialisation est rendue possible par les exclusions. Elles ne sont pas des exceptions, mais des mécanismes de routage entre politiques.
 
-Déployer seulement une partie du framework en Audit fausse l’analyse, car :
-- les recouvrements ne sont pas visibles ;
+
+## Étape 2 - Cas n°1 : Security Defaults actif
+
+Si Security Defaults est actif, le désactiver immédiatement pour "repartir proprement" est la première erreur classique. Security Defaults assure implicitement plusieurs protections : MFA pour les administrateurs, blocage de l'authentification legacy, protection de l'enregistrement MFA. Les supprimer sans équivalent explicite en place crée une fenêtre de vulnérabilité réelle.
+
+La transition se fait en deux temps.
+
+D'abord, on déploie un socle minimal de politiques Conditional Access couvrant explicitement ce que Security Defaults couvre implicitement :
+
+- blocage de l'authentification legacy (équivalent futur de CA002) ;
+- MFA sur les accès administratifs (équivalent futur de CA100/CA101) ;
+- protection de l'enregistrement et de la jonction d'appareils (équivalent futur de CA003).
+
+Ces politiques sont activées en mode ON, pas en Report-only. Elles ne font pas encore partie du framework : elles servent uniquement à garantir qu'aucune protection n'est perdue lors de la transition.
+
+Une fois ce socle validé et stable, Security Defaults peut être désactivé. C'est seulement à partir de là que le déploiement du framework démarre.
+
+
+
+## Étape 3 - Cas n°2 : politiques héritées déjà en place
+
+C'est le cas le plus fréquent en environnement de production. Des politiques ont été créées au fil du temps pour répondre à des besoins ponctuels, sans cadre global. Elles sont souvent partiellement documentées, avec des exclusions dont la raison d'être n'est plus claire.
+
+### Ce qu'on ne fait pas
+
+On ne supprime rien. On ne modifie rien. On ne cherche pas à simplifier avant d'avoir observé.
+
+La tentation de "faire le ménage" avant de déployer le framework est compréhensible, mais elle est risquée : une politique héritée que personne ne comprend plus couvre peut-être un scénario réel. La supprimer sans observation préalable peut créer un blocage ou une régression invisible.
+
+### Ce qu'on fait
+
+On déploie l'intégralité du framework v2026.2.1 en mode Report-only, par-dessus les politiques existantes.
+
+L'objectif n'est pas de remplacer immédiatement, mais de poser une grille de lecture cohérente sur une configuration hétérogène. En mode Report-only, les politiques du framework sont évaluées sur toutes les authentifications réelles et leurs décisions sont journalisées, sans affecter les utilisateurs.
+
+C'est à partir de ces journaux qu'on peut répondre aux vraies questions :
+- Quelle politique héritée couvre le même périmètre que CA200 ?
+- Cette exclusion dans la politique existante est-elle justifiée dans le contexte du framework ?
+- Est-ce que CA401 bloquerait des guests qui ont aujourd'hui accès à des applications non couvertes par une exception ?
+
+### La cohabitation dans le temps
+
+Pendant la phase Report-only, les politiques héritées restent actives et continuent de prendre les décisions. Le framework observe en parallèle. Cette cohabitation peut durer plusieurs semaines selon la complexité de l'environnement : c'est normal et souhaitable.
+
+La substitution se fait politique par politique, dans l'ordre défini à l'étape suivante. Pour chaque bascule, la séquence est :
+
+1. Vérifier les journaux Report-only de la politique concernée.
+2. Valider que son périmètre couvre ce qu'on attend.
+3. Ajuster les exclusions si nécessaire.
+4. Passer la politique du framework en mode ON.
+5. Désactiver (pas supprimer) la politique héritée correspondante.
+6. Observer 48 à 72 heures avant de continuer.
+
+Les politiques héritées désactivées restent présentes dans le tenant pendant au moins 30 jours. Si une régression est détectée, elles peuvent être réactivées immédiatement.
+
+
+
+## Étape 4 - Pourquoi le framework se déploie en totalité, même en Report-only
+
+Le framework n'est pas une liste de règles indépendantes. Il repose sur une logique de spécialisation progressive : les politiques globales posent le socle, et des politiques plus ciblées prennent le relais pour des personas ou des contextes spécifiques. Cette spécialisation fonctionne grâce aux exclusions croisées entre politiques.
+
+Déployer seulement une partie du framework en Report-only fausse l'analyse :
+- les recouvrements entre politiques ne sont pas visibles ;
 - les exclusions croisées ne peuvent pas être interprétées correctement ;
-- les journaux deviennent difficilement exploitables.
+- les journaux sont partiels et donc trompeurs.
 
-Déployer **l’ensemble du framework en Audit** permet au contraire :
-- d’observer quelle politique aurait réellement pris la décision ;
-- de comprendre comment les flux sont orientés entre politiques globales et spécialisées ;
-- de valider la cohérence des périmètres et des exclusions.
+Déployer l'ensemble permet au contraire d'observer quelle politique aurait pris la décision sur chaque authentification, comment les flux sont orientés entre politiques globales et spécialisées, et si les périmètres sont cohérents.
 
-Le mode Audit n’est pas une temporisation.  
-C’est **la phase d’ingénierie du déploiement**.
+Le mode Report-only n'est pas une temporisation. C'est la phase d'ingénierie du déploiement.
 
-### Étape 5 — Analyse des journaux et des métriques
 
-Une fois le framework entièrement présent en mode Audit, l’analyse peut commencer.
 
-On observe notamment :
-- quelles politiques auraient été appliquées ;
-- à quels types d’identités ;
-- sur quelles applications ;
-- dans quels contextes ;
-- avec quels effets combinés.
+## Étape 5 - Ordre d'activation recommandé
 
-Cette phase permet :
-- d’ajuster les périmètres d’inclusion ;
-- de valider les exclusions réellement nécessaires ;
-- d’identifier les dépendances entre politiques ;
-- de détecter les incohérences héritées de l’existant.
+L'activation part des personas les plus spécifiques vers le socle global. La raison est simple : chaque persona activée avant les politiques globales constitue un périmètre d'exclusion naturel et maîtrisé. Quand CA000-CA006 entrent en jeu en dernier, les identités les plus sensibles sont déjà couvertes par leurs propres politiques - et explicitement exclues du socle.
 
-Sans cette étape, toute activation repose sur des hypothèses.
+**1. Agents - CA501**
 
-### Étape 6 — Passage progressif en mode ON (ordre recommandé)
+Point de départ logique : c'est le périmètre le plus restreint du framework. CA501 bloque les agents présentant un workload identity risk élevé via Entra ID Protection. Avant activation, vérifier que les workload identities concernées sont couvertes par les licences Entra ID Protection et que les signaux de risque sont déjà collectés.
 
-L’activation ne commence qu’après l’analyse, progressivement et dans un ordre cohérent avec la structure du framework :
+**2. Service accounts - CA300 et CA301**
 
-1. Les politiques globales (CA000–CA006), qui remplacent explicitement les protections de base
-2. Les utilisateurs internes standards (CA200–CA210)
-3. Les contrôles de session et de tokens, une fois les flux compris
-4. L’exploitation des signaux device
-5. Les comptes à privilèges (CA100–CA105)
-6. Les invités et identités externes (CA400+)
-7. Les comptes de service (CA300+), selon les usages réels
+CA301 repose sur la named location `ALLOWED COUNTRIES - SERVICE ACCOUNTS`. Vérifier qu'elle est correctement configurée avant activation. Une named location mal définie sur cette politique peut bloquer des flux d'automatisation critiques sans alerte immédiate.
 
-Chaque bascule doit être annoncée, observée et stabilisée avant de passer à la suivante.
+**3. Guests - CA400 à CA404**
 
-### Ce qu’il ne faut pas faire
+CA401 bloque par défaut l'accès des invités à toutes les applications hors exceptions explicites. Valider la liste des exclusions applicatives avant activation, en particulier si des partenaires MSP ont accès au tenant.
 
-- Activer un bloc complet sans analyse préalable.
-- Supprimer l’existant avant d’avoir observé les interactions.
-- Accumuler des exclusions « temporaires » non documentées.
-- Interpréter le mode Audit comme une absence de risque.
-- Confondre conformité device et sécurité réelle.
+**4. Internals - CA200 à CA210**
 
-Ces erreurs sont rarement techniques.  
-Elles sont presque toujours méthodologiques.
+Les utilisateurs internes représentent le volume d'authentifications le plus important. C'est sur cette persona que l'analyse Report-only aura été la plus riche en données. Vérifier en priorité CA203 si Autopilot Device Preparation v2 est utilisé : les utilisateurs concernés doivent être exclus de cette politique.
 
-### Conclusion
+**5. Admins - CA100 à CA105**
 
-Le Conditional Access Framework v4 ne s’active pas d’un clic.  
-Il se **déploie par superposition, observation et substitution progressive**, en respectant la logique interne des politiques et de leurs exclusions.
+Les politiques admin arrivent après les internals, une fois la mécanique rodée sur un périmètre moins exposé. Vérifier avant activation que les comptes break-glass sont correctement exclus et que les méthodes phishing-resistant (FIDO2, CBA) sont disponibles pour les comptes ciblés par CA105. Un blocage sur cette politique sans FIDO2 en place peut verrouiller des comptes critiques.
 
-Quel que soit le point de départ — *Security Defaults*, accès conditionnel partiel ou déploiement automatisé — la règle reste la même :
+**6. Politiques globales - CA000 à CA006**
 
-**audit d’abord, compréhension ensuite, activation en dernier.**
+Le socle s'applique en dernier, quand toutes les personas spécialisées sont actives et correctement exclues. Attention particulière à CA005 : depuis mars 2026, le contrôle *Require approved client app* est déprécié. CA005 utilise désormais *RequireAppProtection*. Les politiques héritées s'appuyant encore sur l'ancien contrôle doivent être migrées avant cette étape.
+
+## Ce qu'il ne faut pas faire
+
+- Activer un groupe de politiques complet sans avoir analysé les journaux Report-only au préalable.
+- Supprimer les politiques héritées avant d'avoir observé les interactions avec le framework.
+- Accumuler des exclusions "temporaires" sans les documenter. Elles deviennent permanentes.
+- Confondre le mode Report-only avec une absence de risque : une politique en Report-only n'applique pas de contrôle, elle observe uniquement.
+- Ignorer CA210 (blocage sign-in risk élevé) sous prétexte que CA201 (blocage user risk) est déjà active : les deux signaux sont distincts et complémentaires.
+
+Ces erreurs sont rarement techniques. Elles sont méthodologiques.
+
+## Conclusion
+
+Le Conditional Access Framework v2026.2.1 ne s'active pas d'un clic. Il se déploie par superposition, observation et substitution progressive, en respectant la logique interne des politiques et de leurs exclusions.
+
+Quel que soit le point de départ - Security Defaults, accès conditionnel partiel ou déploiement automatisé - la règle reste la même : cartographier d'abord, observer ensuite, activer en dernier.
+
+Les articles suivants de cette série couvrent les politiques groupe par groupe. Ce guide en est la colonne vertébrale opérationnelle.
