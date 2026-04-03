@@ -33,7 +33,7 @@ C'est le point de départ non négociable. Sans cartographie précise de ce qui 
 
 ### Ce qu'on cherche
 
-**Security Defaults.** Premier réflexe : vérifier dans le portail Entra ID si Security Defaults est actif (`Entra ID > Properties > Manage security defaults`). S'il est actif, il coexiste avec d'éventuelles politiques d'accès conditionnel mais prend la main sur certains scénarios. Sa désactivation ne peut pas être la première action.
+**Security Defaults.** Premier réflexe : vérifier dans le portail Entra ID si Security Defaults est actif (`Entra ID > Properties > Manage security defaults`). S'il est actif, aucune politique d'accès conditionnel ne peut être créée ni activée : les deux mécanismes sont mutuellement exclusifs. Le constater à ce stade, ne pas le désactiver. La transition est traitée à l'étape 2.
 
 **Les politiques d'accès conditionnel existantes.** Il ne s'agit pas de les lister, mais de les comprendre :
 - Quel est leur périmètre réel d'inclusion (utilisateurs, groupes, rôles) ?
@@ -65,21 +65,27 @@ Une politique active dont personne ne comprend plus les exclusions est un risque
 
 ## Étape 2 - Cas n°1 : Security Defaults actif
 
-Si Security Defaults est actif, le désactiver immédiatement pour "repartir proprement" est la première erreur classique. Security Defaults assure implicitement plusieurs protections : MFA pour les administrateurs, blocage de l'authentification legacy, protection de l'enregistrement MFA. Les supprimer sans équivalent explicite en place crée une fenêtre de vulnérabilité réelle.
+Si Security Defaults est actif, le désactiver immédiatement pour "repartir proprement" est la première erreur classique. Security Defaults assure implicitement plusieurs protections : MFA pour les administrateurs, blocage de l'authentification legacy, protection de l'enregistrement MFA. Les supprimer sans équivalent prêt à être activé crée une fenêtre de vulnérabilité réelle.
 
-La transition se fait en deux temps.
+Le portail Entra ID ne permet pas de créer des politiques Conditional Access tant que Security Defaults est actif. La transition ne peut donc pas se faire par superposition. Elle se prépare en amont et s'exécute en séquence rapide.
 
-D'abord, on déploie un socle minimal de politiques Conditional Access couvrant explicitement ce que Security Defaults couvre implicitement :
+D'abord, on prépare un socle minimal de politiques Conditional Access couvrant explicitement ce que Security Defaults couvre implicitement :
 
 - blocage de l'authentification legacy (équivalent futur de CA002) ;
 - MFA sur les accès administratifs (équivalent futur de CA100/CA101) ;
 - protection de l'enregistrement et de la jonction d'appareils (équivalent futur de CA003).
 
-Ces politiques sont activées en mode ON, pas en Report-only. Elles ne font pas encore partie du framework : elles servent uniquement à garantir qu'aucune protection n'est perdue lors de la transition.
+Préparer signifie : documenter les politiques, valider les périmètres d'inclusion et d'exclusion, identifier les groupes nécessaires et les créer. Les politiques elles-mêmes ne peuvent pas encore être créées dans le portail.
 
-Une fois ce socle validé et stable, Security Defaults peut être désactivé. C'est seulement à partir de là que le déploiement du framework démarre.
+Une fois cette préparation terminée, la bascule s'exécute en une seule session :
 
+1. Désactiver Security Defaults.
+2. Créer et activer immédiatement les politiques CA du socle de remplacement, en mode ON.
+3. Valider les premiers Sign-in logs pour confirmer que les contrôles sont appliqués.
 
+Cette séquence implique une fenêtre de vulnérabilité incompressible entre la désactivation de Security Defaults et l'activation des politiques CA. En pratique, avec une préparation rigoureuse, elle se réduit à quelques minutes. C'est un risque accepté, pas un risque ignoré.
+
+C'est seulement à partir de là que le déploiement du framework démarre.
 
 ## Étape 3 - Cas n°2 : politiques héritées déjà en place
 
@@ -160,7 +166,7 @@ Les politiques admin arrivent après les internals, une fois la mécanique rodé
 
 **6. Politiques globales - CA000 à CA006**
 
-Le socle s'applique en dernier, quand toutes les personas spécialisées sont actives et correctement exclues. Attention particulière à CA005 : depuis mars 2026, le contrôle *Require approved client app* est déprécié. CA005 utilise désormais *RequireAppProtection*. Les politiques héritées s'appuyant encore sur l'ancien contrôle doivent être migrées avant cette étape.
+Le socle s'applique en dernier, quand toutes les personas spécialisées sont actives et correctement exclues. Attention particulière à CA005 : le contrôle *Require approved client app* sera retiré le 30 juin 2026 (date repoussée depuis l'annonce initiale de mars 2026). CA005 doit utiliser *Require app protection policy* en remplacement. Les politiques héritées s'appuyant encore sur l'ancien contrôle doivent être migrées avant cette échéance.
 
 ## Ce qu'il ne faut pas faire
 
