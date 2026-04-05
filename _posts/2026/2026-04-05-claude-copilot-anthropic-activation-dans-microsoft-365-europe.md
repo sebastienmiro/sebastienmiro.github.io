@@ -1,6 +1,6 @@
 ---
 title: "Non, Claude n'est pas activé par défaut dans Copilot en Europe"
-date: 2026-04-07 08:00:00 +01:00
+date: 2026-04-05 08:00:00 +01:00
 layout: post
 categories: [Microsoft 365, Copilot]
 tags:
