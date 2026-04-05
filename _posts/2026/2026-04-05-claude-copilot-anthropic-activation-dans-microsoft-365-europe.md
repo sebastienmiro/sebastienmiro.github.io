@@ -16,7 +16,7 @@ sidebar: true
 level: Intermédiaire
 platform: Microsoft 365
 scope: Tenant
-cover-img: assets/img/banners/IMG_7802.jpeg
+cover-img: assets/img/banners/IMG_7802.png
 thumbnail-img: assets/img/posts/2026/IMG_7801.jpeg
 ---
 
