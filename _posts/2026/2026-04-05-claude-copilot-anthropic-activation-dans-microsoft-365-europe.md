@@ -17,7 +17,7 @@ level: Intermédiaire
 platform: Microsoft 365
 scope: Tenant
 cover-img: assets/img/banners/IMG_7802.jpeg
-thumbnail-img: assets/img/posts/IMG_7801.jpeg
+thumbnail-img: assets/img/posts/2026/IMG_7801.jpeg
 ---
 
 Depuis quelques jours, on voit circuler sur LinkedIn des publications affirmant que "Claude va être activé par défaut dans Microsoft 365 Copilot". Certaines recommandent de désactiver la fonctionnalité au plus vite. Le problème, c'est que ces publications omettent un détail important : cette activation par défaut ne concerne pas les tenants européens.
