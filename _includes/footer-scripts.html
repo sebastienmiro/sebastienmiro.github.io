@@ -38,3 +38,20 @@
 {% endif %}
 
     <script src="/assets/js/skin-switch.js"></script>
+
+    {% if page.mermaid %}
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('pre > code.language-mermaid').forEach(function (block) {
+          var pre = block.parentElement;
+          var div = document.createElement('div');
+          div.className = 'mermaid';
+          div.textContent = block.textContent;
+          pre.parentElement.replaceChild(div, pre);
+        });
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        mermaid.initialize({ startOnLoad: true, theme: isDark ? 'dark' : 'neutral', securityLevel: 'strict' });
+      });
+    </script>
+    {% endif %}

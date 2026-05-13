@@ -9,7 +9,7 @@ comments: true
 cover-img: "assets/img/banners/banner-conditional-access.png"
 thumbnail-img: "assets/img/posts/series/conditional-access-framework/080/080-thumb.png"
 series: CA
-series_order: 050
+series_order: 080
 sidebar: true
 level: référence
 scope:

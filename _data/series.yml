@@ -9,3 +9,9 @@ R1M:
   description: Comprendre une attaque, puis apporter une réponse concrète
   url: /series/un-risque-une-mesure/
   featured: true
+
+ITDR:
+  label: ITDR Microsoft
+  description: Détecter et répondre aux menaces sur l'identité avec la pile Microsoft
+  url: /series/itdr-microsoft/
+  featured: true
