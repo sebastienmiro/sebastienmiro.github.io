@@ -1,0 +1,266 @@
+current directory: C:/Users/miros/sources/sebastienmiro.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.1/ext/ruby_http_parser
+C:/Ruby31-x64/bin/ruby.exe -I C:/Ruby31-x64/lib/ruby/3.1.0 extconf.rb
+creating Makefile
+
+current directory: C:/Users/miros/sources/sebastienmiro.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.1/ext/ruby_http_parser
+make DESTDIR\= sitearchdir\=./.gem.20260513-21476-x2493s sitelibdir\=./.gem.20260513-21476-x2493s clean
+
+current directory: C:/Users/miros/sources/sebastienmiro.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.1/ext/ruby_http_parser
+make DESTDIR\= sitearchdir\=./.gem.20260513-21476-x2493s sitelibdir\=./.gem.20260513-21476-x2493s
+generating ruby_http_parser-x64-mingw-ucrt.def
+compiling ruby_http_parser.c
+ruby_http_parser.c: In function 'Init_ruby_http_parser':
+ruby_http_parser.c:542:50: error: passing argument 3 of 'rb_define_singleton_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  542 |   rb_define_singleton_method(cParser, "strict?", Parser_strict_p, 0);
+      |                                                  ^~~~~~~~~~~~~~~
+      |                                                  |
+      |                                                  VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+In file included from C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/anyargs.h:76,
+                 from C:/Ruby31-x64/include/ruby-3.1.0/ruby/ruby.h:26,
+                 from C:/Ruby31-x64/include/ruby-3.1.0/ruby.h:38,
+                 from ruby_http_parser.c:1:
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/intern/class.h:353:68: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+  353 | void rb_define_singleton_method(VALUE obj, const char *mid, VALUE(*func)(ANYARGS), int arity);
+      |                                                             ~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:319:7: note: 'Parser_strict_p' declared here
+  319 | VALUE Parser_strict_p(VALUE klass) {
+      |       ^~~~~~~~~~~~~~~
+ruby_http_parser.c:543:43: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  543 |   rb_define_method(cParser, "initialize", Parser_initialize, -1);
+      |                                           ^~~~~~~~~~~~~~~~~
+      |                                           |
+      |                                           VALUE (*)(int,  VALUE *, VALUE) {aka long long unsigned int (*)(int,  long long unsigned int *, long long unsigned int)}
+In file included from C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/anyargs.h:78:
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(int,  VALUE *, VALUE)' {aka 'long long unsigned int (*)(int,  long long unsigned int *, long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:323:7: note: 'Parser_initialize' declared here
+  323 | VALUE Parser_initialize(int argc, VALUE *argv, VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~
+ruby_http_parser.c:545:50: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  545 |   rb_define_method(cParser, "on_message_begin=", Parser_set_on_message_begin, 1);
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                  |
+      |                                                  VALUE (*)(VALUE,  VALUE) {aka long long unsigned int (*)(long long unsigned int,  long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE,  VALUE)' {aka 'long long unsigned int (*)(long long unsigned int,  long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:386:7: note: 'Parser_set_on_message_begin' declared here
+  386 | VALUE Parser_set_on_message_begin(VALUE self, VALUE callback) {
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:546:53: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  546 |   rb_define_method(cParser, "on_headers_complete=", Parser_set_on_headers_complete, 1);
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                     |
+      |                                                     VALUE (*)(VALUE,  VALUE) {aka long long unsigned int (*)(long long unsigned int,  long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE,  VALUE)' {aka 'long long unsigned int (*)(long long unsigned int,  long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:394:7: note: 'Parser_set_on_headers_complete' declared here
+  394 | VALUE Parser_set_on_headers_complete(VALUE self, VALUE callback) {
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:547:41: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  547 |   rb_define_method(cParser, "on_body=", Parser_set_on_body, 1);
+      |                                         ^~~~~~~~~~~~~~~~~~
+      |                                         |
+      |                                         VALUE (*)(VALUE,  VALUE) {aka long long unsigned int (*)(long long unsigned int,  long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE,  VALUE)' {aka 'long long unsigned int (*)(long long unsigned int,  long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:402:7: note: 'Parser_set_on_body' declared here
+  402 | VALUE Parser_set_on_body(VALUE self, VALUE callback) {
+      |       ^~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:548:53: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  548 |   rb_define_method(cParser, "on_message_complete=", Parser_set_on_message_complete, 1);
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                     |
+      |                                                     VALUE (*)(VALUE,  VALUE) {aka long long unsigned int (*)(long long unsigned int,  long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE,  VALUE)' {aka 'long long unsigned int (*)(long long unsigned int,  long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:410:7: note: 'Parser_set_on_message_complete' declared here
+  410 | VALUE Parser_set_on_message_complete(VALUE self, VALUE callback) {
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:549:35: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  549 |   rb_define_method(cParser, "<<", Parser_execute, 1);
+      |                                   ^~~~~~~~~~~~~~
+      |                                   |
+      |                                   VALUE (*)(VALUE,  VALUE) {aka long long unsigned int (*)(long long unsigned int,  long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE,  VALUE)' {aka 'long long unsigned int (*)(long long unsigned int,  long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:357:7: note: 'Parser_execute' declared here
+  357 | VALUE Parser_execute(VALUE self, VALUE data) {
+      |       ^~~~~~~~~~~~~~
+ruby_http_parser.c:551:44: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  551 |   rb_define_method(cParser, "keep_alive?", Parser_keep_alive_p, 0);
+      |                                            ^~~~~~~~~~~~~~~~~~~
+      |                                            |
+      |                                            VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:418:7: note: 'Parser_keep_alive_p' declared here
+  418 | VALUE Parser_keep_alive_p(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:552:41: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  552 |   rb_define_method(cParser, "upgrade?", Parser_upgrade_p, 0);
+      |                                         ^~~~~~~~~~~~~~~~
+      |                                         |
+      |                                         VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:425:7: note: 'Parser_upgrade_p' declared here
+  425 | VALUE Parser_upgrade_p(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~
+ruby_http_parser.c:554:45: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  554 |   rb_define_method(cParser, "http_version", Parser_http_version, 0);
+      |                                             ^~~~~~~~~~~~~~~~~~~
+      |                                             |
+      |                                             VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:432:7: note: 'Parser_http_version' declared here
+  432 | VALUE Parser_http_version(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:555:43: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  555 |   rb_define_method(cParser, "http_major", Parser_http_major, 0);
+      |                                           ^~~~~~~~~~~~~~~~~
+      |                                           |
+      |                                           VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:442:7: note: 'Parser_http_major' declared here
+  442 | VALUE Parser_http_major(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~
+ruby_http_parser.c:556:43: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  556 |   rb_define_method(cParser, "http_minor", Parser_http_minor, 0);
+      |                                           ^~~~~~~~~~~~~~~~~
+      |                                           |
+      |                                           VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:452:7: note: 'Parser_http_minor' declared here
+  452 | VALUE Parser_http_minor(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~
+ruby_http_parser.c:558:44: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  558 |   rb_define_method(cParser, "http_method", Parser_http_method, 0);
+      |                                            ^~~~~~~~~~~~~~~~~~
+      |                                            |
+      |                                            VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:462:7: note: 'Parser_http_method' declared here
+  462 | VALUE Parser_http_method(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:559:44: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  559 |   rb_define_method(cParser, "status_code", Parser_status_code, 0);
+      |                                            ^~~~~~~~~~~~~~~~~~
+      |                                            |
+      |                                            VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:472:7: note: 'Parser_status_code' declared here
+  472 | VALUE Parser_status_code(VALUE self) {
+      |       ^~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:561:39: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  561 |   rb_define_method(cParser, "status", Parser_status, 0);
+      |                                       ^~~~~~~~~~~~~
+      |                                       |
+      |                                       VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:483:9: note: 'Parser_status' declared here
+  483 |   VALUE Parser_##name(VALUE self) {          \
+      |         ^~~~~~~
+ruby_http_parser.c:489:1: note: in expansion of macro 'DEFINE_GETTER'
+  489 | DEFINE_GETTER(status);
+      | ^~~~~~~~~~~~~
+ruby_http_parser.c:562:44: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  562 |   rb_define_method(cParser, "request_url", Parser_request_url, 0);
+      |                                            ^~~~~~~~~~~~~~~~~~
+      |                                            |
+      |                                            VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:483:9: note: 'Parser_request_url' declared here
+  483 |   VALUE Parser_##name(VALUE self) {          \
+      |         ^~~~~~~
+ruby_http_parser.c:490:1: note: in expansion of macro 'DEFINE_GETTER'
+  490 | DEFINE_GETTER(request_url);
+      | ^~~~~~~~~~~~~
+ruby_http_parser.c:563:40: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  563 |   rb_define_method(cParser, "headers", Parser_headers, 0);
+      |                                        ^~~~~~~~~~~~~~
+      |                                        |
+      |                                        VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:483:9: note: 'Parser_headers' declared here
+  483 |   VALUE Parser_##name(VALUE self) {          \
+      |         ^~~~~~~
+ruby_http_parser.c:491:1: note: in expansion of macro 'DEFINE_GETTER'
+  491 | DEFINE_GETTER(headers);
+      | ^~~~~~~~~~~~~
+ruby_http_parser.c:564:45: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  564 |   rb_define_method(cParser, "upgrade_data", Parser_upgrade_data, 0);
+      |                                             ^~~~~~~~~~~~~~~~~~~
+      |                                             |
+      |                                             VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:483:9: note: 'Parser_upgrade_data' declared here
+  483 |   VALUE Parser_##name(VALUE self) {          \
+      |         ^~~~~~~
+ruby_http_parser.c:492:1: note: in expansion of macro 'DEFINE_GETTER'
+  492 | DEFINE_GETTER(upgrade_data);
+      | ^~~~~~~~~~~~~
+ruby_http_parser.c:565:50: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  565 |   rb_define_method(cParser, "header_value_type", Parser_header_value_type, 0);
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                  |
+      |                                                  VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:483:9: note: 'Parser_header_value_type' declared here
+  483 |   VALUE Parser_##name(VALUE self) {          \
+      |         ^~~~~~~
+ruby_http_parser.c:493:1: note: in expansion of macro 'DEFINE_GETTER'
+  493 | DEFINE_GETTER(header_value_type);
+      | ^~~~~~~~~~~~~
+ruby_http_parser.c:566:51: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  566 |   rb_define_method(cParser, "header_value_type=", Parser_set_header_value_type, 1);
+      |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                   |
+      |                                                   VALUE (*)(VALUE,  VALUE) {aka long long unsigned int (*)(long long unsigned int,  long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE,  VALUE)' {aka 'long long unsigned int (*)(long long unsigned int,  long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:495:7: note: 'Parser_set_header_value_type' declared here
+  495 | VALUE Parser_set_header_value_type(VALUE self, VALUE val) {
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ruby_http_parser.c:568:39: error: passing argument 3 of 'rb_define_method' from incompatible pointer type [-Wincompatible-pointer-types]
+  568 |   rb_define_method(cParser, "reset!", Parser_reset, 0);
+      |                                       ^~~~~~~~~~~~
+      |                                       |
+      |                                       VALUE (*)(VALUE) {aka long long unsigned int (*)(long long unsigned int)}
+C:/Ruby31-x64/include/ruby-3.1.0/ruby/internal/method.h:99:61: note: expected 'VALUE (*)(void)' {aka 'long long unsigned int (*)(void)'} but argument is of type 'VALUE (*)(VALUE)' {aka 'long long unsigned int (*)(long long unsigned int)'}
+   99 | void rb_define_method(VALUE klass, const char *mid, VALUE (*func)(ANYARGS), int arity);
+      |                                                     ~~~~~~~~^~~~~~~~~~~~~~
+ruby_http_parser.c:506:7: note: 'Parser_reset' declared here
+  506 | VALUE Parser_reset(VALUE self) {
+      |       ^~~~~~~~~~~~
+make: *** [Makefile:247: ruby_http_parser.o] Error 1
+
+make failed, exit code 2
