@@ -25,8 +25,6 @@ cover-img: "assets/img/posts/2026/05/zero-day-wave-cover.png"
 thumbnail-img: "assets/img/posts/2026/05/zero-day-wave-thumb.png"
 ---
 
-## Pourquoi cet article hors série
-
 > Depuis le début avril 2026, un chercheur en sécurité opérant sous les pseudonymes [Chaotic Eclipse et Nightmare-Eclipse](https://github.com/Nightmare-Eclipse) publie un flot continu de zero-day Windows. Cinq vulnérabilités en six semaines, dont quatre toujours non patchées au moment où j'écris ces lignes. La dernière en date, [YellowKey](https://github.com/Nightmare-Eclipse/YellowKey), permet de contourner BitLocker en configuration TPM-only.
 > 
 > Pour les équipes sécurité, ces publications répétées posent un vrai problème opérationnel : la majorité de ces failles n'ont pas de correctif disponible. Cet article fait le point sur les cinq exploits, leur statut, et surtout ce qu'il faut faire concrètement.
