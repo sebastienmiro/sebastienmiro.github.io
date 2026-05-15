@@ -25,13 +25,11 @@ cover-img: "assets/img/posts/2026/05/entra-connect-to-cloud-sync-cover.png"
 thumbnail-img: "assets/img/posts/2026/05/entra-connect-to-cloud-sync-thumb.png"
 ---
 
-## L'annonce
-
-Microsoft a confirmé en avril 2026 le démarrage officiel de la transition entre **Entra Connect Sync** (l'outil serveur historique, ex-Azure AD Connect) et **Entra Cloud Sync** (le moteur de synchronisation cloud-natif basé sur des agents légers).
-
-Les notifications individuelles aux tenants commenceront en **juillet 2026** via Message Center, Entra Connect Health et des emails ciblés. Chaque tenant recevra sa propre fenêtre de transition, en fonction de sa complexité de configuration.
-
-Cet article est un guide d'action pour les administrateurs : ce qu'il faut vérifier, ce qu'il faut préparer, et dans quel ordre.
+> Microsoft a confirmé en avril 2026 le démarrage officiel de la transition entre **Entra Connect Sync** (l'outil serveur historique, ex-Azure AD Connect) et **Entra Cloud Sync** (le moteur de synchronisation cloud-natif basé sur des agents légers).
+> 
+> Les notifications individuelles aux tenants commenceront en **juillet 2026** via Message Center, Entra Connect Health et des emails ciblés. Chaque tenant recevra sa propre fenêtre de transition, en fonction de sa complexité de configuration.
+> 
+> Cet article est un guide d'action pour les administrateurs : ce qu'il faut vérifier, ce qu'il faut préparer, et dans quel ordre.
 
 ## Deux échéances à ne pas confondre
 
