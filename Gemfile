@@ -18,4 +18,6 @@ gem "jekyll-seo-tag"
 gem "jekyll-news-sitemap"
 gem "jekyll-minifier"
 
+gem "sass-embedded", "~> 1.69.0"
+
 gemspec

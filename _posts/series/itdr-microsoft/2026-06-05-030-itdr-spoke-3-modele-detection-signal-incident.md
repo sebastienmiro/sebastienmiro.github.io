@@ -101,3 +101,12 @@ Le tuning n'est pas un projet ponctuel. C'est une activité récurrente, à mesu
 Le pipeline Defender XDR est structuré et cohérent. Il convertit des signaux bruts en incidents exploitables via un enchaînement détection, alerte, corrélation. Mais un incident n'est pas une vérité : c'est une hypothèse construite par le système à partir des alertes disponibles. Sa qualité dépend de la qualité de la détection en amont, du tuning des briques sources, et du travail continu des équipes qui traitent les retours.
 
 Les articles suivants entrent dans le détail de chaque brique source, en commençant par Entra ID Protection et ses risk policies.
+
+## Références
+
+- [Incidents dans Microsoft Defender XDR](https://learn.microsoft.com/fr-fr/microsoft-365/security/defender/incidents-overview)
+- [Alertes dans Microsoft Defender XDR](https://learn.microsoft.com/fr-fr/microsoft-365/security/defender/investigate-alerts)
+- [Corrélation et graph d'actifs Defender XDR](https://learn.microsoft.com/fr-fr/microsoft-365/security/defender/incident-queue)
+- [Automated Investigation and Response (AIR)](https://learn.microsoft.com/fr-fr/microsoft-365/security/defender/m365d-autoir)
+- [Entra ID Protection - Détections de risques](https://learn.microsoft.com/fr-fr/entra/id-protection/concept-identity-protection-risks)
+- [Emplacements nommés dans l'accès conditionnel](https://learn.microsoft.com/fr-fr/entra/identity/conditional-access/location-condition)

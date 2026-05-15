@@ -148,3 +148,13 @@ Ces limites seront détaillées dans l'article dédié aux [angles morts de la p
 Les briques de la pile ITDR Microsoft ne sont pas interchangeables. Entra ID Protection et MDI sont des sources de détection avec des périmètres distincts. Defender for Cloud Apps couvre le plan applicatif. Defender XDR est une plateforme de corrélation, pas une source de signaux autonome. Sentinel étend le périmètre quand l'environnement le justifie.
 
 C'est ce que posait le [000 de cette série]({% post_url series/itdr-microsoft/2026-05-15-000-itdr-microsoft-presentation-serie %}) : l'ITDR Microsoft est une chaîne fonctionnelle, pas une catégorie de produit. Lire la pile brique par brique, en partant de la surface d'attaque décrite dans le [010]({% post_url series/itdr-microsoft/2026-05-22-010-itdr-spoke-1-surface-attaque-identite-microsoft %}), permet de savoir ce qu'on couvre réellement et ce qu'on ne couvre pas. Les articles suivants entrent dans le détail de chaque source de signaux.
+
+## Références
+
+- [Microsoft Entra ID Protection - Vue d'ensemble](https://learn.microsoft.com/fr-fr/entra/id-protection/overview-identity-protection)
+- [Microsoft Defender for Identity - Présentation](https://learn.microsoft.com/fr-fr/defender-for-identity/what-is)
+- [Microsoft Defender for Cloud Apps - Présentation](https://learn.microsoft.com/fr-fr/defender-cloud-apps/what-is-defender-for-cloud-apps)
+- [Microsoft Defender XDR - Vue d'ensemble](https://learn.microsoft.com/fr-fr/microsoft-365/security/defender/microsoft-365-defender)
+- [Microsoft Sentinel - Vue d'ensemble](https://learn.microsoft.com/fr-fr/azure/sentinel/overview)
+- [Journaux de connexion dans Microsoft Entra ID](https://learn.microsoft.com/fr-fr/entra/identity/monitoring-health/concept-sign-ins)
+- [Licences Microsoft Entra ID](https://learn.microsoft.com/fr-fr/entra/fundamentals/licensing)
