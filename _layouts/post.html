@@ -1,29 +1,20 @@
 ---
 layout: base
 ---
-
 {% include header.html type="post" %}
-
   <div class="sidebar-mobile d-lg-none">
     {% include sidebar-mobile.html %}
   </div>
-
-
 <div class="{% if page.full-width %} container-fluid {% else %} container-md {% endif %}">
   <div class="row">
-
   <div class="col-lg-3 d-none d-lg-block">
     {% include sidebar-desktop.html %}
   </div>
-
-
   <div class="{% if page.full-width %} col {% else %} col-lg-9 {% endif %}">
-
       {% if page.gh-repo %}
         {% assign gh_split =  page.gh-repo | split:'/'  %}
         {% assign gh_user =  gh_split[0]  %}
         {% assign gh_repo =  gh_split[1]  %}
-
         <div id="header-gh-btns">
           {% if page.gh-badge.size > 0 %}
             {% for badge in page.gh-badge %}
@@ -41,7 +32,6 @@ layout: base
           {% endif %}
         </div>
       {% endif %}
-
       {% if page.before-content %}
         <div class="before-content">
           {% for file in page.before-content %}
@@ -49,11 +39,9 @@ layout: base
           {% endfor %}
         </div>
       {% endif %}
-
       <article role="main" class="blog-post">
         {{ content }}
       </article>
-
       {% if page.tags.size > 0 %}
         <div class="blog-tags">
           <span>Tags:</span>
@@ -62,7 +50,6 @@ layout: base
           {% endfor %}
         </div>
       {% endif %}
-
       {% if page.after-content %}
         <div class="after-content">
           {% for file in page.after-content %}
@@ -70,11 +57,9 @@ layout: base
           {% endfor %}
         </div>
       {% endif %}
-
       {% if page.social-share %}
         {% include social-share.html %}
       {% endif %}
-
       <ul class="pagination blog-pager">
         {% if page.previous.url %}
         <li class="page-item previous">
@@ -91,3 +76,49 @@ layout: base
     </div>
   </div>
 </div>
+
+{% if page.mermaid %}
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Convert all ```mermaid code blocks rendered by Jekyll/Rouge into .mermaid divs
+    document.querySelectorAll('pre > code.language-mermaid, code.language-mermaid').forEach(function(block) {
+      var pre = block.closest('pre') || block;
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = block.textContent;
+      pre.parentNode.replaceChild(div, pre);
+    });
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      timeline: {
+        useMaxWidth: true
+      }
+    });
+
+    mermaid.run();
+  });
+</script>
+<style>
+  .mermaid {
+    text-align: center;
+    margin: 2rem 0;
+    background: #fafafa;
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+  }
+  .mermaid svg {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+{% endif %}

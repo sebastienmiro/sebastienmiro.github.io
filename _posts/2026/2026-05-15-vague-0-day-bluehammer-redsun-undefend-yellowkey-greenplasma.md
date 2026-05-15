@@ -15,6 +15,7 @@ readtime: true
 comments: true
 sidebar: true
 level: Analyse
+mermaid: true
 platform: Windows
 scope:
   - Windows 11
