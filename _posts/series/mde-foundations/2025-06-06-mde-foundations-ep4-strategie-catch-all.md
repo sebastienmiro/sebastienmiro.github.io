@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 4 : la stratégie catch-all"
-date: 2025-06-06 08:00:00 +01:00
+date: 2026-06-06 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

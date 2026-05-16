@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 5 : configurer Windows Defender correctement"
-date: 2025-06-13 08:00:00 +01:00
+date: 2026-06-13 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

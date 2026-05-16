@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 7 : Attack Surface Reduction, comprendre les règles"
-date: 2025-06-27 08:00:00 +01:00
+date: 2026-06-27 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

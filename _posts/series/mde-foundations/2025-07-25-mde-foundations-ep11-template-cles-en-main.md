@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 11 : le template MDE Foundations, import clés en main"
-date: 2025-07-25 08:00:00 +01:00
+date: 2026-07-25 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

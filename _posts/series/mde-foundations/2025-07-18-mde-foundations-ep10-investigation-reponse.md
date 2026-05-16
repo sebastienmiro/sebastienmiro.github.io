@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 10 : investigation et réponse avec MDE"
-date: 2025-07-18 08:00:00 +01:00
+date: 2026-07-18 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

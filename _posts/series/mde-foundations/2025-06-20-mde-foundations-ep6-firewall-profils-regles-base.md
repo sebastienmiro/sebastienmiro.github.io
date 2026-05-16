@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 6 : firewall Windows, profils et règles de base"
-date: 2025-06-20 08:00:00 +01:00
+date: 2026-06-20 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

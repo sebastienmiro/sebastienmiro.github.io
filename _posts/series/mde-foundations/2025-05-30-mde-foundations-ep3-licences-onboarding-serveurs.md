@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 3 : licences et onboarding des serveurs Windows"
-date: 2025-05-30 08:00:00 +01:00
+date: 2026-05-30 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

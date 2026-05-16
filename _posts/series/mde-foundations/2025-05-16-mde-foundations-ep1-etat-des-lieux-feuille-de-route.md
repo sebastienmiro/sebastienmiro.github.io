@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 1 : état des lieux et feuille de route"
-date: 2025-05-16 08:00:00 +01:00
+date: 2026-05-16 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:

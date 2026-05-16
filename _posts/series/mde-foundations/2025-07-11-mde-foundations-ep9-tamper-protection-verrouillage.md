@@ -1,6 +1,6 @@
 ---
 title: "MDE Foundations - Episode 9 : Tamper Protection et verrouillage de la configuration"
-date: 2025-07-11 08:00:00 +01:00
+date: 2026-07-11 08:00:00 +01:00
 layout: post
 categories: [securite, MDE]
 tags:
