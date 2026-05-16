@@ -42,6 +42,8 @@ Les seuls vecteurs autorisés pour modifier ces paramètres sont les policies In
 
 Les GPO classiques, les scripts PowerShell locaux (`Set-MpPreference -DisableRealtimeMonitoring $true`), les modifications de registre, ne fonctionnent pas. Tamper Protection les ignore silencieusement et logge la tentative.
 
+![Tamper protection - Avant/Après](/assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep9-figure1.png)
+
 ## Le rôle critique en cas de compromission
 
 L'intérêt principal de Tamper Protection se manifeste en cas de compromission active. Un attaquant qui obtient des privilèges administrateur sur un poste a historiquement plusieurs vecteurs pour neutraliser l'antivirus avant de déclencher son payload :

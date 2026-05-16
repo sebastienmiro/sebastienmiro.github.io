@@ -36,6 +36,8 @@ Le croisement de ces deux dimensions donne une matrice de déploiement. Tu n'act
 
 Les règles ASR n'ont pas le même risque de générer des faux positifs métier. Voici une classification utilisable pour structurer le déploiement.
 
+![Déploiement des règles ASR par niveau de risque](/assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep8-figure1.png)
+
 **Risque très faible - Activation directe en Block**
 
 Ces règles ciblent des comportements quasi exclusivement malveillants. Aucune raison légitime d'écrire un workflow métier qui les déclenche.

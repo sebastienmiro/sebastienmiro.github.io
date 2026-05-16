@@ -55,6 +55,8 @@ Pas de configuration agressive, pas de blocage, pas d'exclusions spécifiques. J
 
 Les policies plus spécifiques (postes pilote, postes production, serveurs pilote, serveurs production) viennent ensuite par-dessus avec des configurations plus fines. C'est là qu'il faut comprendre comment Intune résout les conflits entre policies.
 
+![Superposition des policies MDE](/assets/img/posts/series/mde-foundations/2026/06/mde-foundations-ep4-figure1.png)
+
 ## La logique de fusion des policies Intune
 
 Quand plusieurs policies de sécurité Endpoint Security s'appliquent au même appareil via plusieurs groupes, Intune ne choisit pas "la dernière" ou "la plus prioritaire". Le comportement varie selon le type de paramètre.

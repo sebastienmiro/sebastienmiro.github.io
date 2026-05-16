@@ -37,6 +37,8 @@ Windows Defender Antivirus dans MDE ne se résume plus à la détection par sign
 
 La protection cloud n'est pas une option de confort. Sans elle, Windows Defender perd la majorité de ses capacités modernes de détection. Désactiver la protection cloud, c'est revenir à un antivirus de 2010.
 
+![Chaîne de décision de Microsoft Defender](/assets/img/posts/series/mde-foundations/2026/06/mde-foundations-ep5-figure1.png)
+
 ## Le mode actif et le mode passif
 
 Avant de configurer quoi que ce soit, il faut comprendre dans quel mode Windows Defender tourne sur tes machines.

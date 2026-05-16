@@ -43,6 +43,8 @@ Actif quand l'utilisateur a déclaré le réseau comme "public" (café, aéropor
 
 Sur un poste de travail nomade, ces trois profils peuvent changer plusieurs fois par jour selon les déplacements. Sur un serveur, le profil reste généralement stable sur Domaine.
 
+![Windows Firewall - Les profils](/assets/img/posts/series/mde-foundations/2026/06/mde-foundations-ep6-figure1.png)
+
 ## Le piège du profil Domaine désactivé
 
 C'est la configuration la plus fréquente en audit, et la plus problématique : le firewall est activé sur Privé et Public, mais désactivé sur Domaine. La justification est toujours la même : "c'est un environnement de confiance, on n'a pas besoin du firewall en interne".

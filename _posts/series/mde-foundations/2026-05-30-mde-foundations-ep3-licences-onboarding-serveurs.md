@@ -57,11 +57,7 @@ Elle s'applique nativement aux serveurs Azure. Pour des serveurs on-premises, AW
 
 ### Récapitulatif
 
-| Option | Périmètre | Plafond | Cas typique |
-|---|---|---|---|
-| MDE for Endpoint for Servers (P1/P2) | On-premises, par OSE | Aucun | Serveurs on-premises classiques |
-| Defender for Business servers | Tenants Business Premium / DfB | 60 serveurs | PME avec quelques serveurs |
-| Defender for Servers (P1/P2) | Azure, Arc, AWS, GCP | Aucun | Serveurs déjà supervisés par Defender for Cloud |
+![Tableau comparatif des licences MDE for Servers](/assets/img/posts/series/mde-foundations/2026/05/mde-foundations-ep3-figure1.png)
 
 Les trois options offrent les mêmes capacités EDR de base (P2 dans tous les cas inclut investigation automatisée et threat hunting). Le choix dépend de ton modèle de facturation préféré, de la taille de ton parc, et de ton degré d'intégration avec Azure.
 
