@@ -2,7 +2,7 @@
 title: "MDE Foundations - Episode 6 : firewall Windows, profils et règles de base"
 date: 2025-06-20 08:00:00 +01:00
 layout: post
-categories: [Sécurité, Microsoft Defender for Endpoint]
+categories: [securite, MDE]
 tags:
   - Microsoft Defender for Endpoint
   - Windows Firewall

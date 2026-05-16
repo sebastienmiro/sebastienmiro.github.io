@@ -2,7 +2,7 @@
 title: "MDE Foundations - Episode 9 : Tamper Protection et verrouillage de la configuration"
 date: 2025-07-11 08:00:00 +01:00
 layout: post
-categories: [Sécurité, Microsoft Defender for Endpoint]
+categories: [securite, MDE]
 tags:
   - Microsoft Defender for Endpoint
   - Tamper Protection

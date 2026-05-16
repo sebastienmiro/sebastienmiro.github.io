@@ -2,7 +2,7 @@
 title: "MDE Foundations - Episode 7 : Attack Surface Reduction, comprendre les règles"
 date: 2025-06-27 08:00:00 +01:00
 layout: post
-categories: [Sécurité, Microsoft Defender for Endpoint]
+categories: [securite, MDE]
 tags:
   - Microsoft Defender for Endpoint
   - ASR

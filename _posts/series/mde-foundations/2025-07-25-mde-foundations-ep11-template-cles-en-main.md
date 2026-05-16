@@ -2,7 +2,7 @@
 title: "MDE Foundations - Episode 11 : le template MDE Foundations, import clés en main"
 date: 2025-07-25 08:00:00 +01:00
 layout: post
-categories: [Sécurité, Microsoft Defender for Endpoint]
+categories: [securite, MDE]
 tags:
   - Microsoft Defender for Endpoint
   - Intune

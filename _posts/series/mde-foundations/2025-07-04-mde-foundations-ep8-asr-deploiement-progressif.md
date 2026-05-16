@@ -2,7 +2,7 @@
 title: "MDE Foundations - Episode 8 : ASR, déploiement progressif et gestion des faux positifs"
 date: 2025-07-04 08:00:00 +01:00
 layout: post
-categories: [Sécurité, Microsoft Defender for Endpoint]
+categories: [securite, MDE]
 tags:
   - Microsoft Defender for Endpoint
   - ASR

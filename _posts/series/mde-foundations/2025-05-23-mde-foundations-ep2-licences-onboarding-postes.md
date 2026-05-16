@@ -2,7 +2,7 @@
 title: "MDE Foundations - Episode 2 : licences et onboarding des postes de travail"
 date: 2025-05-23 08:00:00 +01:00
 layout: post
-categories: [Sécurité, Microsoft Defender for Endpoint]
+categories: [securite, MDE]
 tags:
   - Microsoft Defender for Endpoint
   - Intune
