@@ -155,4 +155,25 @@ Nom : MDE-Production-Workstations
 Type : Sécurité, membres dynamiques
 ```
 
-On revient sur la stratégie de déploiement pilote vers production à chaque épisode. La règle est simple : toujours déployer sur le groupe pilote d'abord, observer 48 heures, puis étendre au groupe production.
+## Pilote, production et cas particuliers
+
+Une fois ces groupes en place, voici comment un poste se répartit selon sa configuration.
+
+```mermaid
+flowchart TD
+    A[Nouveau poste<br/>WRK-XXX joint à Entra ID] --> B{Inclus dans la règle<br/>dynamique WRK- ?}
+    B -->|Oui automatique| C[MDE-Production-Workstations]
+    B -->|Non| D[Hors des groupes spécifiques<br/>voir épisode 4]
+
+    C --> E{Ajouté manuellement<br/>au groupe pilote ?}
+    E -->|Oui| F[Reçoit aussi les policies<br/>MDE-Pilot-Workstations]
+    E -->|Non| G[Configuration production<br/>standard]
+
+    style C fill:#d4f4d4
+    style F fill:#ffe8cc
+    style D fill:#fff4cc
+```
+
+Un poste qui suit la convention de nommage se retrouve automatiquement dans le groupe production. Pour qu'il soit aussi en pilote, il faut l'ajouter manuellement au groupe `MDE-Pilot-Workstations`. Les postes hors convention de nommage (postes de test renommés, machines créées hors procédure) ne tombent dans aucun de ces groupes : on traite ce cas dans l'épisode suivant.
+
+La règle de déploiement est simple : toujours déployer sur le groupe pilote d'abord, observer 48 heures, puis étendre au groupe production. On revient sur cette stratégie à chaque épisode.

@@ -73,17 +73,17 @@ Argument plus rare et généralement infondé. Les outils modernes de déploieme
 
 Le cas le plus fréquent. Tamper Protection a été désactivée à un moment donné pour une raison ponctuelle, et personne ne l'a réactivée.
 
-Dans tous ces cas, la réponse est la même : réactiver, et inclure Tamper Protection dans le catch-all pour qu'aucune machine ne s'en passe.
+Dans tous ces cas, la réponse est la même : réactiver Tamper Protection, dans la policy AV catch-all comme dans toutes les policies AV production. Tamper Protection doit être à *Enabled* dans chaque policy antivirus, sans exception. C'est un paramètre simple qui ne génère pas de conflit puisqu'il est activé partout avec la même valeur.
 
 ## Activer Tamper Protection via Intune
 
-L'activation se fait au niveau de la policy Antivirus déjà créée dans l'épisode 5. Le paramètre se trouve dans la même policy `MDE-AV-CatchAll` :
+L'activation se fait au niveau de chaque policy Antivirus créée dans l'épisode 5. Le paramètre est présent dans toutes les policies AV de la série :
 
 ```
 Tamper Protection : Enabled
 ```
 
-Cette ligne a déjà été ajoutée dans la configuration du catch-all à l'épisode 5. Si elle n'est pas active, c'est le moment de vérifier.
+Cette ligne doit être présente dans `MDE-AV-CatchAll`, `MDE-AV-Workstations-Production`, `MDE-AV-Servers-Production`, et les variantes pilote. Si elle manque dans une policy, c'est le moment de vérifier : une machine ne doit jamais avoir Tamper Protection à Off, quelle que soit la policy qui la cible.
 
 Une fois la policy déployée, Tamper Protection devient active sur le poste dans les minutes qui suivent l'application. Le changement d'état est tracé dans les logs Windows Defender (`Event ID 5007` dans le journal `Microsoft-Windows-Windows Defender/Operational`).
 

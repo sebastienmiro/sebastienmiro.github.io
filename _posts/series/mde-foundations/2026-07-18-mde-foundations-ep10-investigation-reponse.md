@@ -54,6 +54,10 @@ Chaque incident a une **gravité** (Informational, Low, Medium, High) et un **st
 
 Quand un incident remonte dans le portail, voici la séquence de questions à poser dans l'ordre.
 
+![Premiers réflexes face à un incident avec MDE](/assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep10-figure1.png)
+
+
+
 **Qu'est-ce qui a été détecté ?**
 
 Lire la vue d'ensemble de l'incident. Quelles alertes le composent ? Quelles techniques MITRE ATT&CK sont mentionnées ? L'attaque est-elle bloquée par MDE ou simplement détectée ?
@@ -71,6 +75,30 @@ Le premier événement de l'incident date de quand ? Si c'est il y a deux minute
 **Qu'est-ce qui a été fait automatiquement ?**
 
 MDE peut avoir déjà pris des actions : isolation de la machine, suppression de fichier, blocage de processus. Lire la section "Actions" de l'incident pour savoir ce qui a été remédié automatiquement avant d'agir manuellement.
+
+```mermaid
+flowchart TD
+    A[Nouvelle alerte ou incident] --> B{Détection bloquée<br/>ou pas ?}
+    B -->|Bloquée par MDE| C[Vérifier que la chaîne<br/>est complètement stoppée]
+    B -->|Détectée seulement| D[Incident actif<br/>Priorité haute]
+
+    C --> E{Comportement<br/>récurrent ?}
+    E -->|Oui| F[Investigation source]
+    E -->|Non| G[Resolved + documenter]
+
+    D --> H[Évaluer le périmètre]
+    H --> I{Un seul appareil<br/>ou plusieurs ?}
+    I -->|Un seul| J[Isoler l'appareil]
+    I -->|Plusieurs| K[Isolation +<br/>alerte SOC élargie]
+    J --> L[Live Response<br/>et analyse]
+    K --> L
+    L --> M[Remédiation +<br/>post-mortem]
+
+    style D fill:#ffd4d4
+    style J fill:#ffe8cc
+    style K fill:#ffd4d4
+    style M fill:#d4f4d4
+```
 
 ## La fiche appareil
 

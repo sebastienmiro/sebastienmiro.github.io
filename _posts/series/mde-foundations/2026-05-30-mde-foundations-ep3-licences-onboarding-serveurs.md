@@ -186,5 +186,19 @@ Par exemple, tu peux renseigner `extensionAttribute1` avec la valeur `Server` vi
 Nom : MDE-Production-Servers
 Type : Sécurité, membres dynamiques
 ```
+```mermaid
+flowchart TD
+    A[Nouveau serveur<br/>SRV-XXX enregistré dans Entra ID] --> B{Inclus dans la règle<br/>dynamique SRV- ?}
+    B -->|Oui automatique| C[MDE-Production-Servers]
+    B -->|Non| D[Hors des groupes spécifiques<br/>voir épisode 4]
+
+    C --> E{Ajouté manuellement<br/>au groupe pilote ?}
+    E -->|Oui| F[Reçoit aussi les policies<br/>MDE-Pilot-Servers]
+    E -->|Non| G[Configuration production<br/>standard]
+
+    style C fill:#d4f4d4
+    style F fill:#ffe8cc
+    style D fill:#fff4cc
+```
 
 Assigne les policies MDE à des groupes serveurs distincts des groupes postes de travail, même si les policies sont identiques pour l'instant. Certaines configurations diffèrent entre ces deux contextes (ASR, exclusions antivirus, règles firewall), et avoir des groupes séparés dès le départ évite d'avoir à scinder les affectations plus tard.

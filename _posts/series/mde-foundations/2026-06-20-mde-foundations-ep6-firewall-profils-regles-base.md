@@ -66,6 +66,22 @@ Le firewall Windows fonctionne selon une logique simple :
 
 Cette dissymétrie est volontaire. Bloquer tout en sortant casserait la majorité des applications sans bénéfice de sécurité significatif sur un poste de travail. Bloquer tout en entrant est en revanche la posture standard.
 
+```mermaid
+flowchart LR
+    A[Trafic réseau] --> B{Direction ?}
+    B -->|Entrant| C[Posture par défaut<br/>BLOCK]
+    B -->|Sortant| D[Posture par défaut<br/>ALLOW]
+
+    C --> E[Liste blanche<br/>Ouvertures explicites]
+    D --> F[Liste noire<br/>Blocages explicites]
+
+    E --> G[Exemples<br/>RDP depuis subnet admin<br/>ICMP sur Domaine]
+    F --> H[Exemples<br/>SMB vers Internet<br/>Telnet, FTP, TFTP]
+
+    style C fill:#ffd4d4
+    style D fill:#d4f4d4
+```
+
 Les règles s'évaluent dans l'ordre suivant :
 
 1. Règles de sécurité de connexion (IPsec)
@@ -239,9 +255,9 @@ Les règles spécifiques aux rôles applicatifs (IIS sur 443, SQL sur 1433, Exch
 
 | Policy | Cible | Contenu |
 |---|---|---|
-| MDE-FW-CatchAll | Groupe catch-all Windows | Configuration globale : firewall activé sur les trois profils, comportements par défaut |
-| MDE-FW-Rules-Workstations | Production postes | Règles de blocage SMB, Telnet, FTP, RDP sur Public |
-| MDE-FW-Rules-Servers | Production serveurs | Règles entrantes admin (RDP, WinRM) + blocages SMB Internet |
+| MDE-FW-CatchAll | All Devices + filtre Windows + exclusion des 4 groupes | Configuration globale firewall autosuffisante : firewall activé sur les trois profils, comportements par défaut, pour les machines orphelines |
+| MDE-FW-Rules-Workstations | MDE-Pilot-Workstations et MDE-Production-Workstations | Configuration globale + règles postes (blocage SMB sortant Internet, Telnet/FTP, RDP sur Public, ICMP entrant) |
+| MDE-FW-Rules-Servers | MDE-Pilot-Servers et MDE-Production-Servers | Configuration globale + règles serveurs (blocage SMB entrant Internet, RDP/WinRM autorisés depuis subnet admin) |
 
 Sur le catch-all, on se contente de garantir que le firewall est activé sur les trois profils. Les règles spécifiques arrivent au niveau des policies production.
 
@@ -253,7 +269,7 @@ Le paramètre **Allow Local Policy Merge** à `Disabled` que tu as posé sur le 
 
 Concrètement : si tu déploies une policy Intune sur le profil Domaine avec `Allow Local Policy Merge = Disabled`, les règles locales sur Domaine sont ignorées. Sur Privé et Public, les règles locales continuent à s'appliquer tant qu'aucune policy Intune ne couvre ces profils.
 
-Pour avoir un comportement homogène, déploie la configuration globale et les règles sur les trois profils, même si certains profils n'ont pas de règles spécifiques.
+Pour avoir un comportement homogène, déploie la configuration globale et les règles sur les trois profils dans chaque policy, même si certains profils n'ont pas de règles spécifiques. Les policies production et catch-all couvrent toutes les trois profils par défaut dans cette série.
 
 ## Vérification après déploiement
 

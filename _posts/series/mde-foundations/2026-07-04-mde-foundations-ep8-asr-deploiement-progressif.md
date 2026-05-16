@@ -38,6 +38,31 @@ Les règles ASR n'ont pas le même risque de générer des faux positifs métier
 
 ![Déploiement des règles ASR par niveau de risque](/assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep8-figure1.png)
 
+```mermaid
+flowchart LR
+    A[Règles ASR<br/>par catégorie] --> B[Risque très faible]
+    A --> C[Risque faible]
+    A --> D[Risque modéré]
+    A --> E[Risque élevé]
+
+    B --> B1[LSASS<br/>Drivers vulnérables<br/>WMI persistence<br/>Scripts obfusqués<br/>JS/VBScript downloads]
+    B --> B2[Block direct]
+
+    C --> C1[Email exec<br/>USB unsigned<br/>Files unless trusted]
+    C --> C2[Audit 1 sem<br/>puis Block]
+
+    D --> D1[Office macros<br/>Office child processes<br/>Code injection<br/>Adobe Reader child]
+    D --> D2[Audit 2-4 sem<br/>puis Warn puis Block]
+
+    E --> E1[PSExec/WMI commands<br/>Office communication]
+    E --> E2[Évaluation<br/>cas par cas]
+
+    style B2 fill:#d4f4d4
+    style C2 fill:#cfe8ff
+    style D2 fill:#ffe8cc
+    style E2 fill:#ffd4d4
+```
+
 **Risque très faible - Activation directe en Block**
 
 Ces règles ciblent des comportements quasi exclusivement malveillants. Aucune raison légitime d'écrire un workflow métier qui les déclenche.
@@ -79,11 +104,11 @@ Plutôt qu'une grosse policy ASR unique qui contient toutes les règles, la sér
 
 | Policy | Cible | Contenu |
 |---|---|---|
-| MDE-ASR-LowRisk-Block | Catch-all + Production (postes et serveurs) | Règles à risque très faible, directement en Block |
-| MDE-ASR-Office-Audit | Pilote (postes uniquement) | Règles Office en Audit |
-| MDE-ASR-Office-Warn | Production (postes uniquement) après validation pilote | Règles Office en Warn |
-| MDE-ASR-Office-Block | Production (postes uniquement) après validation Warn | Règles Office en Block |
-| MDE-ASR-Exclusions | Tous groupes | Exclusions ASR par règle, gérées de manière centralisée |
+| MDE-ASR-LowRisk-Block | All Devices + filtre Windows | Règles ASR à risque très faible, directement en Block. Policy universelle qui s'applique à toutes les machines Windows. |
+| MDE-ASR-Office-Audit | MDE-Pilot-Workstations puis MDE-Production-Workstations | Règles Office en Audit pour identifier les workflows métier impactés |
+| MDE-ASR-Office-Warn | MDE-Production-Workstations | Règles Office en Warn après validation de la phase Audit |
+| MDE-ASR-Office-Block | PMDE-Production-Workstations | Règles Office en Block après validation de la phase Warn |
+| MDE-ASR-Exclusions | Groupes concernés selon le contexte | Exclusions ASR par règle, gérées de manière centralisée |
 
 Les règles ASR sur serveurs sont volontairement plus restreintes. Les règles Office et navigateur n'ont pas de sens sur un serveur sans utilisateur interactif. On y déploie uniquement les règles de la catégorie "Risque très faible" plus la règle LSASS.
 

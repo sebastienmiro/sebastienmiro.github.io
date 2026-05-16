@@ -47,6 +47,25 @@ Chaque règle peut être dans l'un des cinq états suivants.
 
 Trois règles ne supportent pas le mode Warn et passent automatiquement en Block si tu le configures : la règle de blocage du vol de credentials LSASS, la règle de blocage des appels API Win32 depuis les macros Office, et la règle de blocage de la persistance via WMI.
 
+```mermaid
+flowchart TD
+    A[Comportement détecté<br/>par une règle ASR] --> B{Mode de la règle ?}
+    B -->|Not Configured<br/>Disabled| C[Aucune action<br/>Pas de télémétrie]
+    B -->|Audit| D[Pas de blocage<br/>Événement enregistré]
+    B -->|Warn| E[Blocage avec popup<br/>Bypass utilisateur 24h]
+    B -->|Block| F[Blocage strict<br/>Pas de contournement]
+
+    D --> G{Cloud Block Level<br/>= High ou High+ ?}
+    E --> G
+    F --> G
+    G -->|Oui| H[Alerte EDR dans MDE]
+    G -->|Non| I[Événement local uniquement<br/>Pas de remontée portail]
+
+    style C fill:#ffd4d4
+    style I fill:#ffd4d4
+    style H fill:#d4f4d4
+```
+
 ## Le prérequis Cloud Block Level High
 
 C'est un point critique souvent ignoré : **les alertes EDR pour les règles ASR ne sont générées que sur les appareils configurés en Cloud Block Level High ou High Plus**. Sur les appareils en Cloud Block Level Default ou inférieur, les règles ASR fonctionnent (elles bloquent ou auditent), mais aucune alerte EDR n'est levée.

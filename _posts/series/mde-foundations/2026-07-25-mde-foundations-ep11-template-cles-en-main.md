@@ -29,7 +29,6 @@ Le template MDE Foundations couvre l'ensemble des briques vues dans la série. V
 
 **Groupes Entra ID**
 
-- `MDE-CatchAll-Windows` : groupe dynamique couvrant tous les appareils Windows du tenant
 - `MDE-Pilot-Workstations` : groupe statique pour les postes de travail pilotes
 - `MDE-Production-Workstations` : groupe dynamique pour les postes de travail de production
 - `MDE-Pilot-Servers` : groupe statique pour les serveurs pilotes
@@ -47,6 +46,8 @@ Le template MDE Foundations couvre l'ensemble des briques vues dans la série. V
 - Activation de Security Management for MDE pour les postes hors Intune
 - Activation globale de Tamper Protection
 - Configuration de l'investigation automatisée
+
+![MDE FOundations](/assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep11-figure1.png)
 
 ## Prérequis avant déploiement
 
@@ -112,15 +113,6 @@ Une fois connecté, tu accèdes aux différents types d'objets : Configuration P
 
 Les groupes peuvent être créés directement depuis IntuneManagement ou depuis le portail Entra ID. Voici les définitions exactes.
 
-**MDE-CatchAll-Windows**
-
-```
-Type : Sécurité, membres dynamiques
-Description : Catch-all - Tous les appareils Windows onboardés
-Règle dynamique :
-  (device.deviceOSType -eq "Windows")
-```
-
 **MDE-Pilot-Workstations**
 
 ```
@@ -159,6 +151,20 @@ Règle dynamique (à adapter) :
   (device.deviceOSType -eq "Windows") 
   and (device.displayName -startsWith "SRV-")
 ```
+## Étape 2bis - Créer le filtre d'assignation Windows-Only
+
+Le filtre permet de cibler `All Devices` sans toucher iOS, Android ou macOS.
+
+Création depuis `intune.microsoft.com > Appareils > Filtres > Créer un filtre`
+
+```
+Nom : Windows-Only
+Plateforme : Windows 10 et plus tard
+Description : Filtre pour cibler uniquement les appareils Windows
+Règle : (device.deviceTrustType -ne "Workplace") and (device.operatingSystem -eq "Windows")
+```
+
+Ce filtre se réutilise sur toutes les policies catch-all et universelles.
 
 ## Étape 3 - Créer la policy d'onboarding EDR
 
@@ -182,7 +188,8 @@ Paramètres :
 
 Assignations :
 
-- `MDE-CatchAll-Windows` (inclusion)
+- Include : `All Devices`
+- Filter : `Windows-Only` (Include)
 
 ## Étape 4 - Créer les policies Antivirus
 
@@ -215,7 +222,10 @@ Le socle minimal appliqué à tout appareil Windows.
 | Tamper Protection | Enabled |
 | Disable Auto Exclusions | Not Configured |
 
-Assignations : `MDE-CatchAll-Windows`
+Assignations :
+- Include : `All Devices`
+- Filter : `Windows-Only` (Include)
+- Exclude : `MDE-Pilot-Workstations`, `MDE-Production-Workstations`, `MDE-Pilot-Servers`, `MDE-Production-Servers`
 
 ### MDE-AV-Workstations-Production
 
@@ -300,7 +310,10 @@ Pour chacun des trois profils (Domaine, Privé, Public), appliquer les mêmes va
 
 Pour les serveurs, créer une copie de cette policy avec `Disable Inbound Notifications` à `True` (pas de popup utilisateur pertinent sur serveur sans session interactive).
 
-Assignations : `MDE-CatchAll-Windows`
+Assignations :
+- Include : `All Devices`
+- Filter : `Windows-Only` (Include)
+- Exclude : `MDE-Pilot-Workstations`, `MDE-Production-Workstations`, `MDE-Pilot-Servers`, `MDE-Production-Servers`
 
 ### MDE-FW-Rules-Workstations
 
@@ -458,21 +471,58 @@ Sur les serveurs, on déploie uniquement la policy `MDE-ASR-LowRisk-Block`. Les 
 
 Vue d'ensemble des affectations.
 
-| Policy | CatchAll | Pilot WS | Prod WS | Pilot Srv | Prod Srv |
-|---|---|---|---|---|---|
-| MDE-EDR-Onboarding | X | | | | |
-| MDE-AV-CatchAll | X | | | | |
-| MDE-AV-Workstations-Production | | | X | | |
-| MDE-AV-Servers-Production | | | | | X |
-| MDE-AV-Workstations-Pilot | | X | | | |
-| MDE-AV-Servers-Pilot | | | | X | |
-| MDE-FW-CatchAll | X | | | | |
-| MDE-FW-Rules-Workstations | | X | X | | |
-| MDE-FW-Rules-Servers | | | | X | X |
-| MDE-ASR-LowRisk-Block | X | | | | |
-| MDE-ASR-Office-Audit | | X | | | |
-| MDE-ASR-Office-Warn (après) | | | X | | |
-| MDE-ASR-Office-Block (après) | | | X | | |
+| Policy | Cible Intune |
+|---|---|
+| MDE-EDR-Onboarding | All Devices + Filter Windows-Only |
+| MDE-ASR-LowRisk-Block | All Devices + Filter Windows-Only |
+| MDE-AV-CatchAll | All Devices + Filter Windows-Only + Exclude 4 groupes |
+| MDE-FW-CatchAll | All Devices + Filter Windows-Only + Exclude 4 groupes |
+| MDE-AV-Workstations-Production | MDE-Production-Workstations |
+| MDE-FW-Rules-Workstations | MDE-Pilot-Workstations et MDE-Production-Workstations |
+| MDE-AV-Servers-Production | MDE-Production-Servers |
+| MDE-FW-Rules-Servers | MDE-Pilot-Servers et MDE-Production-Servers |
+| MDE-AV-Workstations-Pilot | MDE-Pilot-Workstations |
+| MDE-AV-Servers-Pilot | MDE-Pilot-Servers |
+| MDE-ASR-Office-Audit | MDE-Pilot-Workstations puis MDE-Production-Workstations |
+| MDE-ASR-Office-Warn | MDE-Production-Workstations |
+| MDE-ASR-Office-Block | MDE-Production-Workstations |
+
+```mermaid
+flowchart TB
+    subgraph Universal["Universelles (toutes les machines Windows)"]
+        U1[MDE-EDR-Onboarding]
+        U2[MDE-ASR-LowRisk-Block]
+    end
+
+    subgraph CatchAll["Catch-all (orphelins seulement)"]
+        C1[MDE-AV-CatchAll]
+        C2[MDE-FW-CatchAll]
+    end
+
+    subgraph Workstations["Spécifiques postes"]
+        W1[MDE-AV-Workstations-Production]
+        W2[MDE-FW-Rules-Workstations]
+        W3[MDE-AV-Workstations-Pilot]
+        W4[MDE-ASR-Office-Audit puis Warn puis Block]
+    end
+
+    subgraph Servers["Spécifiques serveurs"]
+        S1[MDE-AV-Servers-Production]
+        S2[MDE-FW-Rules-Servers]
+        S3[MDE-AV-Servers-Pilot]
+    end
+
+    style Universal fill:#cfe8ff
+    style CatchAll fill:#fff4cc
+    style Workstations fill:#d4f4d4
+    style Servers fill:#ffe8cc
+```
+
+Trois types de policies se distinguent :
+
+- **Universelles** : EDR Onboarding et ASR LowRisk Block ciblent toutes les machines Windows sans exception
+- **Catch-all** : AV et FW CatchAll ciblent toutes les machines Windows à l'exception des quatre groupes spécifiques, pour rattraper les orphelins
+- **Spécifiques** : toutes les autres policies ciblent un ou plusieurs groupes explicitement
 
 La logique de superposition (épisode 4) garantit que chaque appareil reçoit le socle catch-all plus les couches spécifiques à son rôle.
 
@@ -510,11 +560,12 @@ L'ordre d'activation est important. Voici la séquence recommandée.
 
 **Semaine 1 - Socle**
 
-1. Créer les cinq groupes Entra ID
-2. Importer ou créer la policy `MDE-EDR-Onboarding`
-3. Importer ou créer la policy `MDE-AV-CatchAll`
-4. Importer ou créer la policy `MDE-FW-CatchAll` (postes et serveurs)
-5. Activer Tamper Protection au niveau tenant
+1. Créer les quatre groupes Entra ID
+2. Créer le filtre d'assignation `Windows-Only`
+3. Importer ou créer la policy `MDE-EDR-Onboarding` (universelle)
+4. Importer ou créer la policy `MDE-AV-CatchAll` (avec exclusion des 4 groupes)
+5. Importer ou créer la policy `MDE-FW-CatchAll` (avec exclusion des 4 groupes)
+6. Activer Tamper Protection au niveau tenant
 
 Validation : les machines remontent dans le portail MDE, Tamper Protection active sur quelques postes témoins.
 
