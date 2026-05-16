@@ -15,8 +15,8 @@ sidebar: false
 level: Intermédiaire
 platform: Microsoft Defender for Endpoint
 scope: Postes de travail / Serveurs
-cover-img: assets/img/posts/2025/07/mde-foundations-ep9-cover.png
-thumbnail-img: assets/img/posts/2025/07/mde-foundations-ep9-thumb.png
+cover-img: assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep9-cover.png
+thumbnail-img: assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep9-thumb.png
 series: MDE Foundations
 series_order: 9
 ---
