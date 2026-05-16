@@ -2,7 +2,7 @@
 layout: page
 title: MDE Foundations Framework
 sidebar: true
-series: MDE Foundations
+series: [MDE Foundations]
 permalink: /series/mde-foundations/
 tags: [series:mde-foundations]
 
