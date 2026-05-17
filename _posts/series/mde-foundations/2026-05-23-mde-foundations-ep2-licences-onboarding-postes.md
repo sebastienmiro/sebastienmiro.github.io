@@ -125,22 +125,31 @@ Si l'appareil n'apparaît pas dans MDE après 1 heure, vérifie :
 - Le service `Sense` est bien démarré (`sc query sense`)
 - Les logs dans `C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection\Logs\`
 
-## Construire les groupes dynamiques Entra ID
+## Construire les groupes Entra ID pour les postes
 
-La gestion des politiques par groupes dynamiques évite d'avoir à maintenir des affectations manuelles. Voici la structure de groupes recommandée pour la série.
+La gestion des policies par groupes Entra ID évite d'avoir à maintenir des affectations manuelles. Voici la structure de groupes recommandée pour la série, avec deux vagues de déploiement.
 
-**Groupe pilote postes de travail**
+**Groupe pilote Wave1 (10% du parc)**
 
-Commence par un groupe statique avec une sélection manuelle de postes de test. Ce groupe reçoit les policies en premier.
+Premier groupe pilote, statique, avec une sélection manuelle de postes représentatifs. Environ 10% du parc, mélange de profils utilisateurs (techniques, métier, mobiles, sédentaires). Ce groupe reçoit toutes les nouveautés en premier.
 
 ```
-Nom : MDE-Pilot-Workstations
+Nom : MDE-Pilot-Workstations-Wave1
+Type : Sécurité, membres statiques
+```
+
+**Groupe pilote Wave2 (30% du parc)**
+
+Deuxième groupe pilote, statique, avec environ 30% du parc. Permet d'élargir l'échantillon une fois Wave1 validé, avant de déployer sur l'ensemble de la production.
+
+```
+Nom : MDE-Pilot-Workstations-Wave2
 Type : Sécurité, membres statiques
 ```
 
 **Groupe production postes de travail**
 
-Un groupe dynamique pour cibler l'ensemble des postes de travail. La difficulté ici est qu'Entra ID ne dispose pas d'un attribut natif qui distingue un poste de travail d'un serveur. La règle dynamique dépend donc de la convention de nommage de ton parc.
+Un groupe dynamique pour cibler l'ensemble des postes de travail. Entra ID ne dispose pas d'attribut natif qui distingue un poste de travail d'un serveur. La règle dynamique repose donc sur la convention de nommage du parc.
 
 Si tes postes suivent une convention de nommage (par exemple `WRK-` en préfixe) :
 
@@ -148,32 +157,44 @@ Si tes postes suivent une convention de nommage (par exemple `WRK-` en préfixe)
 (device.displayName -startsWith "WRK-")
 ```
 
-Si tu n'as pas de convention de nommage stricte, l'alternative est d'utiliser un **extensionAttribute** renseigné via un script Graph, ou de gérer ces groupes en statique le temps de mettre en place une convention.
+Si tu n'as pas de convention de nommage stricte, l'alternative est d'utiliser un **extensionAttribute** renseigné via un script Graph, ou de gérer ce groupe en statique le temps de mettre en place une convention.
 
 ```
 Nom : MDE-Production-Workstations
 Type : Sécurité, membres dynamiques
 ```
 
-## Pilote, production et cas particuliers
+## Logique d'exclusivité
 
-Une fois ces groupes en place, voici comment un poste se répartit selon sa configuration.
+La règle est simple : un poste reçoit **une seule** configuration par domaine (antivirus, firewall, ASR). Pas de superposition de policies, pas de fusion à gérer. Cette simplicité s'obtient grâce aux exclusions d'assignation Intune.
+
+Concrètement, quand une policy de production sera assignée à `MDE-Production-Workstations`, elle exclura les deux groupes pilote. Un poste en Wave1 ne reçoit donc que sa policy pilote, pas celle de production en plus. Idem pour Wave2.
 
 ```mermaid
 flowchart TD
-    A[Nouveau poste<br/>WRK-XXX joint à Entra ID] --> B{Inclus dans la règle<br/>dynamique WRK- ?}
-    B -->|Oui automatique| C[MDE-Production-Workstations]
-    B -->|Non| D[Hors des groupes spécifiques<br/>voir épisode 4]
+    A[Poste WRK-XXX<br/>joint à Entra ID] --> B{Dans Wave1<br/>ajout manuel ?}
+    B -->|Oui| C[Reçoit policies Wave1]
+    B -->|Non| D{Dans Wave2<br/>ajout manuel ?}
+    D -->|Oui| E[Reçoit policies Wave2]
+    D -->|Non| F[Reçoit policies Production]
 
-    C --> E{Ajouté manuellement<br/>au groupe pilote ?}
-    E -->|Oui| F[Reçoit aussi les policies<br/>MDE-Pilot-Workstations]
-    E -->|Non| G[Configuration production<br/>standard]
-
-    style C fill:#d4f4d4
-    style F fill:#ffe8cc
-    style D fill:#fff4cc
+    style C fill:#ffe8cc
+    style E fill:#fff4cc
+    style F fill:#d4f4d4
 ```
 
-Un poste qui suit la convention de nommage se retrouve automatiquement dans le groupe production. Pour qu'il soit aussi en pilote, il faut l'ajouter manuellement au groupe `MDE-Pilot-Workstations`. Les postes hors convention de nommage (postes de test renommés, machines créées hors procédure) ne tombent dans aucun de ces groupes : on traite ce cas dans l'épisode suivant.
+Les postes hors convention de nommage (postes de test renommés, machines créées hors procédure) ne tombent dans aucun de ces groupes. Ces orphelins sont rattrapés par une policy catch-all, traitée dans l'épisode suivant.
 
-La règle de déploiement est simple : toujours déployer sur le groupe pilote d'abord, observer 48 heures, puis étendre au groupe production. On revient sur cette stratégie à chaque épisode.
+## Stratégie de déploiement
+
+La cible finale est que les groupes Wave1 et Wave2 soient progressivement vidés : on y place des postes pour valider une nouvelle configuration, puis une fois validée, on retire les postes des groupes pilote et la configuration de production prend le relais.
+
+Schéma type d'un déploiement progressif :
+
+1. On crée une nouvelle policy ou on modifie une existante
+2. On l'assigne d'abord aux postes Wave1 (10% du parc)
+3. On observe 48 heures, on collecte les remontées
+4. Si tout va bien, on étend à Wave2 (30%)
+5. On observe encore quelques jours
+6. Si tout va bien, on bascule la configuration sur la production
+7. On vide les groupes Wave1 et Wave2 pour le prochain cycle de déploiement

@@ -184,17 +184,21 @@ L'exclusion par règle spécifique (paramètre `ASR Only Per Rule Exclusions`) e
 
 Les exclusions ASR suivent la même règle d'or que les exclusions antivirus : chaque exclusion doit être justifiée, tracée, et revue. Pas d'exclusions héritées d'un audit qui datent d'il y a deux ans.
 
-## La stratégie de déploiement en trois étapes
+## La stratégie de déploiement en deux temps
 
-L'épisode 8 développera la stratégie de déploiement. À ce stade, voici les trois étapes à connaître :
+L'épisode 8 développera la stratégie concrète. À ce stade, l'approche est simple : deux policies suffisent.
 
-1. **Phase Audit** sur les règles qui supportent Audit et qui ont un risque d'impact métier (macros Office, processus enfants, scripts). Durée : 2 à 4 semaines. Analyse de la télémétrie pour identifier les workflows légitimes à exclure.
+**Première policy : audit large avec LSASS en Block**
 
-2. **Activation directe en Block** pour les règles à faible risque d'impact (LSASS, scripts obfusqués, drivers vulnérables, WMI). Microsoft a déjà fait le travail de filtrage pour ces règles.
+Toutes les règles ASR en mode Audit, sauf la règle LSASS qui passe directement en Block. Cette policy s'applique partout, dès le départ. Elle collecte la télémétrie sur toutes les règles sans rien bloquer (hors LSASS), ce qui permet d'identifier les workflows métier impactés avant tout blocage.
 
-3. **Mode Warn** comme palier intermédiaire entre Audit et Block sur les règles qui le supportent, pour les utilisateurs avertis et les groupes pilotes.
+La règle LSASS fait exception parce qu'elle est activée en Block par défaut depuis 2022, qu'elle intègre déjà un filtrage interne Microsoft, et que les cas légitimes de lecture mémoire LSASS sont quasi inexistants en environnement managé.
 
-Le piège classique est de tout mettre en Audit "par sécurité" et de ne jamais sortir de cette phase. Audit n'est pas une configuration cible. Audit est une étape de validation, point.
+**Seconde policy : bascule progressive en Block**
+
+Une fois la télémétrie analysée et les exclusions identifiées, une seconde policy contient toutes les règles en mode Block. Cette policy n'est pas assignée au départ. Elle se déploie progressivement via les groupes Wave1, puis Wave2, puis production.
+
+Le piège classique reste valable : **le mode *Audit* n'est pas une configuration cible**. C'est une étape de validation. Si une règle reste en Audit sans bascule pendant plus de deux mois, soit elle est validée et il faut la basculer, soit elle pose un problème et il faut documenter pourquoi on ne la passe pas en Block.
 
 ## Vérification après déploiement
 

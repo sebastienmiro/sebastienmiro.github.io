@@ -153,16 +153,25 @@ Si le service est en état `Stopped` après l'installation de l'agent unifié, d
 C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection\Logs\
 ```
 
-## Construire les groupes dynamiques pour les serveurs
+## Construire les groupes Entra ID pour les serveurs
 
-Comme pour les postes de travail, Entra ID ne dispose pas d'un attribut natif qui identifie un serveur. La stratégie de groupe dépend de ta convention de nommage.
+Comme pour les postes de travail, Entra ID ne dispose pas d'attribut natif qui identifie un serveur. La stratégie de groupe dépend de ta convention de nommage. La structure suit la même logique que pour les postes, avec deux vagues de déploiement progressif.
 
-**Groupe pilote serveurs**
+**Groupe pilote Wave1 serveurs**
 
-Groupe statique avec une sélection manuelle de serveurs de test, idéalement des serveurs non critiques ou des serveurs de lab.
+Premier groupe pilote serveurs, statique, avec une sélection manuelle de serveurs non critiques ou de lab. Mélange de profils (serveurs applicatifs simples, serveurs de fichiers, etc.).
 
 ```
-Nom : MDE-Pilot-Servers
+Nom : MDE-Pilot-Servers-Wave1
+Type : Sécurité, membres statiques
+```
+
+**Groupe pilote Wave2 serveurs**
+
+Deuxième groupe pilote serveurs, statique. Permet d'élargir progressivement le périmètre de validation.
+
+```
+Nom : MDE-Pilot-Servers-Wave2
 Type : Sécurité, membres statiques
 ```
 
@@ -174,7 +183,7 @@ Groupe dynamique basé sur le préfixe de nommage si tu en as un (par exemple `S
 (device.displayName -startsWith "SRV-")
 ```
 
-Si tu n'as pas de convention de nommage, une alternative est de renseigner un `extensionAttribute` sur les objets ordinateur dans Active Directory (ils se synchronisent vers Entra ID via Entra Connect) et de construire la règle dynamique sur cet attribut.
+Si tu n'as pas de convention de nommage, une alternative est de renseigner un `extensionAttribute` sur les objets ordinateur dans Active Directory (qui se synchronisent vers Entra ID via Entra Connect) et de construire la règle dynamique sur cet attribut.
 
 Par exemple, tu peux renseigner `extensionAttribute1` avec la valeur `Server` via un script AD, puis utiliser la règle :
 
@@ -186,19 +195,28 @@ Par exemple, tu peux renseigner `extensionAttribute1` avec la valeur `Server` vi
 Nom : MDE-Production-Servers
 Type : Sécurité, membres dynamiques
 ```
+
+## Logique d'exclusivité
+
+Même principe que pour les postes : un serveur reçoit une seule configuration par domaine. Quand une policy de production sera assignée à `MDE-Production-Servers`, elle exclura les groupes pilote Wave1 et Wave2.
+
 ```mermaid
 flowchart TD
-    A[Nouveau serveur<br/>SRV-XXX enregistré dans Entra ID] --> B{Inclus dans la règle<br/>dynamique SRV- ?}
-    B -->|Oui automatique| C[MDE-Production-Servers]
-    B -->|Non| D[Hors des groupes spécifiques<br/>voir épisode 4]
+    A[Serveur SRV-XXX<br/>enregistré dans Entra ID] --> B{Dans Wave1<br/>ajout manuel ?}
+    B -->|Oui| C[Reçoit policies Wave1]
+    B -->|Non| D{Dans Wave2<br/>ajout manuel ?}
+    D -->|Oui| E[Reçoit policies Wave2]
+    D -->|Non| F[Reçoit policies Production]
 
-    C --> E{Ajouté manuellement<br/>au groupe pilote ?}
-    E -->|Oui| F[Reçoit aussi les policies<br/>MDE-Pilot-Servers]
-    E -->|Non| G[Configuration production<br/>standard]
-
-    style C fill:#d4f4d4
-    style F fill:#ffe8cc
-    style D fill:#fff4cc
+    style C fill:#ffe8cc
+    style E fill:#fff4cc
+    style F fill:#d4f4d4
 ```
 
-Assigne les policies MDE à des groupes serveurs distincts des groupes postes de travail, même si les policies sont identiques pour l'instant. Certaines configurations diffèrent entre ces deux contextes (ASR, exclusions antivirus, règles firewall), et avoir des groupes séparés dès le départ évite d'avoir à scinder les affectations plus tard.
+Les serveurs hors convention de nommage ne tombent dans aucun de ces groupes. Comme pour les postes, ils sont rattrapés par la policy catch-all traitée dans l'épisode suivant.
+
+## Stratégie de déploiement serveurs
+
+La logique de déploiement progressif s'applique aussi aux serveurs, mais avec plus de prudence vu la criticité. Le périmètre Wave1 reste très réduit (2 à 5 serveurs non critiques), Wave2 s'élargit aux serveurs moins exposés, et la production absorbe le reste une fois validation faite.
+
+Les configurations diffèrent entre postes et serveurs (ASR, exclusions antivirus, règles firewall), c'est pourquoi cette série maintient des groupes séparés dès le départ. Avoir des groupes distincts évite d'avoir à scinder les affectations plus tard.

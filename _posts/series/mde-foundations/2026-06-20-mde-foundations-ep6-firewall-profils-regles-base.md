@@ -81,7 +81,6 @@ flowchart LR
     style C fill:#ffd4d4
     style D fill:#d4f4d4
 ```
-
 Les règles s'évaluent dans l'ordre suivant :
 
 1. Règles de sécurité de connexion (IPsec)
@@ -101,6 +100,8 @@ Tu vas créer deux types de policies distinctes :
 - Une ou plusieurs policies de **règles** qui définissent les autorisations et blocages spécifiques
 
 Cette séparation est importante. La policy de configuration globale est stable, elle change rarement. Les policies de règles évoluent plus souvent au gré des besoins applicatifs. Les gérer séparément évite d'avoir à modifier la configuration globale à chaque ajustement de règle.
+
+Avec le modèle d’exclusivité appliqué à cette série d'aticles, cette séparation permet aussi de réutiliser la même configuration globale (firewall activé sur les trois profils) à la fois sur le catch-all et sur les policies spécifiques. Les règles, elles, sont déclinées par périmètre et par étape de déploiement.
 
 ### Policy de configuration globale
 
@@ -251,15 +252,19 @@ Les règles spécifiques aux rôles applicatifs (IIS sur 443, SQL sur 1433, Exch
 
 ## La structure des policies pour cette série
 
-À ce stade, voici la structure firewall :
+Le modèle d'exclusivité se traduit pour le firewall par cinq policies. La configuration globale (firewall activé sur les trois profils) est intégrée dans chaque policy spécifique, pas dans une policy à part.
 
-| Policy | Cible | Contenu |
+| Policy | Cible Intune | Contenu |
 |---|---|---|
-| MDE-FW-CatchAll | All Devices + filtre Windows + exclusion des 4 groupes | Configuration globale firewall autosuffisante : firewall activé sur les trois profils, comportements par défaut, pour les machines orphelines |
-| MDE-FW-Rules-Workstations | MDE-Pilot-Workstations et MDE-Production-Workstations | Configuration globale + règles postes (blocage SMB sortant Internet, Telnet/FTP, RDP sur Public, ICMP entrant) |
-| MDE-FW-Rules-Servers | MDE-Pilot-Servers et MDE-Production-Servers | Configuration globale + règles serveurs (blocage SMB entrant Internet, RDP/WinRM autorisés depuis subnet admin) |
+| MDE-FW-CatchAll | All Devices + Filter Windows-Only + Exclude des 6 groupes | Configuration globale firewall autosuffisante (firewall activé sur les trois profils), sans règles spécifiques, pour les orphelins |
+| MDE-FW-Rules-Workstations | Include MDE-Production-Workstations + Exclude Pilot-WS-Wave1 et Wave2 | Configuration globale + règles postes (blocage SMB sortant Internet, Telnet/FTP, RDP sur Public, ICMP entrant) |
+| MDE-FW-Rules-Workstations-Pilot | Include Pilot-WS-Wave1 et Pilot-WS-Wave2 | Identique à la production postes (validation des règles avant rollout production) |
+| MDE-FW-Rules-Servers | Include MDE-Production-Servers + Exclude Pilot-Srv-Wave1 et Wave2 | Configuration globale + règles serveurs (blocage SMB entrant Internet, RDP/WinRM autorisés depuis subnet admin) |
+| MDE-FW-Rules-Servers-Pilot | Include Pilot-Srv-Wave1 et Pilot-Srv-Wave2 | Identique à la production serveurs |
 
-Sur le catch-all, on se contente de garantir que le firewall est activé sur les trois profils. Les règles spécifiques arrivent au niveau des policies production.
+Chaque policy embarque sa configuration globale (firewall ON sur les trois profils, comportements par défaut, `Allow Local Policy Merge = Disabled`). Pas de socle commun, pas de superposition. Une machine reçoit une seule policy firewall.
+
+Les policies pilote contiennent exactement les mêmes règles que les policies production correspondantes. Le déploiement progressif Wave1 -> Wave2 -> Production permet de valider toute modification de règle avant de toucher l'ensemble du parc.
 
 ## Le piège des règles préexistantes
 
@@ -269,7 +274,7 @@ Le paramètre **Allow Local Policy Merge** à `Disabled` que tu as posé sur le 
 
 Concrètement : si tu déploies une policy Intune sur le profil Domaine avec `Allow Local Policy Merge = Disabled`, les règles locales sur Domaine sont ignorées. Sur Privé et Public, les règles locales continuent à s'appliquer tant qu'aucune policy Intune ne couvre ces profils.
 
-Pour avoir un comportement homogène, déploie la configuration globale et les règles sur les trois profils dans chaque policy, même si certains profils n'ont pas de règles spécifiques. Les policies production et catch-all couvrent toutes les trois profils par défaut dans cette série.
+Pour avoir un comportement homogène, chaque policy de la série couvre les trois profils dans sa configuration globale (firewall activé sur Domain, Private, Public avec les comportements par défaut). Les règles spécifiques ciblent ensuite les profils pertinents (par exemple, blocage RDP entrant sur Public uniquement).
 
 ## Vérification après déploiement
 

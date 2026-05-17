@@ -151,11 +151,11 @@ Toute exclusion doit avoir :
 
 | Policy | Cible | Contenu |
 |---|---|---|
-| MDE-AV-CatchAll | Groupe catch-all Windows | Protection cloud High, Tamper ON, pas d'exclusions |
-| MDE-AV-Workstations-Production | Production postes | Comme catch-all + ajustements scans + exclusions justifiées spécifiques aux postes |
-| MDE-AV-Servers-Production | Production serveurs | Comme catch-all + exclusions justifiées + Cloud Extended Timeout 50s |
-| MDE-AV-Workstations-Pilot | Pilote postes | Comme production + Cloud Block Level High Plus |
-| MDE-AV-Servers-Pilot | Pilote serveurs | Comme production serveurs + Cloud Block Level High Plus |
+| MDE-AV-CatchAll | All Devices + filtre Windows + exclusion des 4 groupes | Configuration AV complète et autosuffisante minimale, sans exclusions, pour les machines orphelines |
+| MDE-AV-Workstations-Production | MDE-Production-Workstations | Configuration AV complète orientée postes (scans planifiés, ajustements CPU, exclusions postes éventuelles) |
+| MDE-AV-Servers-Production | MDE-Production-Servers | Configuration AV complète orientée serveurs (Cloud Extended Timeout 50s, ajustements CPU faibles, scans hors heures) |
+| MDE-AV-Workstations-Pilot | MDE-Pilot-Workstations | Durcissement Cloud Block Level High Plus, qui se superpose à la policy production sur les postes pilote |
+| MDE-AV-Servers-Pilot | MDE-Pilot-Servers | Durcissement Cloud Block Level High Plus, qui se superpose à la policy production sur les serveurs pilote |
 
 Cette structure peut paraître redondante. Elle est volontairement redondante : chaque policy est explicite sur ce qu'elle pose, sans dépendance implicite à la fusion. Si tu veux retirer une couche, tu sais exactement ce que ça enlève.
 
@@ -191,7 +191,7 @@ Tu as maintenant :
 
 - Une compréhension des moteurs de Windows Defender modernes et du rôle central de la protection cloud
 - Une distinction claire entre les paramètres globaux (toujours actifs) et les exclusions (à justifier)
-- Une structure de policies en couches : catch-all en socle, production puis pilote au-dessus
+- Une structure de policies par cible : catch-all pour les orphelins, production pour les machines identifiées, pilote en superposition pour les machines de test
 - Une méthode pour traquer les exclusions héritées qui ne sont plus justifiées
 
 L'épisode suivant traite du firewall Windows : profils réseau, règles de base et logique d'application.

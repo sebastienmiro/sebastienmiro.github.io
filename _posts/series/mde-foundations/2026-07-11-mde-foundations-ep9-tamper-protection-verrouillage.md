@@ -73,7 +73,8 @@ Argument plus rare et généralement infondé. Les outils modernes de déploieme
 
 Le cas le plus fréquent. Tamper Protection a été désactivée à un moment donné pour une raison ponctuelle, et personne ne l'a réactivée.
 
-Dans tous ces cas, la réponse est la même : réactiver Tamper Protection, dans la policy AV catch-all comme dans toutes les policies AV production. Tamper Protection doit être à *Enabled* dans chaque policy antivirus, sans exception. C'est un paramètre simple qui ne génère pas de conflit puisqu'il est activé partout avec la même valeur.
+Dans tous ces cas, la réponse est la même : réactiver Tamper Protection dans toutes les policies antivirus de la série. C’est un paramètre qui doit être à *Enabled* dans `MDE-AV-CatchAll`, `MDE-AV-Workstations-Production`, `MDE-AV-Workstations-Pilot`, `MDE-AV-Servers-Production` et `MDE-AV-Servers-Pilot`. Avec le modèle d’exclusivité de la série (un appareil reçoit une seule policy par domaine), Tamper Protection doit être présente et activée dans chaque policy pour qu’aucune machine, quelle que soit son groupe, ne s’en passe.
+
 
 ## Activer Tamper Protection via Intune
 
@@ -83,7 +84,7 @@ L'activation se fait au niveau de chaque policy Antivirus créée dans l'épisod
 Tamper Protection : Enabled
 ```
 
-Cette ligne doit être présente dans `MDE-AV-CatchAll`, `MDE-AV-Workstations-Production`, `MDE-AV-Servers-Production`, et les variantes pilote. Si elle manque dans une policy, c'est le moment de vérifier : une machine ne doit jamais avoir Tamper Protection à Off, quelle que soit la policy qui la cible.
+Cette ligne doit être présente dans les cinq policies antivirus `MDE-AV-CatchAll`, `MDE-AV-Workstations-Production`, `MDE-AV-Workstations-Pilot`, `MDE-AV-Servers-Production`, `MDE-AV-Servers-Pilot`). Si elle manque dans l’une d’elles, c’est le moment de corriger : une machine ne doit jamais avoir Tamper Protection à Off, quelle que soit la policy qui la cible.
 
 Une fois la policy déployée, Tamper Protection devient active sur le poste dans les minutes qui suivent l'application. Le changement d'état est tracé dans les logs Windows Defender (`Event ID 5007` dans le journal `Microsoft-Windows-Windows Defender/Operational`).
 

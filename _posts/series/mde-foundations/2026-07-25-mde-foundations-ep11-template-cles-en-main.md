@@ -29,10 +29,12 @@ Le template MDE Foundations couvre l'ensemble des briques vues dans la série. V
 
 **Groupes Entra ID**
 
-- `MDE-Pilot-Workstations` : groupe statique pour les postes de travail pilotes
-- `MDE-Production-Workstations` : groupe dynamique pour les postes de travail de production
-- `MDE-Pilot-Servers` : groupe statique pour les serveurs pilotes
-- `MDE-Production-Servers` : groupe dynamique pour les serveurs de production
+- `MDE-Pilot-Workstations-Wave1` : groupe statique, 10% du parc, postes représentatifs
+- `MDE-Pilot-Workstations-Wave2` : groupe statique, 30% du parc, élargissement de la validation
+- `MDE-Production-Workstations` : groupe dynamique, tous les postes (préfixe WRK- ou équivalent)
+- `MDE-Pilot-Servers-Wave1` : groupe statique, quelques serveurs non critiques
+- `MDE-Pilot-Servers-Wave2` : groupe statique, élargissement du périmètre serveurs
+- `MDE-Production-Servers` : groupe dynamique, tous les serveurs (préfixe SRV- ou équivalent)
 
 **Policies Endpoint Security**
 
@@ -109,48 +111,74 @@ Permissions Graph requises :
 
 Une fois connecté, tu accèdes aux différents types d'objets : Configuration Profiles, Endpoint Security Policies, Groupes, etc.
 
-## Étape 2 - Créer les groupes Entra ID
+## Étape 2 - Créer les six groupes Entra ID
 
-Les groupes peuvent être créés directement depuis IntuneManagement ou depuis le portail Entra ID. Voici les définitions exactes.
+Création depuis `entra.microsoft.com > Groupes > Tous les groupes > Nouveau groupe`
 
-**MDE-Pilot-Workstations**
+**MDE-Pilot-Workstations-Wave1**
 
 ```
-Type : Sécurité, membres statiques
-Description : Postes de travail pilotes - Validation pré-production
-Membres : sélection manuelle de 5 à 20 postes représentatifs
+Type : Sécurité
+Membres : Statiques (sélection manuelle)
+Description : Wave1 pilote postes - 10% du parc - premiers à recevoir les nouvelles policies
 ```
+
+Sélectionner manuellement environ 10% du parc avec un mélange de profils (techniques, métier, mobiles, sédentaires).
+
+**MDE-Pilot-Workstations-Wave2**
+
+```
+Type : Sécurité
+Membres : Statiques (sélection manuelle)
+Description : Wave2 pilote postes - 30% du parc - élargissement de la validation
+```
+
+Sélectionner manuellement environ 30% supplémentaires du parc, après validation Wave1.
 
 **MDE-Production-Workstations**
 
 ```
-Type : Sécurité, membres dynamiques
-Description : Postes de travail en production
-Règle dynamique (à adapter à ta convention) :
-  (device.deviceOSType -eq "Windows") 
-  and (device.deviceOSVersion -notStartsWith "10.0.17763")
-  and (device.displayName -startsWith "WRK-")
+Type : Sécurité
+Membres : Dynamiques
+Description : Production postes - tous les postes hors pilote
+Règle dynamique :
+  (device.deviceOSType -eq "Windows") and (device.displayName -startsWith "WRK-")
 ```
 
-Le filtre sur `deviceOSVersion` exclut Windows Server (qui a un OS Version qui démarre par 10.0.17763 pour 2019, 10.0.20348 pour 2022). Adapte selon les versions présentes dans ton parc.
+À adapter selon la convention de nommage en place ou un `extensionAttribute`.
 
-**MDE-Pilot-Servers**
+**MDE-Pilot-Servers-Wave1**
 
 ```
-Type : Sécurité, membres statiques
-Description : Serveurs pilotes - Idéalement serveurs non critiques ou lab
-Membres : sélection manuelle de 2 à 5 serveurs
+Type : Sécurité
+Membres : Statiques (sélection manuelle)
+Description : Wave1 pilote serveurs - serveurs non critiques pour validation initiale
 ```
+
+Sélectionner 2 à 5 serveurs non critiques (serveurs de lab, applicatifs simples).
+
+**MDE-Pilot-Servers-Wave2**
+
+```
+Type : Sécurité
+Membres : Statiques (sélection manuelle)
+Description : Wave2 pilote serveurs - élargissement du périmètre serveurs
+```
+
+Sélectionner quelques serveurs supplémentaires, en élargissant la diversité des rôles.
 
 **MDE-Production-Servers**
 
 ```
-Type : Sécurité, membres dynamiques
-Description : Serveurs Windows en production
-Règle dynamique (à adapter) :
-  (device.deviceOSType -eq "Windows") 
-  and (device.displayName -startsWith "SRV-")
+Type : Sécurité
+Membres : Dynamiques
+Description : Production serveurs - tous les serveurs hors pilote
+Règle dynamique :
+  (device.deviceOSType -eq "Windows") and (device.displayName -startsWith "SRV-")
 ```
+
+À adapter selon la convention de nommage ou un `extensionAttribute`.
+
 ## Étape 2bis - Créer le filtre d'assignation Windows-Only
 
 Le filtre permet de cibler `All Devices` sans toucher iOS, Android ou macOS.
@@ -164,7 +192,7 @@ Description : Filtre pour cibler uniquement les appareils Windows
 Règle : (device.deviceTrustType -ne "Workplace") and (device.operatingSystem -eq "Windows")
 ```
 
-Ce filtre se réutilise sur toutes les policies catch-all et universelles.
+Ce filtre se réutilise sur toutes les policies universelles et catch-all de la série.
 
 ## Étape 3 - Créer la policy d'onboarding EDR
 
@@ -225,7 +253,14 @@ Le socle minimal appliqué à tout appareil Windows.
 Assignations :
 - Include : `All Devices`
 - Filter : `Windows-Only` (Include)
-- Exclude : `MDE-Pilot-Workstations`, `MDE-Production-Workstations`, `MDE-Pilot-Servers`, `MDE-Production-Servers`
+- Exclude :
+  - `MDE-Pilot-Workstations-Wave1`
+  - `MDE-Pilot-Workstations-Wave2`
+  - `MDE-Production-Workstations`
+  - `MDE-Pilot-Servers-Wave1`
+  - `MDE-Pilot-Servers-Wave2`
+  - `MDE-Production-Servers`
+
 
 ### MDE-AV-Workstations-Production
 
@@ -262,7 +297,12 @@ Couche spécifique aux serveurs. Hérite du catch-all et ajuste pour le contexte
 
 Les exclusions automatiques liées aux rôles serveur (Exchange, SQL Server, AD DS, IIS, Hyper-V) sont appliquées automatiquement par Windows Server 2016+ tant que `Disable Auto Exclusions` n'est pas explicitement à `Enabled`.
 
-Assignations : `MDE-Production-Servers`
+Assignations :
+- Include : `MDE-Production-Workstations`
+- Exclude :
+  - `MDE-Pilot-Workstations-Wave1`
+  - `MDE-Pilot-Workstations-Wave2`
+
 
 ### MDE-AV-Workstations-Pilot
 
@@ -272,7 +312,11 @@ Couche encore plus stricte appliquée aux postes pilotes pour identifier les év
 |---|---|
 | Cloud Block Level | High Plus |
 
-Assignations : `MDE-Pilot-Workstations`
+Assignations : 
+- Include :
+  - `MDE-Pilot-Workstations-Wave1`
+  - `MDE-Pilot-Workstations-Wave2`
+
 
 ### MDE-AV-Servers-Pilot
 
@@ -282,7 +326,10 @@ Identique au pilote postes pour le paramètre Cloud Block Level.
 |---|---|
 | Cloud Block Level | High Plus |
 
-Assignations : `MDE-Pilot-Servers`
+Assignations : 
+- Include :
+  - `MDE-Pilot-Servers-Wave1`
+  - `MDE-Pilot-Servers-Wave2`
 
 ## Étape 5 - Créer les policies Firewall
 
@@ -313,7 +360,7 @@ Pour les serveurs, créer une copie de cette policy avec `Disable Inbound Notifi
 Assignations :
 - Include : `All Devices`
 - Filter : `Windows-Only` (Include)
-- Exclude : `MDE-Pilot-Workstations`, `MDE-Production-Workstations`, `MDE-Pilot-Servers`, `MDE-Production-Servers`
+- Exclude : `Tous les groupes spécifiques`}
 
 ### MDE-FW-Rules-Workstations
 
@@ -364,7 +411,11 @@ Profils : Domaine
 Description : Autorise ping entrant sur profil Domaine pour supervision
 ```
 
-Assignations : `MDE-Production-Workstations`
+Assignations : 
+- Include : `MDE-Production-Workstations`
+- Exclude : 
+  - `MDE-Pilot-Workstations-Wave1`
+  - `MDE-Pilot-Workstations-Wave2`
 
 ### MDE-FW-Rules-Servers
 
@@ -413,31 +464,48 @@ Profils : Domaine
 Description : Autorise WinRM depuis le subnet d'administration uniquement
 ```
 
-Assignations : `MDE-Production-Servers`
+Assignations : 
+- Include : `MDE-Production-Servers`
+- Exclude : 
+  - `MDE-Pilot-Servers-Wave1`
+  - `MDE-Pilot-Servers-Wave2`
 
 ## Étape 6 - Créer les policies ASR
 
-Quatre policies par catégorie de risque, déployées progressivement.
+Conformément à l'approche simplifiée de l'épisode 8, deux policies suffisent.
 
-### MDE-ASR-LowRisk-Block
+**MDE-ASR-Audit-Plus-LSASS**
 
-Règles à risque très faible, activables directement en Block.
+Contenu : toutes les règles ASR en mode Audit, sauf la règle LSASS en mode Block.
 
-`Sécurité des points de terminaison > Réduction de la surface d'attaque > Créer une policy`, plateforme `Windows 10, Windows 11 et Windows Server`, profil `Règles de réduction de la surface d'attaque`.
+```
+Affectation :
+  Include : All Devices
+  Filter : Windows-Only (Include)
+```
 
-| Règle | GUID | État |
-|---|---|---|
-| Block credential stealing from LSASS | 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2 | Block |
-| Block abuse of exploited vulnerable signed drivers | 56a863a9-875e-4185-98a7-b882c64b5ce5 | Block |
-| Block persistence through WMI event subscription | e6db77e5-3df2-4cf1-b95a-636979351e5b | Block |
-| Block execution of potentially obfuscated scripts | 5beb7efe-fd9a-4556-801d-275e5ffc04cc | Block |
-| Block JavaScript or VBScript from launching downloaded executable content | d3e037e1-3eb8-44c8-a917-57927947596d | Block |
-| Block executable content from email client and webmail | be9ba2d9-53ea-4cdc-84e5-9b1eeee46550 | Block |
-| Block untrusted and unsigned processes that run from USB | b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4 | Block |
-| Block executable files from running unless they meet a prevalence, age, or trusted list criterion | 01443614-cd74-433a-b99e-2ecdc07bfc25 | Block |
-| Use advanced protection against ransomware | c1db55ab-c21a-4637-bb3f-a12568109d35 | Block |
+Cette policy est universelle au démarrage. Elle collecte la télémétrie sur toutes les règles.
 
-Assignations : `MDE-CatchAll-Windows`
+**MDE-ASR-FullBlock**
+
+Contenu : toutes les règles ASR en mode Block.
+
+```
+Affectation au démarrage : aucune
+```
+
+Cette policy est créée mais **non assignée** au démarrage. Elle sera déployée progressivement après analyse de la télémétrie (voir épisode 8).
+
+**MDE-ASR-Exclusions** (optionnel mais recommandé)
+
+Policy dédiée pour héberger les exclusions ASR par règle, indépendamment des changements de mode.
+
+```
+Contenu : ASR Only Per Rule Exclusions = (liste des exclusions justifiées)
+Affectation :
+  Include : All Devices
+  Filter : Windows-Only (Include)
+```
 
 ### MDE-ASR-Office-Audit
 
@@ -469,32 +537,39 @@ Sur les serveurs, on déploie uniquement la policy `MDE-ASR-LowRisk-Block`. Les 
 
 ## Étape 7 - Matrice d'assignation
 
-Vue d'ensemble des affectations.
+Vue d'ensemble de toutes les policies et de leurs cibles dans l'état stable (après déploiement complet).
 
-| Policy | Cible Intune |
-|---|---|
-| MDE-EDR-Onboarding | All Devices + Filter Windows-Only |
-| MDE-ASR-LowRisk-Block | All Devices + Filter Windows-Only |
-| MDE-AV-CatchAll | All Devices + Filter Windows-Only + Exclude 4 groupes |
-| MDE-FW-CatchAll | All Devices + Filter Windows-Only + Exclude 4 groupes |
-| MDE-AV-Workstations-Production | MDE-Production-Workstations |
-| MDE-FW-Rules-Workstations | MDE-Pilot-Workstations et MDE-Production-Workstations |
-| MDE-AV-Servers-Production | MDE-Production-Servers |
-| MDE-FW-Rules-Servers | MDE-Pilot-Servers et MDE-Production-Servers |
-| MDE-AV-Workstations-Pilot | MDE-Pilot-Workstations |
-| MDE-AV-Servers-Pilot | MDE-Pilot-Servers |
-| MDE-ASR-Office-Audit | MDE-Pilot-Workstations puis MDE-Production-Workstations |
-| MDE-ASR-Office-Warn | MDE-Production-Workstations |
-| MDE-ASR-Office-Block | MDE-Production-Workstations |
+| Policy | Include | Exclude |
+|---|---|---|
+| MDE-EDR-Onboarding | All Devices + Filter Windows-Only | aucune |
+| MDE-ASR-Audit-Plus-LSASS | All Devices + Filter Windows-Only | (à terme : les 6 groupes spécifiques) |
+| MDE-ASR-FullBlock | (à terme : tous les groupes spécifiques) | aucune |
+| MDE-ASR-Exclusions | All Devices + Filter Windows-Only | aucune |
+| MDE-AV-CatchAll | All Devices + Filter Windows-Only | Les 6 groupes spécifiques |
+| MDE-FW-CatchAll | All Devices + Filter Windows-Only | Les 6 groupes spécifiques |
+| MDE-AV-Workstations-Production | MDE-Production-Workstations | Wave1 WS, Wave2 WS |
+| MDE-FW-Rules-Workstations | MDE-Production-Workstations | Wave1 WS, Wave2 WS |
+| MDE-AV-Workstations-Pilot | Wave1 WS + Wave2 WS | aucune |
+| MDE-FW-Rules-Workstations-Pilot | Wave1 WS + Wave2 WS | aucune |
+| MDE-AV-Servers-Production | MDE-Production-Servers | Wave1 Srv, Wave2 Srv |
+| MDE-FW-Rules-Servers | MDE-Production-Servers | Wave1 Srv, Wave2 Srv |
+| MDE-AV-Servers-Pilot | Wave1 Srv + Wave2 Srv | aucune |
+| MDE-FW-Rules-Servers-Pilot | Wave1 Srv + Wave2 Srv | aucune |
+
+Trois types de policies se distinguent visuellement :
+
+- **Universelles** : EDR Onboarding et ASR Exclusions ciblent toutes les machines Windows sans exception
+- **Catch-all** : AV et FW CatchAll ciblent toutes les machines Windows à l'exception des six groupes spécifiques, pour rattraper les orphelins
+- **Spécifiques** : toutes les policies AV/FW pilote et production ciblent un ou plusieurs groupes explicitement, avec exclusion des groupes pilote pour les policies production
 
 ```mermaid
 flowchart TB
     subgraph Universal["Universelles (toutes les machines Windows)"]
         U1[MDE-EDR-Onboarding]
-        U2[MDE-ASR-LowRisk-Block]
+        U2[MDE-ASR-Exclusions]
     end
 
-    subgraph CatchAll["Catch-all (orphelins seulement)"]
+    subgraph CatchAll["Catch-all (orphelins uniquement)"]
         C1[MDE-AV-CatchAll]
         C2[MDE-FW-CatchAll]
     end
@@ -503,28 +578,27 @@ flowchart TB
         W1[MDE-AV-Workstations-Production]
         W2[MDE-FW-Rules-Workstations]
         W3[MDE-AV-Workstations-Pilot]
-        W4[MDE-ASR-Office-Audit puis Warn puis Block]
+        W4[MDE-FW-Rules-Workstations-Pilot]
     end
 
     subgraph Servers["Spécifiques serveurs"]
         S1[MDE-AV-Servers-Production]
         S2[MDE-FW-Rules-Servers]
         S3[MDE-AV-Servers-Pilot]
+        S4[MDE-FW-Rules-Servers-Pilot]
+    end
+
+    subgraph ASR["ASR (gestion à part)"]
+        R1[MDE-ASR-Audit-Plus-LSASS<br/>au démarrage]
+        R2[MDE-ASR-FullBlock<br/>en cible finale]
     end
 
     style Universal fill:#cfe8ff
     style CatchAll fill:#fff4cc
     style Workstations fill:#d4f4d4
     style Servers fill:#ffe8cc
+    style ASR fill:#e8d4f4
 ```
-
-Trois types de policies se distinguent :
-
-- **Universelles** : EDR Onboarding et ASR LowRisk Block ciblent toutes les machines Windows sans exception
-- **Catch-all** : AV et FW CatchAll ciblent toutes les machines Windows à l'exception des quatre groupes spécifiques, pour rattraper les orphelins
-- **Spécifiques** : toutes les autres policies ciblent un ou plusieurs groupes explicitement
-
-La logique de superposition (épisode 4) garantit que chaque appareil reçoit le socle catch-all plus les couches spécifiques à son rôle.
 
 ## Étape 8 - Activation au niveau tenant
 
@@ -556,51 +630,53 @@ Quelques paramètres à activer côté portail Microsoft Defender, indépendants
 
 ## Étape 9 - Plan de déploiement
 
-L'ordre d'activation est important. Voici la séquence recommandée.
+Le déploiement complet se déroule sur 11 semaines pour un parc de plusieurs centaines de postes. À adapter selon la taille du parc.
 
-**Semaine 1 - Socle**
+**Semaine 1 - Socle infrastructure**
 
-1. Créer les quatre groupes Entra ID
+1. Créer les six groupes Entra ID
 2. Créer le filtre d'assignation `Windows-Only`
 3. Importer ou créer la policy `MDE-EDR-Onboarding` (universelle)
-4. Importer ou créer la policy `MDE-AV-CatchAll` (avec exclusion des 4 groupes)
-5. Importer ou créer la policy `MDE-FW-CatchAll` (avec exclusion des 4 groupes)
-6. Activer Tamper Protection au niveau tenant
+4. Importer ou créer la policy `MDE-AV-CatchAll` (avec exclusion des 6 groupes)
+5. Importer ou créer la policy `MDE-FW-CatchAll` (avec exclusion des 6 groupes)
+6. Importer ou créer la policy `MDE-ASR-Audit-Plus-LSASS` (universelle)
+7. Activer Tamper Protection au niveau tenant
 
-Validation : les machines remontent dans le portail MDE, Tamper Protection active sur quelques postes témoins.
+**Semaine 2 - Déploiement antivirus et firewall**
 
-**Semaine 2 - Production**
+1. Importer ou créer `MDE-AV-Workstations-Production` et l'assigner
+2. Importer ou créer `MDE-AV-Workstations-Pilot` et l'assigner
+3. Importer ou créer `MDE-AV-Servers-Production` et l'assigner
+4. Importer ou créer `MDE-AV-Servers-Pilot` et l'assigner
+5. Importer ou créer les policies firewall production et pilote (4 policies)
+6. Vérifier les statuts d'application dans Intune
 
-1. Importer les policies AV et FW production postes et serveurs
-2. Activer Security Management for MDE pour les machines sans Intune
-3. Déployer la policy `MDE-ASR-LowRisk-Block` sur le catch-all
+**Semaines 3 à 6 - Phase d'analyse ASR**
 
-Validation : pas de remontée d'incident applicatif sur les premières 48 heures.
+Collecte de la télémétrie via `MDE-ASR-Audit-Plus-LSASS`. Analyse des remontées dans le portail Defender, identification des workflows métier impactés, création de la policy `MDE-ASR-Exclusions` avec les exclusions justifiées.
 
-**Semaines 3 à 6 - Phase pilote ASR Office**
+**Semaine 7 - Bascule ASR sur Wave1**
 
-1. Déployer `MDE-ASR-Office-Audit` sur le groupe pilote postes
-2. Analyser hebdomadairement les remontées dans le portail MDE
-3. Construire la liste des exclusions justifiées (par règle, par processus)
-4. Identifier les workflows métier qui déclenchent les règles
+1. Assigner `MDE-ASR-FullBlock` au groupe `MDE-Pilot-Workstations-Wave1`
+2. Ajouter exclusion de Wave1 dans `MDE-ASR-Audit-Plus-LSASS`
+3. Observer 48h, ajuster les exclusions si nécessaire
 
-**Semaine 7 - Bascule Warn**
+**Semaines 8 à 9 - Extension à Wave2**
 
-1. Étendre la phase Audit Office au groupe production postes
-2. Déployer `MDE-ASR-Office-Warn` sur les pilotes
-3. Communication utilisateur préparatoire
+1. Assigner `MDE-ASR-FullBlock` au groupe `MDE-Pilot-Workstations-Wave2`
+2. Ajouter exclusion de Wave2 dans `MDE-ASR-Audit-Plus-LSASS`
+3. Observer 1 semaine
 
-**Semaines 8 à 10 - Observation Warn**
+**Semaines 10 à 11 - Bascule production**
 
-1. Suivi des clics utilisateur sur Débloquer
-2. Ajustement des exclusions selon les remontées
-3. Validation que le volume est acceptable
+1. Assigner `MDE-ASR-FullBlock` aux groupes `MDE-Production-Workstations`, `MDE-Production-Servers`, et aux pilotes serveurs
+2. Ajouter exclusion de tous les groupes dans `MDE-ASR-Audit-Plus-LSASS`
+3. Communication finale aux utilisateurs avec canal incident dédié
+4. Surveillance renforcée pendant deux semaines
 
-**Semaine 11 - Bascule Block**
+**Après la semaine 11 - Vidage des Wave**
 
-1. Déployer `MDE-ASR-Office-Block` sur production postes
-2. Communication finale
-3. Surveillance renforcée pendant deux semaines
+Retirer progressivement les postes des groupes Wave1 et Wave2. Ils basculent automatiquement sur les policies production. Les groupes Wave restent disponibles pour le prochain cycle de déploiement.
 
 ## Étape 10 - Vérification globale
 
