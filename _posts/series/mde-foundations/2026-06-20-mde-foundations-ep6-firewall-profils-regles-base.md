@@ -23,7 +23,7 @@ series_order: 6
 
 Le firewall Windows est intégré à Windows depuis quinze ans. Il est mature, performant, et géré centralement via Intune dans le cadre de MDE. Pourtant, en audit, c'est la brique de configuration la moins maîtrisée après les exclusions antivirus. Soit il est désactivé sur le profil Domaine "parce que c'est un environnement de confiance", soit il est laissé sur ses valeurs par défaut sans cohérence d'ensemble, soit il est rempli de règles obsolètes qui datent de logiciels désinstallés depuis longtemps.
 
-Cet épisode pose une configuration firewall structurée, postes de travail et serveurs.
+Cet épisode pose une configuration firewall structurée, postes de travail et serveurs. La couverture n'est pas identique pour les deux : côté postes, on déploie des règles spécifiques ; côté serveurs, on s'en tient à l'activation globale du firewall sans règles applicatives. La raison est simple : les règles firewall serveur dépendent du rôle applicatif, du contexte d'administration et de la topologie réseau. Une règle générique mal calibrée peut couper un flux métier vital. Le sujet des règles serveur relève d'un travail d'analyse cas par cas, hors périmètre de cette série Foundations.
 
 ## Les trois profils réseau
 
@@ -195,76 +195,70 @@ Type ICMP : 8 (Echo Request)
 Profils : Domaine
 ```
 
-## Un socle de règles de base pour serveurs
+## Côté serveurs : activation seule, pas de règles
 
-Les serveurs ont une posture firewall différente. Ils acceptent généralement plus de connexions entrantes selon leur rôle, mais on garde la même logique : ouvrir explicitement ce qui est nécessaire.
+Sur les serveurs, on s'arrête à l'activation globale du firewall. Trois raisons pour cette prudence.
 
-**Bloquer SMB entrant depuis Internet**
+**Les flux entrants sont vitaux et variables**
 
-Même logique que pour les postes, mais cette fois en entrant. Un serveur ne doit jamais accepter de connexion SMB depuis Internet.
+Un serveur héberge des applications dont les ports d'écoute dépendent du rôle : IIS sur 443, SQL Server sur 1433, Exchange sur SMTP/IMAP/HTTPS, contrôleur de domaine sur une vingtaine de ports différents, application métier sur un port custom. Une règle entrante trop restrictive coupe un flux applicatif. Une règle entrante "bien intentionnée" peut casser la production.
 
-```
-Direction : Inbound
-Action : Block
-Protocole : TCP
-Ports locaux : 445
-Adresses distantes : Internet
-Profils : Domaine, Privé, Public
-```
+**L'administration distante repose sur des conventions locales**
 
-**Bloquer RDP entrant sur Public**
+Les règles d'autorisation RDP, WinRM ou SSH depuis un subnet admin présupposent qu'un subnet admin existe et qu'il est bien défini. Dans beaucoup d'environnements, l'administration passe par un bastion, par un VPN multi-segments, par un outil tiers. Une règle générique "Allow RDP from 10.0.0.0/24" ne reflète aucune réalité d'environnement.
 
-Si le serveur se retrouve sur un profil Public (cas d'une mauvaise détection de profil), on s'assure que RDP n'est pas accessible.
+**Le risque "admin qui désactive tout" est réel**
 
-```
-Direction : Inbound
-Action : Block
-Protocole : TCP
-Ports locaux : 3389
-Profils : Public
-```
+En audit, on rencontre régulièrement des serveurs avec le firewall complètement désactivé sur les trois profils, parce que "ça posait problème pour une application". Pousser des règles génériques mal calibrées via Intune est le meilleur moyen de provoquer ce comportement à grande échelle.
 
-**Autoriser RDP entrant sur Domaine depuis le subnet admin**
+L'objectif de cette série est donc minimal mais essentiel pour les serveurs : **garantir que le firewall est activé sur les trois profils**, et qu'aucune règle locale obsolète ne s'applique. C'est déjà un gain considérable par rapport à la configuration courante en audit.
 
-```
-Direction : Inbound
-Action : Allow
-Protocole : TCP
-Ports locaux : 3389
-Adresses distantes : <subnet admin spécifique>
-Profils : Domaine
-```
+### Configuration globale serveurs
 
-**Autoriser WinRM entrant sur Domaine depuis le subnet admin**
+Plateforme : Windows 10, Windows 11 et Windows Server. Profil : Pare-feu Microsoft Defender. Mêmes paramètres que pour les postes :
 
-Indispensable pour la gestion à distance via PowerShell.
+| Paramètre | Valeur |
+|---|---|
+| Enable Firewall | Enabled (sur les trois profils) |
+| Default Inbound Action | Block |
+| Default Outbound Action | Allow |
+| Disable Inbound Notifications | Enabled (serveurs sans utilisateur interactif) |
+| Allow Local Policy Merge | Disabled |
+| Allow Local IPsec Policy Merge | Disabled |
 
-```
-Direction : Inbound
-Action : Allow
-Protocole : TCP
-Ports locaux : 5985, 5986
-Adresses distantes : <subnet admin spécifique>
-Profils : Domaine
-```
+Le paramètre `Default Inbound Action = Block` ne casse rien sur un serveur correctement configuré : les flux applicatifs légitimes disposent déjà de leurs propres règles d'ouverture (créées par l'installation de l'application, par le rôle Windows correspondant, ou par les outils de provisioning). Le firewall Windows respecte ces règles préexistantes, il n'écrase que les règles locales ajoutées en dehors d'Intune via `Allow Local Policy Merge = Disabled`.
 
-Les règles spécifiques aux rôles applicatifs (IIS sur 443, SQL sur 1433, Exchange sur ses ports SMTP/IMAP/HTTPS) viennent en plus de ce socle, et sont gérées dans des policies de règles dédiées par rôle plutôt que dans le socle commun.
+Si une application serveur perd ses flux après application de cette configuration, c'est que ses règles d'ouverture n'étaient pas correctement déclarées. C'est une information utile à traiter, pas un signal pour désactiver le firewall.
+
+### Pourquoi pas de règles applicatives ici
+
+Les règles applicatives serveurs (IIS, SQL, Exchange, AD DS, etc.) sont mieux gérées par d'autres mécanismes :
+
+- Les rôles Windows Server installent eux-mêmes les règles correspondantes
+- Les outils de déploiement (MECM, Ansible, scripts d'installation) peuvent les pousser de manière contextuelle
+- Une policy Intune par rôle (`MDE-FW-Rules-IIS`, `MDE-FW-Rules-SQL`) peut être créée séparément, ciblée sur les serveurs concernés via un groupe dédié
+
+Ces approches sortent du périmètre d'une série Foundations. Elles relèvent d'un projet d'amélioration ultérieur, à mener avec une analyse cas par cas.
+
+Pour l'instant, on s'en tient à l'activation globale. C'est l'amélioration la plus impactante avec le risque le plus maîtrisé.
 
 ## La structure des policies pour cette série
 
-Le modèle d'exclusivité se traduit pour le firewall par cinq policies. La configuration globale (firewall activé sur les trois profils) est intégrée dans chaque policy spécifique, pas dans une policy à part.
+Le modèle d'exclusivité se traduit pour le firewall par cinq policies, mais la stratégie diffère entre postes et serveurs.
+
+**Côté postes** : configuration globale + règles spécifiques (blocage SMB sortant Internet, Telnet, FTP, RDP entrant sur Public). Déploiement progressif Wave1 → Wave2 → Production.
+
+**Côté serveurs** : uniquement la configuration globale (firewall activé sur les trois profils, comportements par défaut). Pas de règles fournies. L'objectif est de garantir que le firewall ne soit pas désactivé, sans imposer une posture qui pourrait casser des flux applicatifs non identifiés.
 
 | Policy | Cible Intune | Contenu |
 |---|---|---|
-| MDE-FW-CatchAll | All Devices + Filter Windows-Only + Exclude des 6 groupes | Configuration globale firewall autosuffisante (firewall activé sur les trois profils), sans règles spécifiques, pour les orphelins |
+| MDE-FW-CatchAll | All Devices + Filter Windows-Only + Exclude des 6 groupes | Configuration globale firewall (firewall activé sur les trois profils), sans règles spécifiques, pour les orphelins |
 | MDE-FW-Rules-Workstations | Include MDE-Production-Workstations + Exclude Pilot-WS-Wave1 et Wave2 | Configuration globale + règles postes (blocage SMB sortant Internet, Telnet/FTP, RDP sur Public, ICMP entrant) |
 | MDE-FW-Rules-Workstations-Pilot | Include Pilot-WS-Wave1 et Pilot-WS-Wave2 | Identique à la production postes (validation des règles avant rollout production) |
-| MDE-FW-Rules-Servers | Include MDE-Production-Servers + Exclude Pilot-Srv-Wave1 et Wave2 | Configuration globale + règles serveurs (blocage SMB entrant Internet, RDP/WinRM autorisés depuis subnet admin) |
-| MDE-FW-Rules-Servers-Pilot | Include Pilot-Srv-Wave1 et Pilot-Srv-Wave2 | Identique à la production serveurs |
+| MDE-FW-Rules-Servers | Include MDE-Production-Servers + Exclude Pilot-Srv-Wave1 et Wave2 | Configuration globale uniquement (firewall activé sur les trois profils), pas de règles applicatives |
+| MDE-FW-Rules-Servers-Pilot | Include Pilot-Srv-Wave1 et Pilot-Srv-Wave2 | Identique à la production serveurs (configuration globale uniquement) |
 
 Chaque policy embarque sa configuration globale (firewall ON sur les trois profils, comportements par défaut, `Allow Local Policy Merge = Disabled`). Pas de socle commun, pas de superposition. Une machine reçoit une seule policy firewall.
-
-Les policies pilote contiennent exactement les mêmes règles que les policies production correspondantes. Le déploiement progressif Wave1 -> Wave2 -> Production permet de valider toute modification de règle avant de toucher l'ensemble du parc.
 
 ## Le piège des règles préexistantes
 

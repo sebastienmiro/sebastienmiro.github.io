@@ -77,18 +77,20 @@ La série couvre le déploiement complet de MDE sur un tenant, postes de travail
 
 **Épisode 3** - Licences et onboarding : serveurs Windows
 
-**Épisode 4** - Antivirus : configurer Windows Defender correctement
+**Épisode 4** - Stratégie de ciblage et gestion des orphelins
 
-**Épisode 5** - Firewall : profils et règles de base
+**Épisode 5** - Antivirus : configurer Windows Defender correctement
 
-**Épisode 6** - Attack Surface Reduction : comprendre les règles
+**Épisode 6** - Firewall : profils et règles de base
 
-**Épisode 7** - Attack Surface Reduction : déploiement progressif
+**Épisode 7** - Attack Surface Reduction : comprendre les règles
 
-**Épisode 8** - Tamper Protection et verrouillage
+**Épisode 8** - Attack Surface Reduction : déploiement progressif
 
-**Épisode 9** - Investigation et réponse avec MDE
+**Épisode 9** - Tamper Protection et verrouillage
 
-**Épisode 10** - Le template MDE Foundations : import clés en main avec IntuneManagement
+**Épisode 10** - Investigation et réponse avec MDE
+
+**Épisode 11** - Le template MDE Foundations : import clés en main avec IntuneManagement
 
 Le dernier épisode fournit un export complet de groupes Entra ID et de policies Intune, importable directement dans ton tenant via un outil dédié. Les épisodes macOS et Linux seront traités séparément, en dehors de cette série.

@@ -147,17 +147,17 @@ Toute exclusion doit avoir :
 
 ## La structure des policies pour cette série
 
-À ce stade de la série, tu vas avoir plusieurs policies Antivirus qui se superposent :
+Le modèle d'exclusivité posé à l'épisode 4 se traduit ici par cinq policies antivirus, toutes autosuffisantes. Chaque policy contient l'intégralité de la configuration nécessaire à son périmètre, sans dépendance implicite à une autre policy.
 
-| Policy | Cible | Contenu |
+| Policy | Cible Intune | Contenu |
 |---|---|---|
-| MDE-AV-CatchAll | All Devices + filtre Windows + exclusion des 4 groupes | Configuration AV complète et autosuffisante minimale, sans exclusions, pour les machines orphelines |
-| MDE-AV-Workstations-Production | MDE-Production-Workstations | Configuration AV complète orientée postes (scans planifiés, ajustements CPU, exclusions postes éventuelles) |
-| MDE-AV-Servers-Production | MDE-Production-Servers | Configuration AV complète orientée serveurs (Cloud Extended Timeout 50s, ajustements CPU faibles, scans hors heures) |
-| MDE-AV-Workstations-Pilot | MDE-Pilot-Workstations | Durcissement Cloud Block Level High Plus, qui se superpose à la policy production sur les postes pilote |
-| MDE-AV-Servers-Pilot | MDE-Pilot-Servers | Durcissement Cloud Block Level High Plus, qui se superpose à la policy production sur les serveurs pilote |
+| MDE-AV-CatchAll | All Devices + filtre Windows + exclusion des 6 groupes | Configuration AV complète et autosuffisante minimale, sans exclusions, pour les machines orphelines |
+| MDE-AV-Workstations-Production | Include MDE-Production-Workstations + Exclude Wave1 WS, Wave2 WS | Configuration AV complète orientée postes (scans planifiés, ajustements CPU, exclusions postes éventuelles) |
+| MDE-AV-Servers-Production | Include MDE-Production-Servers + Exclude Wave1 Srv, Wave2 Srv | Configuration AV complète orientée serveurs (Cloud Extended Timeout 50s, ajustements CPU faibles, scans hors heures) |
+| MDE-AV-Workstations-Pilot | Include Pilot-WS-Wave1 et Pilot-WS-Wave2 | Identique à la production postes, avec Cloud Block Level monté à High Plus |
+| MDE-AV-Servers-Pilot | Include Pilot-Srv-Wave1 et Pilot-Srv-Wave2 | Identique à la production serveurs, avec Cloud Block Level monté à High Plus |
 
-Cette structure peut paraître redondante. Elle est volontairement redondante : chaque policy est explicite sur ce qu'elle pose, sans dépendance implicite à la fusion. Si tu veux retirer une couche, tu sais exactement ce que ça enlève.
+Cette structure peut paraître redondante. Elle est volontairement redondante : chaque policy est autosuffisante. La policy pilote n'est pas un delta par rapport à la production, c'est une policy complète. Si tu veux retirer une couche, tu sais exactement ce que ça enlève.
 
 ## Vérification après déploiement
 

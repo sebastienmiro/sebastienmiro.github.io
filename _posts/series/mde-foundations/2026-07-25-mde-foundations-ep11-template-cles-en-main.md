@@ -298,10 +298,10 @@ Couche spécifique aux serveurs. Hérite du catch-all et ajuste pour le contexte
 Les exclusions automatiques liées aux rôles serveur (Exchange, SQL Server, AD DS, IIS, Hyper-V) sont appliquées automatiquement par Windows Server 2016+ tant que `Disable Auto Exclusions` n'est pas explicitement à `Enabled`.
 
 Assignations :
-- Include : `MDE-Production-Workstations`
+- Include : `MDE-Production-Servers`
 - Exclude :
-  - `MDE-Pilot-Workstations-Wave1`
-  - `MDE-Pilot-Workstations-Wave2`
+  - `MDE-Pilot-Servers-Wave1`
+  - `MDE-Pilot-Servers-Wave2`
 
 
 ### MDE-AV-Workstations-Pilot
@@ -419,50 +419,13 @@ Assignations :
 
 ### MDE-FW-Rules-Servers
 
-Règles spécifiques aux serveurs.
+Configuration globale du firewall pour les serveurs, sans règles applicatives. Comme expliqué à l'épisode 6, les règles serveur dépendent du rôle, du contexte d'administration et de la topologie réseau. Les pousser de manière générique expose à des coupures de flux métier. L'objectif ici est uniquement de garantir que le firewall est actif sur les trois profils avec les comportements par défaut corrects.
 
-```
-Nom : Block-Inbound-SMB-Internet
-Direction : Inbound
-Action : Block
-Protocole : TCP
-Ports locaux : 445
-Adresses distantes : Internet
-Profils : Domaine, Privé, Public
-Description : Bloque SMB entrant depuis Internet
-```
+`Sécurité des points de terminaison > Pare-feu > Créer une policy`, plateforme `Windows 10, Windows 11 et Windows Server`, profil `Pare-feu Microsoft Defender`.
 
-```
-Nom : Block-Inbound-RDP-Public-Servers
-Direction : Inbound
-Action : Block
-Protocole : TCP
-Ports locaux : 3389
-Profils : Public
-Description : Bloque RDP sur Public en cas de bascule de profil involontaire
-```
+Mêmes paramètres que `MDE-FW-CatchAll`, avec `Disable Inbound Notifications` à `True` (pas de popup sur serveur sans utilisateur interactif).
 
-```
-Nom : Allow-Inbound-RDP-Admin-Subnet
-Direction : Inbound
-Action : Allow
-Protocole : TCP
-Ports locaux : 3389
-Adresses distantes : <subnet admin à renseigner>
-Profils : Domaine
-Description : Autorise RDP depuis le subnet d'administration uniquement
-```
-
-```
-Nom : Allow-Inbound-WinRM-Admin-Subnet
-Direction : Inbound
-Action : Allow
-Protocole : TCP
-Ports locaux : 5985, 5986
-Adresses distantes : <subnet admin à renseigner>
-Profils : Domaine
-Description : Autorise WinRM depuis le subnet d'administration uniquement
-```
+Les règles d'accès administration (RDP, WinRM depuis subnet admin) sont à ajouter séparément dans des policies dédiées par rôle ou par groupe de serveurs, avec les adresses sources adaptées à ton environnement.
 
 Assignations : 
 - Include : `MDE-Production-Servers`
@@ -506,34 +469,6 @@ Affectation :
   Include : All Devices
   Filter : Windows-Only (Include)
 ```
-
-### MDE-ASR-Office-Audit
-
-Règles Office en Audit pour identification des workflows métier impactés.
-
-| Règle | GUID | État |
-|---|---|---|
-| Block all Office applications from creating child processes | d4f940ab-401b-4efc-aadc-ad5f3c50688a | Audit |
-| Block Office applications from creating executable content | 3b576869-a4ec-4529-8536-b80a7769e899 | Audit |
-| Block Office applications from injecting code into other processes | 75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84 | Audit |
-| Block Win32 API calls from Office macros | 92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b | Audit |
-| Block Adobe Reader from creating child processes | 7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c | Audit |
-
-Assignations : `MDE-Pilot-Workstations` puis `MDE-Production-Workstations` selon le calendrier (voir épisode 8)
-
-### MDE-ASR-Office-Warn
-
-Les mêmes règles que ci-dessus en mode Warn, sauf `Block Win32 API calls from Office macros` qui ne supporte pas Warn (passer en Block direct ou laisser en Audit).
-
-Assignations : `MDE-Production-Workstations` (après validation de la phase Audit)
-
-### MDE-ASR-Office-Block
-
-Les mêmes règles en mode Block, après validation complète.
-
-Assignations : `MDE-Production-Workstations` (en remplacement de Warn)
-
-Sur les serveurs, on déploie uniquement la policy `MDE-ASR-LowRisk-Block`. Les règles Office et navigateur ne sont pas pertinentes sans utilisateur interactif.
 
 ## Étape 7 - Matrice d'assignation
 
