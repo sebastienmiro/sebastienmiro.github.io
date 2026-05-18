@@ -25,9 +25,7 @@ cover-img: "/assets/img/posts/covers/news-entra-cover.png
 
 ---
 
-## Le contexte
-
-Microsoft Entra Agent ID est passé en disponibilité générale le **1er mai 2026**. C'est le mécanisme officiel pour gérer l'identité des agents IA (Copilot Studio, agents tiers, agents internes) dans Entra. L'annonce est sur le [blog Microsoft Security](https://www.microsoft.com/en-us/security/blog/2026/05/01/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations/).
+> Microsoft Entra Agent ID est passé en disponibilité générale le **1er mai 2026**. C'est le mécanisme officiel pour gérer l'identité des agents IA (Copilot Studio, agents tiers, agents internes) dans Entra. L'annonce est sur le [blog Microsoft Security](https://www.microsoft.com/en-us/security/blog/2026/05/01/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations/).
 
 L'arrivée des agents IA en production change la donne pour les admins identité. Un agent n'est ni un utilisateur, ni une application classique. Il a besoin d'authentification, de permissions, de gouvernance, de logs - mais avec une particularité : il peut se cloner, évoluer, et déployer de nouvelles instances dynamiquement.
 
