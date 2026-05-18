@@ -1,6 +1,6 @@
 ---
 title: "Conditional Access sur l'activation des rôles PIM : refermer une fenêtre d'attaque sur les comptes privilégiés"
-date: 2026-06-22 07:30:00 +01:00
+date: 2026-06-22 06:30:00 +01:00
 layout: post
 mermaid: true
 categories: [news, entra]
