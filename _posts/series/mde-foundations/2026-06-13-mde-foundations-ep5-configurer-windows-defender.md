@@ -145,6 +145,27 @@ Toute exclusion doit avoir :
 3. Un périmètre le plus étroit possible (chemin précis plutôt qu'un dossier parent)
 4. Un usage du type **Processus** plutôt que **Chemin** quand c'est possible (l'exclusion par processus est plus restrictive)
 
+```mermaid
+flowchart TD
+    A[Un processus déclenche une alerte<br/>ou est bloqué par l'antivirus] --> B{Le comportement bloqué<br/>est-il légitime ?}
+    B -->|Non| C[Ne pas créer d'exclusion<br/>Investiguer le processus]
+    B -->|Oui| D{La règle qui bloque<br/>est-elle une règle ASR ?}
+    D -->|Oui| E["Exclusion ASR par règle<br/>(ASR Only Per Rule Exclusions)<br/>GUID de la règle + chemin du processus"]
+    D -->|Non — c'est l'antivirus| F{Peut-on cibler<br/>un processus précis ?}
+    F -->|Oui| G["Exclusion par processus<br/>Type : Process<br/>Périmètre le plus restrictif"]
+    F -->|Non| H{Peut-on cibler<br/>un chemin précis ?}
+    H -->|Oui| I["Exclusion par chemin<br/>Type : Path — dossier le plus précis possible"]
+    H -->|Non| J["Exclusion par extension<br/>Type : Extension — dernier recours"]
+
+    G --> K[Documenter : justification + ticket<br/>Revue planifiée dans 6 mois]
+    I --> K
+    J --> K
+    E --> K
+
+    style C fill:#ffd4d4
+    style K fill:#d4f4d4
+```
+
 ## La structure des policies pour cette série
 
 Le modèle d'exclusivité posé à l'épisode 4 se traduit ici par cinq policies antivirus, toutes autosuffisantes. Chaque policy contient l'intégralité de la configuration nécessaire à son périmètre, sans dépendance implicite à une autre policy.

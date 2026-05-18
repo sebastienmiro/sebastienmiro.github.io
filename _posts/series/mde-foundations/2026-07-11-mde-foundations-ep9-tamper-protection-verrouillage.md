@@ -104,6 +104,31 @@ Accès : `security.microsoft.com > Paramètres > Points de terminaison > Caract�
 
 Active le toggle. La protection s'applique à toutes les machines onboardées dans MDE, indépendamment de leur configuration Intune. C'est une couche supplémentaire, gratuite, et qui ne devrait pas être désactivée sauf cas exceptionnel.
 
+```mermaid
+flowchart TD
+    A[Tentative de modifier<br/>la configuration Windows Defender] --> B{Source de la modification ?}
+
+    B -->|"PowerShell local<br/>Set-MpPreference"| C[BLOQUÉ]
+    B -->|"Registre<br/>HKLM\\...\\Windows Defender"| C
+    B -->|"GPO locale<br/>gpedit.msc"| C
+    B -->|"Script ou installeur tiers<br/>outil RMM, MECM local"| C
+    B -->|"Service<br/>sc stop WinDefend"| C
+
+    B -->|"Policy Intune<br/>Endpoint Security"| D[AUTORISÉ]
+    B -->|"Security Management for MDE"| D
+    B -->|"Portail Microsoft Defender<br/>admin explicitement autorisé"| D
+    B -->|"Mode Troubleshooting<br/>fenêtre jusqu'à 4h"| E["AUTORISÉ temporairement<br/>tracé dans le portail MDE"]
+
+    C --> F["Tentative loggée — Event ID 5004<br/>Configuration inchangée"]
+    D --> G["Modification appliquée<br/>Configuration mise à jour"]
+
+    style C fill:#ffd4d4
+    style D fill:#d4f4d4
+    style E fill:#fff4cc
+    style F fill:#ffd4d4
+    style G fill:#d4f4d4
+```
+
 ## Le contournement légitime : le mode Troubleshooting
 
 Microsoft propose un mécanisme pour permettre des modifications ponctuelles malgré Tamper Protection : le **mode Troubleshooting**. Activable depuis le portail Defender, il désactive temporairement Tamper Protection sur une machine spécifique pour une durée définie (jusqu'à 4 heures).

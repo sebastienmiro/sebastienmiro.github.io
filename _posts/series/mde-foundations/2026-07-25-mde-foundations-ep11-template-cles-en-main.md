@@ -39,9 +39,9 @@ Le template MDE Foundations couvre l'ensemble des briques vues dans la série. V
 **Policies Endpoint Security**
 
 - Onboarding EDR : une policy unique pour les postes et serveurs
-- Antivirus : cinq policies en couches (catch-all + production postes + production serveurs + pilote postes + pilote serveurs)
-- Firewall : trois policies (configuration globale + règles postes + règles serveurs)
-- ASR : quatre policies (faible risque + Office audit + Office warn + Office block)
+- Antivirus : cinq policies autosuffisantes (catch-all + production postes + production serveurs + pilote postes + pilote serveurs)
+- Firewall : cinq policies (catch-all + règles postes + règles postes pilote + règles serveurs + règles serveurs pilote)
+- ASR : trois policies (audit initial universel avec LSASS en Block + FullBlock à déployer progressivement + exclusions dédiées)
 
 **Configuration au niveau tenant**
 
@@ -49,7 +49,33 @@ Le template MDE Foundations couvre l'ensemble des briques vues dans la série. V
 - Activation globale de Tamper Protection
 - Configuration de l'investigation automatisée
 
-![MDE FOundations](/assets/img/posts/series/mde-foundations/2026/07/mde-foundations-ep11-figure1.png)
+```mermaid
+flowchart TB
+    T[Template MDE Foundations] --> G[6 groupes Entra ID]
+    T --> F[Filtre Windows-Only]
+    T --> P[14 policies Endpoint Security]
+    T --> TC[Paramètres tenant]
+
+    G --> GW["Postes : Wave1 · Wave2 · Production"]
+    G --> GS["Serveurs : Wave1 · Wave2 · Production"]
+
+    P --> PE["EDR Onboarding ×1 — universel"]
+    P --> PA["Antivirus ×5 — CatchAll + WS + Srv"]
+    P --> PF["Firewall ×5 — CatchAll + WS + Srv"]
+    P --> PR["ASR ×3 — Audit · FullBlock · Exclusions"]
+
+    TC --> TT[Tamper Protection tenant-wide]
+    TC --> TAI[Investigation automatisée]
+    TC --> TSM[Security Management for MDE]
+
+    style PE fill:#cfe8ff
+    style PA fill:#d4f4d4
+    style PF fill:#d4f4d4
+    style PR fill:#e8d4f4
+    style TT fill:#fff4cc
+    style TAI fill:#fff4cc
+    style TSM fill:#fff4cc
+```
 
 ## Prérequis avant déploiement
 
