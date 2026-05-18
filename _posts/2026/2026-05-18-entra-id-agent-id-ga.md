@@ -1,6 +1,6 @@
 ---
 title: "Microsoft Entra Agent ID est en GA : ce que les admins doivent comprendre du modèle à trois niveaux"
-date: 2026-05-18 20:30:00 +01:00
+date: 2026-05-18 19:30:00 +01:00
 layout: post
 mermaid: true
 categories: [news, entra]
