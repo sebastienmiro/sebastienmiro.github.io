@@ -20,7 +20,7 @@ scope:
   - Microsoft Entra ID
   - Identity Platform
   - OAuth
-cover-img: "assets/img/posts/2026/05/token-lifetime-policies-cover.png"
+cover-img: "assets/img/posts/2026/05/news-entra-cover.png"
 thumbnail-img: "assets/img/posts/2026/05/token-lifetime-policies-thumb.png"
 ---
 

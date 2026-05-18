@@ -20,7 +20,7 @@ scope:
   - Microsoft Entra ID
   - Privileged Identity Management
   - Conditional Access
-thumbnail-img: "assets/img/posts/2026/06/ca-pim-activation-thumb.png"
+thumbnail-img: "assets/img/posts/2026/05/news-entra-cover.png"
 cover-img: "/assets/img/posts/covers/news-entra-cover.png"
 ---
 

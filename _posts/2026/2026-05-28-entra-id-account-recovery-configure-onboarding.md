@@ -20,7 +20,7 @@ scope:
   - Microsoft Entra ID
   - Account Recovery
   - Authentication
-thumbnail-img: "assets/img/posts/2026/05/account-recovery-ga-thumb.png"
+thumbnail-img: "assets/img/posts/2026/05/news-entra-cover.png"
 cover-img: "/assets/img/posts/covers/news-entra-cover.png"
 ---
 

@@ -20,7 +20,7 @@ scope:
   - Microsoft Entra Connect Sync
   - Hybrid Identity
   - Entra ID
-cover-img: "assets/img/posts/2026/05/hard-match-blocking-cover.png"
+cover-img: "assets/img/posts/2026/05/news-entra-cover.png"
 thumbnail-img: "assets/img/posts/2026/05/hard-match-blocking-thumb.png"
 ---
 
