@@ -21,7 +21,7 @@ scope:
   - Privileged Identity Management
   - Conditional Access
 thumbnail-img: "assets/img/posts/2026/05/news-entra-cover.png"
-cover-img: "/assets/img/posts/covers/conditional-access-for-pim.png"
+cover-img: "assets/img/posts/covers/news-entra-cover.png"
 ---
 
 > Microsoft a annoncé en mai 2026 la disponibilité générale de l'enforcement des politiques Conditional Access sur l'**activation des rôles PIM**. Annonce dans le [What's New in Microsoft Entra: May 2026](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/whats-new-in-microsoft-entra-may-2026/4517884).
