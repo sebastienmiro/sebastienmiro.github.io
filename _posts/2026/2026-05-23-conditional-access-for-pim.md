@@ -21,7 +21,7 @@ scope:
   - Privileged Identity Management
   - Conditional Access
 thumbnail-img: "assets/img/posts/2026/05/news-entra-cover.png"
-cover-img: "/assets/img/posts/covers/news-entra-cover.png"
+cover-img: "/assets/img/posts/covers/conditional-access-for-pim.png"
 ---
 
 > Microsoft a annoncé en mai 2026 la disponibilité générale de l'enforcement des politiques Conditional Access sur l'**activation des rôles PIM**. Annonce dans le [What's New in Microsoft Entra: May 2026](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/whats-new-in-microsoft-entra-may-2026/4517884).
@@ -44,7 +44,7 @@ sequenceDiagram
     E-->>U: Session valide 8h
     Note over U: Compromission de session<br/>(token volé, phishing AiTM)
     U->>P: Activate Global Admin
-    P-->>U: Rôle activé<br/>(session existante suffit)
+    P-->>U: Rôle activé<br/>(une session existante suffit)
     U->>R: Action privilégiée
     R-->>U: ✗ Compromission
 
