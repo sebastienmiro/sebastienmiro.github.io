@@ -1,6 +1,6 @@
 ---
 title: "Entra ID Account Recovery est GA : configurer un onboarding et une récupération de compte qui résistent aux attaquants"
-date: 2026-05-28 06:30:00 +01:00
+date: 2026-05-28 04:30:00 +01:00
 layout: post
 mermaid: true
 categories: [news, entra]
