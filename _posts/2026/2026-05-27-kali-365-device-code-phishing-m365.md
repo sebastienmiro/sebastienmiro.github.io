@@ -1,9 +1,9 @@
 ---
 title: "Kali365 et le device code phishing : comment bloquer une attaque qui contourne la MFA sans toucher au mot de passe"
-date: 2026-05-27 18:30:00 +01:00
+date: 2026-05-27 17:30:00 +01:00
 layout: post
 mermaid: true
-categories: [news, entra]
+categories: [news, cyber]
 tags:
   - entra-id
   - phishing
