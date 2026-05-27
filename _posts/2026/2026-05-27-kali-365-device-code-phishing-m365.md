@@ -1,9 +1,9 @@
 ---
 title: "Kali365 et le device code phishing : comment bloquer une attaque qui contourne la MFA sans toucher au mot de passe"
-date: 2026-05-27 17:30:00 +01:00
+date: 2026-05-30 07:30:00 +01:00
 layout: post
 mermaid: true
-categories: [news, cyber]
+categories: [news, entra]
 tags:
   - entra-id
   - phishing
@@ -22,14 +22,14 @@ scope:
   - Conditional Access
   - Microsoft Defender XDR
 thumbnail-img: "assets/img/posts/2026/05/kali365-device-code-thumb.png"
-cover-img: "/assets/img/posts/covers/banner-kali-365.png"
+cover-img: "/assets/img/posts/2026/05/kali365-device-code-cover.png"
 ---
 
 ## Le contexte
 
 Le FBI a publié le 21 mai 2026 une [Public Service Announcement (PSA260521)](https://www.ic3.gov/PSA/2026/PSA260521) alertant sur **Kali365**, une plateforme de Phishing-as-a-Service qui exploite le mécanisme OAuth 2.0 device code flow pour voler les tokens Microsoft 365 sans avoir besoin de capturer le mot de passe ni le code MFA. Le kit est distribué via Telegram à partir de 250 dollars par mois, et a été observé pour la première fois en avril 2026 par Arctic Wolf.
 
-L'attaque n'est pas nouvelle dans son principe : Proofpoint avait documenté une augmentation volumétrique du device code phishing en septembre 2025, attribuée d'abord à des acteurs étatiques liés à la Russie, puis adoptée par des criminels financiers en octobre 2025. En février 2026, EvilTokens et Tycoon2FA avaient déjà industrialisé la technique. Huntress avait alors tracé plus de 340 organisations compromises dans cinq pays par une seule campagne associée. Kali365 industrialise davantage en ajoutant des leurres générés par IA, des dashboards de tracking en temps réel, et des templates de campagne automatisés.
+L'attaque n'est pas nouvelle dans son principe : Proofpoint avait documenté une augmentation volumétrique du device code phishing en septembre 2025, attribuée d'abord à des acteurs étatiques liés à la Russie, puis adoptée par des criminels financiers en octobre 2025. En février 2026, EvilTokens et Tycoon2FA avaient déjà industrialisé la technique, avec plusieurs centaines d'organisations compromises rapportées sur des campagnes associées. Kali365 va plus loin en ajoutant des leurres générés par IA, des dashboards de suivi en temps réel, et des templates de campagne automatisés.
 
 Cet article explique le mécanisme technique de l'attaque, ce qui la distingue d'AiTM, et comment la bloquer côté Microsoft Entra.
 
@@ -52,7 +52,7 @@ sequenceDiagram
     D->>D: Session établie
 ```
 
-Le mécanisme est sûr dans son usage prévu : le device limité ne reçoit jamais les credentials, et l'utilisateur s'authentifie sur la vraie page Microsoft. Le problème, c'est que le mécanisme ne vérifie pas **quel device a initié la demande** : si l'attaquant initie lui-même la demande de device code et convainc la victime d'entrer ce code sur la vraie page Microsoft, c'est l'attaquant qui reçoit les tokens à la fin.
+Le mécanisme est sûr dans son usage prévu : le device limité ne reçoit jamais les identifiants, et l'utilisateur s'authentifie sur la vraie page Microsoft. Le problème, c'est que le mécanisme ne vérifie pas **quel device a initié la demande** : si l'attaquant initie lui-même la demande de device code et convainc la victime d'entrer ce code sur la vraie page Microsoft, c'est l'attaquant qui reçoit les tokens à la fin.
 
 ## Le détournement par Kali365
 
@@ -64,7 +64,7 @@ sequenceDiagram
 
     A->>M: Génère un device code<br/>via le flow OAuth
     M-->>A: Code à 8 caractères<br/>(ex: B7HF5N9P)
-    A->>V: Email phishing impersonant<br/>DocuSign ou SharePoint<br/>+ code + URL devicelogin
+    A->>V: Email phishing imitant<br/>DocuSign ou SharePoint<br/>+ code + URL devicelogin
     V->>M: Visite microsoft.com/devicelogin<br/>(VRAIE page Microsoft)
     V->>M: Entre le code + s'authentifie<br/>+ valide la MFA
     M-->>A: Envoie les tokens OAuth<br/>(access + refresh)
@@ -92,20 +92,24 @@ Le device code phishing est souvent confondu avec les attaques AiTM (Adversary i
 |---|---|---|
 | Page d'authentification | Faux portail qui relaie | Vraie page Microsoft |
 | URL visible par la victime | URL phishing (souvent typosquattée) | URL Microsoft légitime |
-| Interception du token | Capture passive du flux | Pas d'interception, l'attaquant reçoit directement le token |
-| Protection FIDO2/passkey | Efficace (rebind cryptographique) | Limitée (le token est valide après l'auth) |
+| Interception du token | Interception active via proxy inverse (Evilginx, Modlishka) | Pas d'interception, l'attaquant reçoit directement le token |
+| Protection FIDO2/passkey | Efficace (verifier impersonation resistance / RP binding) | Limitée (le token est valide après l'auth) |
 | Protection Authentication Strength CA | Efficace | Limitée pour la même raison |
 | Détection par l'utilisateur | Possible (URL, certificat) | Très difficile, rien d'anormal visible |
 
-La conséquence pratique : **le déploiement de phishing-resistant MFA (FIDO2, passkeys, CBA) ne suffit pas** pour bloquer Kali365. La MFA s'exécute correctement, le token est légitimement émis, et l'attaquant le récupère via le flow OAuth normal. La défense doit se faire au niveau du flow lui-même, pas au niveau de la méthode d'authentification.
+La conséquence pratique : **le déploiement de méthodes phishing-resistant (FIDO2, passkeys, CBA) ne suffit pas** pour bloquer Kali365. La MFA s'exécute correctement, le token est légitimement émis, et l'attaquant le récupère via le flow OAuth normal. La défense doit se faire au niveau du flow lui-même, pas au niveau de la méthode d'authentification.
 
 ## Comment bloquer Kali365 dans Entra ID
 
+> ⚠️ Note : La condition Conditional Access **"Authentication flows"** qui permet de cibler le device code flow est actuellement en **Public Preview** au moment de la rédaction. La feature est utilisable en production mais peut évoluer. Source : [Microsoft Learn - Authentication flows](https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-flows).
+
 ### Étape 1 : Auditer l'usage actuel du device code flow
 
-Avant de bloquer, il faut savoir qui l'utilise légitimement dans votre tenant. Le mécanisme est utilisé par des services réels : Microsoft Authenticator sur certains devices, PowerShell sur des serveurs sans browser, agents legacy, équipements de salle de réunion.
+Avant de bloquer, il faut savoir qui l'utilise légitimement dans votre tenant. Le mécanisme est utilisé par des services réels : Microsoft Authenticator sur certains appareils, PowerShell sur des serveurs sans browser, agents legacy, équipements de salle de réunion.
 
 ```powershell
+# Le module Beta est nécessaire pour authenticationProtocol filter
+Install-Module Microsoft.Graph.Beta.Reports -Scope CurrentUser
 Connect-MgGraph -Scopes "AuditLog.Read.All"
 
 # Récupérer les sign-ins via device code flow des 30 derniers jours
@@ -113,7 +117,7 @@ $startDate = (Get-Date).AddDays(-30).ToString("yyyy-MM-ddTHH:mm:ssZ")
 
 $filter = "createdDateTime ge $startDate and authenticationProtocol eq 'deviceCode'"
 
-$signIns = Get-MgAuditLogSignIn -Filter $filter -All
+$signIns = Get-MgBetaAuditLogSignIn -Filter $filter -All
 
 $signIns | Select-Object @{N='Date';E={$_.CreatedDateTime}},
     UserPrincipalName,
@@ -130,6 +134,8 @@ Examiner le résultat : qui utilise le device code flow, depuis quels appareils 
 ### Étape 2 : Créer une politique Conditional Access pour bloquer
 
 ```powershell
+# Le module Beta est nécessaire pour la condition authenticationFlows
+Install-Module Microsoft.Graph.Beta.Identity.SignIns -Scope CurrentUser
 Connect-MgGraph -Scopes "Policy.ReadWrite.ConditionalAccess"
 
 $policy = @{
@@ -154,7 +160,7 @@ $policy = @{
     }
 }
 
-New-MgIdentityConditionalAccessPolicy -BodyParameter $policy
+New-MgBetaIdentityConditionalAccessPolicy -BodyParameter $policy
 ```
 
 La politique cible la condition `authenticationFlows.transferMethods` avec la valeur `deviceCodeFlow`. C'est la condition Conditional Access spécifique introduite par Microsoft pour ce cas d'usage.
@@ -185,7 +191,7 @@ $policyTransfer = @{
     }
 }
 
-New-MgIdentityConditionalAccessPolicy -BodyParameter $policyTransfer
+New-MgBetaIdentityConditionalAccessPolicy -BodyParameter $policyTransfer
 ```
 
 ### Étape 4 : Activer la détection dans Microsoft Defender XDR
@@ -204,17 +210,32 @@ Custom detection rules > Create detection rule
 
 Vérifier que les advanced hunting queries sur les sign-in events incluent les filtres `AuthenticationProtocol == "deviceCode"`.
 
-Une query KQL utile pour le threat hunting historique :
+Une query KQL utile pour le threat hunting historique, dans **Microsoft Defender XDR Advanced Hunting** :
 
 ```kusto
-SignInEvents
+EntraIdSignInEvents
+| where Timestamp > ago(30d)
+| where AuthenticationProtocol == "deviceCode"
+| where ErrorCode == 0  // Sign-in réussi
+| extend SuspiciousLocation = iff(Country != "<your-country>", true, false)
+| where SuspiciousLocation
+| project Timestamp, AccountUpn, Application, IPAddress, Country, City, ClientAppUsed
+| sort by Timestamp desc
+```
+
+Note : la table `EntraIdSignInEvents` remplace `AADSignInEventsBeta` depuis le 9 décembre 2025. Si votre tenant utilise encore l'ancienne table, adaptez le nom.
+
+L'équivalent dans **Microsoft Sentinel** :
+
+```kusto
+SigninLogs
 | where TimeGenerated > ago(30d)
 | where AuthenticationProtocol == "deviceCode"
-| where ResultType == 0  // Success
-| extend SuspiciousLocation = iff(LocationCountry != "<your-country>", true, false)
-| extend SuspiciousIP = iff(IPAddress matches regex @"^(127\.|10\.|172\.16\.|192\.168\.)", false, true)
-| where SuspiciousLocation or SuspiciousIP
-| project TimeGenerated, UserPrincipalName, AppDisplayName, IPAddress, LocationCountry, ClientAppUsed
+| where ResultType == 0
+| extend Country = tostring(LocationDetails.countryOrRegion)
+| extend SuspiciousLocation = iff(Country != "<your-country>", true, false)
+| where SuspiciousLocation
+| project TimeGenerated, UserPrincipalName, AppDisplayName, IPAddress, Country, ClientAppUsed
 | sort by TimeGenerated desc
 ```
 
@@ -226,10 +247,10 @@ SignInEvents
 
 ## Le cas particulier des comptes break-glass
 
-Les comptes break-glass doivent **rester exclus** de la politique de blocage du device code flow, pour éviter un lockout total en cas de problème. Mais ils doivent être protégés autrement :
+Les comptes break-glass doivent **rester exclus** de la politique de blocage du device code flow, pour éviter un verrouillage total en cas de problème. Mais ils doivent être protégés autrement :
 
 - Politique CA dédiée qui exige FIDO2 + IP/localisation spécifique
-- Alerting automatique sur toute activation
+- Alerte automatique sur toute activation
 - Audit mensuel des sign-ins
 - Stockage hors-ligne sécurisé du mot de passe et du device FIDO2
 
@@ -266,7 +287,7 @@ Le blocage du device code flow peut casser des workflows légitimes. Phasage rec
 | 3 | Semaine 4 | Analyse des cas qui auraient été bloqués, création des exceptions |
 | 4 | Semaine 5 | Activation progressive sur les utilisateurs standard |
 | 5 | Semaine 6 | Activation sur les comptes à privilèges |
-| 6 | En continu | Audit mensuel des exceptions, alerting sur toute nouvelle utilisation |
+| 6 | En continu | Audit mensuel des exceptions, alerte sur toute nouvelle utilisation |
 
 ## Sources
 
