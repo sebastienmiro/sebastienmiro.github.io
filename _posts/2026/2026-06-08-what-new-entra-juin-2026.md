@@ -27,7 +27,7 @@ tags:
 
 -----
 
-> Microsoft publie chaque mois son [What’s New in Microsoft Entra](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/whats-new-in-microsoft-entra-june-2026/4517885). C’est une lecture utile, mais piégeuse : un même article mélange des fonctionnalités en disponibilité générale, d’autres en préversion publique, et des annonces de changements à venir. Lire trop vite, c’est risquer de déployer en production une fonctionnalité encore en préversion, ou de présenter comme nouveau quelque chose qui existe déjà.
+Microsoft publie chaque mois son [What’s New in Microsoft Entra](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/whats-new-in-microsoft-entra-june-2026/4517885). C’est une lecture utile, mais piégeuse : un même article mélange des fonctionnalités en disponibilité générale, d’autres en préversion publique, et des annonces de changements à venir. Lire trop vite, c’est risquer de déployer en production une fonctionnalité encore en préversion, ou de présenter comme nouveau quelque chose qui existe déjà.
 
 Cet article reprend l’édition de juin 2026 en clarifiant le statut réel de chaque élément, et en signalant ce qui mérite votre attention en priorité. Le classement suit celui de Microsoft : disponibilité générale, préversion publique, annonces avec échéance, puis nouvelle documentation.
 
