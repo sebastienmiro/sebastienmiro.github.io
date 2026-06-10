@@ -24,9 +24,7 @@ thumbnail-img: "assets/img/posts/2026/06/whatsnew-juin-2026-thumb.png"
 cover-img: "/assets/img/posts/2026/05/news-entra-cover.png"
 ---
 
-## Le fil de juin
-
-Le What's New de juin raconte deux histoires en parallèle. D'un côté, Microsoft continue de pousser le passwordless : passkeys sur Windows, passkeys dans les campagnes d'enregistrement, plus de place pour les profils passkey, phish-resistant MFA qui débarque enfin sur Linux. De l'autre, un travail de fond sur les identités à privilèges et la gouvernance : réponse SOC sans escalade de droits, gouvernance des rôles Azure, parrainage des identités d'agents.
+> Le What's New de juin raconte deux histoires en parallèle. D'un côté, Microsoft continue de pousser le passwordless : passkeys sur Windows, passkeys dans les campagnes d'enregistrement, plus de place pour les profils passkey, phish-resistant MFA qui débarque enfin sur Linux. De l'autre, un travail de fond sur les identités à privilèges et la gouvernance : réponse SOC sans escalade de droits, gouvernance des rôles Azure, parrainage des identités d'agents.
 
 Le reste, ce sont des améliorations de confort ou des briques de préversion à surveiller sans urgence. Et deux annonces avec une date qui, elles, demandent une vraie préparation avant l'été.
 
