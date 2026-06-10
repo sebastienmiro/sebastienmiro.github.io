@@ -1,6 +1,6 @@
 ---
 title: "Microsoft Entra en juin 2026 : ce qui mérite votre attention, ce qui peut attendre"
-date: 2026-06-05 07:30:00 +01:00
+date: 2026-06-08 12:30:00 +01:00
 layout: post
 mermaid: true
 categories: [news, entra]
